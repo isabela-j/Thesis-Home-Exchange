@@ -1,5 +1,5 @@
 <template>
-  <v-navigation-drawer v-model="drawer" :width="width" permanent clipped flat app  bottom class="compact-form">
+  <v-navigation-drawer v-model="drawer" :width="400" permanent clipped flat app  bottom class="compact-form">
     <v-btn v-if="showPreferences" class="btnPressed" @click="setShowPreferences"
       >What you want</v-btn
     >
@@ -49,16 +49,6 @@ export default {
       showYourAnnounces,
       setShowPreferences,
       setShowYourAnnounces,
-      width: {
-        // 700px and up
-        700: {
-          width:120px;
-        },
-        // 1024 and up
-        1024: {
-          width:400px;
-        },
-      },
     };
   },
 };
