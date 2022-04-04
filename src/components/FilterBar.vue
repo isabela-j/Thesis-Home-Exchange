@@ -1,5 +1,5 @@
 <template>
-  <v-navigation-drawer v-model="drawer" :width="400" permanent clipped flat app  bottom class="compact-form">
+  <v-navigation-drawer v-model="drawer" :width="windowSize" permanent clipped flat app  bottom class="compact-form filter-resize" >
     <v-btn v-if="showPreferences" class="btnPressed" @click="setShowPreferences"
       >What you want</v-btn
     >
@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import { ref } from "vue";
+import { ref, computed,onMounted,onUnmounted } from "vue";
 import Filters from "@/components/Filters.vue";
 import MiniCardsList from "@/components/MiniCardsList.vue";
 export default {
@@ -27,10 +27,12 @@ export default {
     Filters,
     MiniCardsList,
   },
+  
   setup() {
     let showPreferences = ref(true);
     let showYourAnnounces = ref(false);
     let drawer = ref(true);
+  
     let setShowPreferences = () => {
       if (!showPreferences.value) {
         showPreferences.value = !showPreferences.value;
@@ -43,12 +45,20 @@ export default {
         showYourAnnounces.value = !showPreferences.value;
       }
     };
+    const windowSize = ref(window.innerWidth * 0.2);
+        onMounted(() => {
+            window.addEventListener('resize', () => {windowSize.value = window.innerWidth * 0.2} )
+        });
+        onUnmounted(() => {
+            window.removeEventListener('resize', () => {windowSize.value = window.innerWidth * 0.2})
+        });
     return {
       drawer,
       showPreferences,
       showYourAnnounces,
       setShowPreferences,
       setShowYourAnnounces,
+      windowSize
     };
   },
 };

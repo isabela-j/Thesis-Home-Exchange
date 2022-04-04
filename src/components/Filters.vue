@@ -1,6 +1,6 @@
 <template>
     <v-list-item dense>
-      <v-list-item-content>
+      <v-list-item-content class="example">
         <v-list-item-title dense>Filters</v-list-item-title>
       </v-list-item-content>
       <v-spacer></v-spacer>
@@ -210,8 +210,33 @@ export default {
   color:rgb(252,158,1); 
   text-transform: none;
   margin: 3px;
+  font-size:12px;
 }
 .justif {
   justify-content: space-evenly;
+}
+/* Extra small devices (phones, 600px and down) */
+@media only screen and (max-width: 600px) {
+  .btn { width: 10px;  font-size:10px;}
+}
+
+/* Small devices (portrait tablets and large phones, 600px and up) */
+@media only screen and (min-width: 600px) {
+
+}
+
+/* Medium devices (landscape tablets, 768px and up) */
+@media only screen and (min-width: 768px) {
+  
+} 
+
+/* Large devices (laptops/desktops, 992px and up) */
+@media only screen and (min-width: 992px) {
+  
+} 
+
+/* Extra large devices (large laptops and desktops, 1200px and up) */
+@media only screen and (min-width: 1200px) {
+ 
 }
 </style>

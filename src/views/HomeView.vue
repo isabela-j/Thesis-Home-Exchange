@@ -70,5 +70,4 @@ export default {
 .bold {
   font-size: 17px;
 }
-
 </style>
