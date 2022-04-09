@@ -21,14 +21,6 @@
     </v-row>
     <v-row class="pab" dense>
       <v-col :key="6" class="priceFont align-self-end">{{ price }}€</v-col>
-      <v-col :key="7" align="right">
-        <v-btn v-if="isRequested" class="btn btnClicked" @click="requestOffer"
-          >Offer requested</v-btn
-        >
-        <v-btn v-else class="btn btnNormal" @click="requestOffer"
-          >Request an offer</v-btn
-        >
-      </v-col>
     </v-row>
   </v-container>
   </v-card>
@@ -121,5 +113,100 @@ export default {
 }
 .align-bot {
   align-content: bottom;
+}
+
+/* Extra small devices (phones, 600px and down) */
+@media only screen and (min-width: 500px) {
+  div {
+    font-size: 8px;
+  }
+  .btn {
+    font-size: 8px;
+    border-radius: 30px;
+    border: 1.3px solid rgb(1, 83, 81);
+    display: block;
+    height: 25px;
+  }
+  .btnFav {
+    height: 25px;
+    border-radius: 30px;
+    border: 1.3px solid rgb(1, 83, 81);
+  }
+  .cardTitle {
+    font-size:11px;
+  }
+  .cardOfferDetails,
+  .cardOfferType {
+    font-size: 9px;
+  }
+}
+/* Small devices (portrait tablets and large phones, 600px and up) */
+@media only screen and (min-width: 600px) {
+  div {
+    font-size: 10px;
+  }
+  .btn {
+    font-size: 8px;
+    border-radius: 30px;
+    border: 1.3px solid rgb(1, 83, 81);
+    height: 30px;
+  }
+  .btnFav {
+    height: 30px;
+    border-radius: 30px;
+    border: 1.3px solid rgb(1, 83, 81);
+  }
+  .cardTitle {
+    font-size:13px;
+  }
+  .cardOfferDetails,
+  .cardOfferType {
+    font-size: 11px;
+  }
+}
+
+/* Medium devices (landscape tablets, 768px and up) */
+@media only screen and (min-width: 768px) {
+  div {
+    font-size: 12px;
+  }
+  .btn {
+    font-size: 12px;
+    border-radius: 40px;
+    border: 1.7px solid rgb(1, 83, 81);
+    height: 35px;
+  }
+  .btnFav {
+    height: 35px;
+    border-radius: 40px;
+    border: 1.7px solid rgb(1, 83, 81);
+  }
+  .cardTitle {
+    font-size:15px;
+  }
+  .cardOfferDetails,
+  .cardOfferType {
+    font-size: 13px;
+  }
+}
+
+/* Large devices (laptops/desktops, 992px and up) */
+@media only screen and (min-width: 992px) {
+  div {
+    font-size: 14px;
+  }
+  .btn {
+    font-size: 14px;
+    border-radius: 50px;
+    border: 2.5px solid rgb(1, 83, 81);
+  }
+
+  .cardTitle {
+    font-size: 17px;
+  }
+  .cardOfferDetails,
+  .cardOfferType {
+    font-size: 14px;
+  }
 }
 </style>

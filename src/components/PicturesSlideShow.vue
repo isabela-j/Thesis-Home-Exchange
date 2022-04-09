@@ -1,10 +1,5 @@
 <template>
-  <!--v-card class="ma-2"  width= "90%" max-height="60%">
-    <v-img
-      :src="currentImgSrc"
-    />
-  </v-card-->
-  <div class="center">
+  <div class="center-content">
   <carousel 
     :items-to-show="3.95"
     wrapAround
@@ -14,7 +9,7 @@
     width= "100%"
   >
     <slide v-for="(item, index) in items" :key="index">
-      <v-img :src="item" class="carousel__item"/>
+      <v-img :src="item" class="carousel__item" />
     </slide>
     <template #addons="{ slidesCount, currentSlide }" @onChange="changed()">
       <navigation v-if="slidesCount > 3"/>
@@ -98,10 +93,10 @@ export default {
   transform: rotateY(0);
 }
 .carousel__slide--next > .carousel__item {
-  transform: scale(0.9) translate(-10px);
+  transform: scale(0.8) translate(-10px);
 }
 .carousel__slide--prev > .carousel__item {
-  transform: scale(0.9) translate(10px);
+  transform: scale(0.8) translate(10px);
 }
 .carousel__slide--active > .carousel__item {
   transform: scale(1.1);
@@ -125,6 +120,12 @@ div {
   --vc-clr-primary: rgb(252, 158, 22);
   --vc-clr-secondary: rgb(252, 158, 22);
   --vc-nav-background-color: rgb(252, 158, 22);
+}
+
+.center-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 </style>

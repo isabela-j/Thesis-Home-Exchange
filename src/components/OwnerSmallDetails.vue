@@ -1,5 +1,5 @@
 <template>
-  <v-card class="ma-2" >
+  <v-card class="ma-2">
     <v-container fluid>
       <v-row dense>
         <v-col key="1" cols="5">
@@ -7,10 +7,10 @@
             <v-label class="name-decoration">{{ name.toUpperCase() }}</v-label>
           </v-row>
           <v-row dense>
-            <v-label>{{ ownerTypeString }}</v-label>
+            <v-label class="person-decoration">{{ ownerTypeString }}</v-label>
           </v-row>
           <v-row dense>
-            <v-label>{{ hasBrokerageName }}</v-label>
+            <v-label class="person-decoration">{{ hasBrokerageName }}</v-label>
           </v-row>
         </v-col>
 
@@ -74,6 +74,35 @@ export default {
 }
 
 .contact-decoration {
-    color: black;
+  color: black;
+  font-size:16px;
+}
+.person-decoration {
+  font-size:16px;
+}
+@media only screen and (min-width: 300px) {
+  .name-decoration, .call-decoration, .contact-decoration, .person-decoration {
+    font-size: 12px;
+  }
+}
+/* Small devices (portrait tablets and large phones, 600px and up) */
+@media only screen and (min-width: 600px) {
+  .name-decoration, .call-decoration, .contact-decoration, .person-decoration {
+    font-size: 13px;
+  }
+}
+
+/* Medium devices (landscape tablets, 768px and up) */
+@media only screen and (min-width: 768px) {
+  .name-decoration, .call-decoration, .contact-decoration, .person-decoration {
+    font-size: 14px;
+  }
+}
+
+/* Large devices (laptops/desktops, 992px and up) */
+@media only screen and (min-width: 992px) {
+  .name-decoration, .call-decoration, .contact-decoration, .person-decoration {
+    font-size: 16px;
+  }
 }
 </style>

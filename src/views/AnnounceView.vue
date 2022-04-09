@@ -5,8 +5,8 @@
         <v-col key="1">
           <PicturesSlideShow />
         </v-col>
-        <v-row dense>
-          <v-col key="11">
+        <v-row class="fill-height" dense>
+          <v-col key="11" >
             <ProfileDetails
               title="Marasti Street nr 3"
               type="1"
@@ -21,12 +21,10 @@
                             with desktop publishing software like Aldus PageMaker including versions of
                             Lorem Ipsum."
               price="130 000"
-              offerRequested="true"
               offerSaved="false"
-              
             />
           </v-col>
-          <v-col key="12">
+          <v-col key="12" class="show-right">
             <OwnerSmallDetails
               name="Viorel Barbos"
               ownerType="0"
@@ -34,9 +32,23 @@
               phoneNo="0745628364"
               email="virelbar@gmail.com"
             />
-            <SuggestOffer/>
+            <SuggestOffer
+            offerRequested="true" />
           </v-col>
         </v-row>
+         <v-row class="show-bottom" dense>
+           <v-col>
+            <OwnerSmallDetails
+              name="Viorel Barbos"
+              ownerType="0"
+              brokerageName=""
+              phoneNo="0745628364"
+              email="virelbar@gmail.com"
+              class="ma-2"
+            />
+            <SuggestOffer />
+           </v-col>
+          </v-row>
       </v-row>
     </v-container>
   </v-main>
@@ -53,7 +65,7 @@ export default {
     ProfileDetails,
     OwnerSmallDetails,
     PicturesSlideShow,
-    SuggestOffer
+    SuggestOffer,
   },
   setup() {},
 };
@@ -66,5 +78,58 @@ export default {
 
 .background {
   background-color: rgb(229, 229, 229);
+}
+
+.center-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.show-right {
+  display: initial;
+}
+
+.show-bottom {
+  display: none;
+}
+
+/* Extra small devices (phones, 600px and down) */
+@media only screen and (min-width: 300px) {
+  .show-right {
+    display: none;
+  }
+  .show-bottom {
+    display: initial;
+  }
+}
+/* Small devices (portrait tablets and large phones, 600px and up) */
+@media only screen and (min-width: 600px) {
+  .show-right {
+    display: none;
+  }
+  .show-bottom {
+    display: initial;
+  }
+}
+
+/* Medium devices (landscape tablets, 768px and up) */
+@media only screen and (min-width: 768px) {
+  .show-right {
+    display: initial;
+  }
+  .show-bottom {
+    display: none;
+  }
+}
+
+/* Large devices (laptops/desktops, 992px and up) */
+@media only screen and (min-width: 992px) {
+  .show-right {
+    display: initial;
+  }
+  .show-bottom {
+    display: none;
+  }
 }
 </style>
