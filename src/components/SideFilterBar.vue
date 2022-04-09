@@ -60,7 +60,7 @@ import { ref, computed, onMounted, onUnmounted } from "vue";
 import Filters from "@/components/Filters.vue";
 import MiniCardsList from "@/components/MiniCardsList.vue";
 export default {
-  name: "FilterBar",
+  name: "SideFilterBar",
   components: {
     Filters,
     MiniCardsList,
@@ -137,5 +137,32 @@ export default {
   transform: scale(0.8);
   -webkit-transform-origin-x: left;
   -webkit-transform-origin-y: top;
+}
+
+/* Extra small devices (phones, 600px and down) */
+@media only screen and (min-width: 200px) {
+  .btnPressed, .btnNotPressed {
+    font-size: 0.5em;
+  }
+}
+/* Small devices (portrait tablets and large phones, 600px and up) */
+@media only screen and (min-width: 600px) {
+  .btnPressed, .btnNotPressed {
+    font-size: 0.5em;
+  }
+}
+
+/* Medium devices (landscape tablets, 768px and up) */
+@media only screen and (min-width: 700px) {
+  .btnPressed, .btnNotPressed {
+    font-size: 0.6em;
+  }
+}
+
+/* Large devices (laptops/desktops, 992px and up) */
+@media only screen and (min-width: 992px) {
+  .btnPressed, .btnNotPressed {
+    font-size: 0.9em;
+  }
 }
 </style>

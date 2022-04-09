@@ -1,5 +1,5 @@
 <template>
-    <v-list-item dense>
+    <v-list-item dense class="example">
       <v-list-item-content class="example">
         <v-list-item-title dense>Filters</v-list-item-title>
       </v-list-item-content>
@@ -190,6 +190,9 @@ export default {
 </script>
 
 <style scoped>
+.example {
+  background-color: white;
+}
 .btnReset {
   border-color: none;
   text-transform: none;

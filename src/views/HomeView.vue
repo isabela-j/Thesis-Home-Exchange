@@ -1,8 +1,8 @@
 <template>
-  <FilterBar v-if="largeScreen" class="compact-form" />
+  <SideFilterBar v-if="!smallScreen" class="compact-form" />
   <v-main>
-    <v-btn v-if="!largeScreen" class="filter-button" margin-top="50">Filter</v-btn>
-    <v-container v-if="largeScreen" class="container-custom" fluid>
+    <v-btn v-if="smallScreen" @click="showFilterBar" class="filter-button" margin-top="50">Filter</v-btn>
+    <v-container v-if="smallScreen && !showFilterMob" class="container-custom  sticky-after" fluid>
       <label class="bold pa-3"> {{ offersShown }} listings</label>
       <v-row v-for="(item, index) in offerCards" :key="index" dense>
         <v-col :key="index">
@@ -17,7 +17,8 @@
         </v-col>
       </v-row>
     </v-container>
-    <v-container v-else class="container-custom sticky-after" fluid>
+    <BasicFilterBar v-if="smallScreen && showFilterMob" class="sticky-after"/>
+    <v-container v-if="!smallScreen" class="container-custom" fluid>
       <label class="bold pa-3"> {{ offersShown }} listings</label>
       <v-row v-for="(item, index) in offerCards" :key="index" dense>
         <v-col :key="index">
@@ -39,7 +40,8 @@
 import { ref, onMounted, onUnmounted } from "vue";
 import OfferCard from "@/components/OfferCard.vue";
 import NavBar from "@/components/NavBar.vue";
-import FilterBar from "@/components/FilterBar.vue";
+import SideFilterBar from "@/components/SideFilterBar.vue";
+import BasicFilterBar from "@/components/BasicFilterBar.vue";
 import { computed } from "vue";
 
 export default {
@@ -47,7 +49,8 @@ export default {
   components: {
     OfferCard,
     NavBar,
-    FilterBar,
+    SideFilterBar,
+    BasicFilterBar
   },
   setup() {
     const offerCards = ref([
@@ -87,26 +90,33 @@ export default {
     const offersShown = computed(() => {
       return offerCards.value.length;
     });
-    const IsNOTMobileWidth = () => {
-      return window.innerWidth > 650;
+    const IsMobileWidth = () => {
+      return window.innerWidth < 650;
     };
-    const largeScreen = ref(IsNOTMobileWidth());
+    const smallScreen = ref(IsMobileWidth());
+    let showFilterMob = ref(false);
+    let showFilterBar = () => {
+      showFilterMob.value = !showFilterMob.value;
 
+      //here we should apply the new filters 
+    }
     onMounted(() => {
       window.addEventListener("resize", () => {
-        largeScreen.value = IsNOTMobileWidth();
+        smallScreen.value = IsMobileWidth();
       });
     });
     onUnmounted(() => {
       window.removeEventListener("resize", () => {
-        largeScreen.value = IsNOTMobileWidth();
+        smallScreen.value = IsMobileWidth();
       });
     });
     return {
       offerCards,
       offersShown,
-      IsNOTMobileWidth,
-      largeScreen,
+      IsMobileWidth,
+      smallScreen,
+      showFilterMob,
+      showFilterBar
     };
   },
 };
