@@ -10,31 +10,57 @@
     <v-btn v-if="largeScreen" class="btn">Offers Received</v-btn>
     <v-btn v-if="largeScreen" class="btn">Saved</v-btn>
 
-    <v-menu left bottom>
-      <template v-slot:activator="{ on, attrs }">
-        <v-btn icon v-bind="attrs" v-on="on" class="btnIcon">
-          <v-app-bar-nav-icon class="btnIcon"></v-app-bar-nav-icon>
-        </v-btn>
-      </template>
-
-      <v-list>
-        <v-list-item v-for="n in 5" :key="n" @click="() => {}">
-          <v-list-item-title>Option {{ n }}</v-list-item-title>
-        </v-list-item>
-      </v-list>
-    </v-menu>
+    <v-btn icon class="btnIcon" @click="showMenuBar">
+      <v-app-bar-nav-icon class="btnIcon"></v-app-bar-nav-icon>
+    </v-btn>
   </v-app-bar>
+   <v-navigation-drawer
+      absolute
+      temporary
+      position="right"
+      v-model="isMenuBarVisible"
+    >
+    <template v-slot:prepend>
+          <v-list-item
+            two-line
+            prepend-avatar="https://randomuser.me/api/portraits/women/81.jpg"
+            :title="userTitle"
+            :subtitle="userDescription"
+          ></v-list-item>
+        </template>
+
+      <v-divider></v-divider>
+
+      <v-list density="compact" nav>
+          <v-list-item  title="Home" value="home"></v-list-item>
+          <v-list-item  title="My Account" value="account"></v-list-item>
+          <v-list-item  title="Add an offer" value="addOffer"></v-list-item>
+          <v-list-item  title="My offers" value="myOffers"></v-list-item>
+          <v-list-item  title="Offers sent" value="offersSent"></v-list-item>
+          <v-list-item  title="Offers received" value="offersReceived"></v-list-item>
+          <v-list-item  title="Saved" value="saved"></v-list-item>
+        </v-list>
+
+        <template v-slot:append>
+          <div class="pa-2">
+            <v-btn block class="logout-btn">
+              Logout
+            </v-btn>
+          </div>
+        </template>
+    </v-navigation-drawer>
 </template>
 
 <script>
 import { ref, computed, onMounted, onUnmounted } from "vue";
+
 export default {
   name: "NavBar",
-  setup () {
+  setup() {
     const IsNOTMobileWidth = () => {
-        return window.innerWidth > 750;
+      return window.innerWidth > 750;
     };
-    const largeScreen= ref(IsNOTMobileWidth());
+    const largeScreen = ref(IsNOTMobileWidth());
     onMounted(() => {
       window.addEventListener("resize", () => {
         largeScreen.value = IsNOTMobileWidth();
@@ -45,11 +71,22 @@ export default {
         largeScreen.value = IsNOTMobileWidth();
       });
     });
+    let isMenuBarVisible = ref(false);
+    let showMenuBar = () => {
+      console.log(isMenuBarVisible.value)
+      isMenuBarVisible.value = !isMenuBarVisible.value;
+    }
+    let userTitle=ref("ileana");
+    let userDescription=ref("cioban la oi");
     return {
       IsNOTMobileWidth,
-      largeScreen
+      largeScreen,
+      isMenuBarVisible,
+      showMenuBar,
+      userTitle,
+      userDescription
     };
-  }
+  },
 };
 </script>
 
@@ -64,5 +101,11 @@ export default {
   color: white;
   text-transform: none;
   font-size: 13px;
+}
+
+.logout-btn {
+  background-color: rgb(199, 62, 62);
+  color: white;
+  text-transform: none;
 }
 </style>
