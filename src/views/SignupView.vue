@@ -1,16 +1,39 @@
 <template>
   <span class="container-custom center-content">
-    <v-card class="container">
-      <v-container style="width: 80%" fluid>
-        <div class="center-content pa-10">
+    <v-card class="container overflow-y-auto" >
+      <v-container style="width: 80%" fluid class=" overflow-y-auto"  v-scroll.self="onScroll">
+        <div class="center-content pa-6">
           <font-awesome-icon icon="fingerprint" class="fa-w fa-3x" />
         </div>
-        <v-text-field label="email address" variant="underlined">
+        <v-text-field label="First name" variant="underlined" height="4em">
+          <template v-slot:append>
+            <v-icon icon="mdi-account" color="rgb(139, 177, 176)" />
+          </template>
+        </v-text-field>
+        <v-text-field label="Last name" variant="underlined" height="4em">
+          <template v-slot:append>
+            <v-icon icon="mdi-account" color="rgb(139, 177, 176)" />
+          </template>
+        </v-text-field>
+        <v-text-field label="Phone number" variant="underlined" height="4em">
+          <template v-slot:append>
+            <v-icon icon="mdi-phone" color="rgb(139, 177, 176)" />
+          </template>
+        </v-text-field>
+        <v-text-field label="E-mail" required variant="underlined" height="4em">
           <template v-slot:append>
             <v-icon icon="mdi-email" color="rgb(139, 177, 176)" />
           </template>
         </v-text-field>
-        <v-text-field label="password" hide-details="auto" variant="underlined">
+        <v-text-field
+          :type="showPass ? 'text' : 'password'"
+          name="input-10-2"
+          v-model="password"
+          label="Password"
+          class="input-group--focused"
+          variant="underlined"
+          height="4em"
+        >
           <template v-slot:append>
             <v-icon
               v-if="showPass"
@@ -26,26 +49,64 @@
             />
           </template>
         </v-text-field>
+        <v-text-field
+          label="Password confirmation"
+          :type="showPass ? 'text' : 'password'"
+          name="input-10-2"
+          v-model="passwordConfirmation"
+          hide-details="auto"
+          class="input-group--focused"
+          variant="underlined"
+          height="4em"
+        >
+          <template v-slot:append>
+            <v-icon
+              v-if="showPassConf"
+              @click="showPassConf = !showPassConf"
+              icon="mdi-eye"
+              color="rgb(139, 177, 176)"
+            />
+            <v-icon
+              v-else
+              icon="mdi-eye-off"
+              @click="showPassConf = !showPassConf"
+              color="rgb(139, 177, 176)"
+            />
+          </template>
+        </v-text-field>
         <div class="center-content pa-2 ma-2">
-          <v-btn class="btn-login"> Login </v-btn>
-        </div>
-        <div style="position: absolute; bottom: 1em; text-align: center">
-          <label class="main-label">Don't have an account?</label>
-          <a class="btn-redirect" href="/signup"> Sign up </a>
+          <v-btn class="btn-login"> Sign up </v-btn>
         </div>
       </v-container>
+      <div style="text-align: center">
+          <label class="main-label">Already have an account?</label>
+          <a class="btn-redirect" href="/login"> Login </a>
+        </div>
     </v-card>
   </span>
 </template>
 
 <script>
-import { ref } from "vue";
+import { ref, reactive } from "vue";
 export default {
-  name: "LoginView",
+  name: "SignupView",
   setup() {
     let showPass = ref(false);
+    let showPassConf = ref(false);
+    let password = ref("");
+    let passwordConfirmation = ref("");
+    let scrollInvoked = ref(0);
+    let onScroll = () => {
+        scrollInvoked.value ++;
+        console.log(scrollInvoked)
+    }
     return {
       showPass,
+      showPassConf,
+      password,
+      passwordConfirmation,
+      scrollInvoked,
+      onScroll
     };
   },
 };
@@ -100,12 +161,17 @@ label {
   margin-top: 1em;
   font-weight: bold;
 }
+
+.label-type {
+    font-weight: normal;
+}
 .bottom-div {
   position: relative;
 }
 ::v-deep(.v-text-field label) {
   color: rgb(139, 177, 176);
 }
+
 /* Extra small devices (phones, 600px and down) */
 @media only screen and (min-width: 300px) {
    ::v-deep(.v-text-field label) {
@@ -193,7 +259,7 @@ label {
   .btn-redirect {
     font-size: 13px;
   }
-   .btn-login {
+  .btn-login {
     font-size: 14px;
   }
 }
