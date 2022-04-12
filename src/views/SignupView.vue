@@ -172,6 +172,10 @@ label {
   color: rgb(139, 177, 176);
 }
 
+::v-deep(.v-text-field .v-input__details)
+{
+  margin-bottom: 0px;
+}
 /* Extra small devices (phones, 600px and down) */
 @media only screen and (min-width: 300px) {
    ::v-deep(.v-text-field label) {
@@ -203,7 +207,7 @@ label {
     font-size: 0.8em;
   }
     .container {
-    height: 40em;
+    height: 30em;
     width: 25em;
   }
    .main-label {
@@ -218,7 +222,7 @@ label {
 }
 
 /* Medium devices (landscape tablets, 768px and up) */
-@media only screen and (min-width: 768px) {
+@media only screen and (min-width: 700px, min-height:700px) {
   ::v-deep(.v-text-field label) {
     font-size: 0.7em;
   }
@@ -259,8 +263,38 @@ label {
   .btn-redirect {
     font-size: 13px;
   }
-  .btn-login {
+   .btn-login {
     font-size: 14px;
   }
 }
+
+@media only screen and (max-width: 1800px) and (min-height: 200px) {
+   ::v-deep(.v-text-field label) {
+    font-size: 0.8em;
+  }
+  ::v-deep(.v-text-field input) {
+    font-size: 0.8em;
+  }
+  .container {
+    height: 40em;
+    width: 24em;
+  }
+   .main-label {
+    font-size: 11px;
+  }
+  .btn-redirect {
+    font-size: 11px;
+  }
+   .btn-login {
+    font-size: 11px;
+  }
+}
+
+@media only screen and (min-width: 1366px) and (max-height: 900px) {
+    .container {
+    height: 40em;
+    width: 30em;
+  }
+}
 </style>
+

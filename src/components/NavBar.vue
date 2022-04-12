@@ -4,7 +4,7 @@
 
     <v-spacer></v-spacer>
 
-    <v-btn v-if="largeScreen" class="btn">Add an offer </v-btn>
+    <v-btn v-if="largeScreen" class="btn org-bkg">Add an offer </v-btn>
     <v-btn v-if="largeScreen" class="btn">My offers </v-btn>
     <v-btn v-if="largeScreen" class="btn">Offers Sent</v-btn>
     <v-btn v-if="largeScreen" class="btn">Offers Received</v-btn>
@@ -107,5 +107,9 @@ export default {
   background-color: rgb(199, 62, 62);
   color: white;
   text-transform: none;
+}
+
+.org-bkg {
+  background-color: rgb(252, 143, 1);
 }
 </style>
