@@ -4,7 +4,7 @@
 
     <v-spacer></v-spacer>
 
-    <v-btn v-if="largeScreen" class="btn org-bkg"  @click="GoToAddOffer">Add an offer </v-btn>
+    <v-btn v-if="largeScreen" class="btn org-bkg" @click="GoToLocation('/addoffer')">Add an offer </v-btn>
     <v-btn v-if="largeScreen" class="btn">My offers </v-btn>
     <v-btn v-if="largeScreen" class="btn">Offers Sent</v-btn>
     <v-btn v-if="largeScreen" class="btn">Offers Received</v-btn>
@@ -73,7 +73,6 @@ export default {
     });
     let isMenuBarVisible = ref(false);
     let showMenuBar = () => {
-      console.log(isMenuBarVisible.value)
       isMenuBarVisible.value = !isMenuBarVisible.value;
     }
     let userTitle=ref("ileana");
@@ -81,6 +80,7 @@ export default {
     let GoToLocation = (location) => {
       window.location = location; 
     }
+    let menuBarHeight=ref(window.innerHeight);
     return {
       IsNOTMobileWidth,
       largeScreen,
@@ -88,7 +88,8 @@ export default {
       showMenuBar,
       userTitle,
       userDescription,
-      GoToLocation
+      GoToLocation,
+      menuBarHeight
     };
   },
 };

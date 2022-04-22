@@ -11,7 +11,7 @@
           />
           <v-text-field
             label="email"
-            class="v-text-field v-label"
+            class="v-text-field"
             hide-details="auto"
           />
           <v-text-field

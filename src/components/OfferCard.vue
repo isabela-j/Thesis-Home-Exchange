@@ -37,11 +37,11 @@
                 <v-btn
                   v-if="isRequested"
                   class="btn btnClicked"
-                  @click="requestOffer"
+                   @click="GoToLocation('/announce')"
                   >Offer requested</v-btn
                 >
-                <v-btn v-else class="btn btnNormal" @click="requestOffer"
-                  >Request offer</v-btn
+                <v-btn v-else class="btn btnNormal"  @click="GoToLocation('/announce')"
+                  >See details</v-btn
                 >
               </v-col>
             </v-row>
@@ -71,12 +71,16 @@ export default {
     let addToFavourites = () => {
       isSaved.value = !isSaved.value;
     };
+    let GoToLocation = (location) => {
+      window.location = location; 
+    }
     return {
       offerType,
       isRequested,
       requestOffer,
       isSaved,
       addToFavourites,
+      GoToLocation
     };
   },
 
