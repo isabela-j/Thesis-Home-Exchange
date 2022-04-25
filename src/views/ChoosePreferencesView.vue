@@ -5,31 +5,23 @@
         <v-col key="1">
           <v-card>
             <div>
-              <v-label> Add your offer here: </v-label>
+              <v-label> Choose your preferences for your future house</v-label>
             </div>
-          </v-card>
-        </v-col>
-      </v-row>
-      <v-row dense>
-        <v-col key="1">
-          <v-card>
             <div style="display: flex; flex-direction: column">
-              <label>Title and description</label>
-              <div style="margin: 0.4em">
-                <v-text-field
-                  label="insert title"
-                  hide-details="auto"
-                  variant="underlined"
-                  v-model="title"
+              <label class="warning-label"
+                ><v-icon
+                  icon="mdi-alert-box"
+                  color="rgb(200, 30, 20)"
+                  size="x-large"
                 />
-                <v-textarea
-                  id="suggestMessage"
-                  label="Description"
-                  hide-details="auto"
-                  v-model="defaultText"
-                  class="v-textarea"
-                ></v-textarea>
-              </div>
+                Be careful, these options should match with your main
+                preferences. Once you have chosen your options, the other users
+                cannot send you offer requests unless their announcements does
+                match with those options. This way we assure that you will not
+                receive unwanted offers from our users. If a certain feature
+                does not seem that important, you can leave it as it is and
+                choose for it later on the main page.
+              </label>
             </div>
           </v-card>
         </v-col>
@@ -77,11 +69,9 @@
               <div style="margin: 0.4em">
                 <v-select
                   :items="location"
-                  label="choose offer location"
-                  v-model="offerLocation"
-                  persistent-hint
-                  return-object
-                  single-line
+                  label="choose wanted locations"
+                  multiple
+                  v-model="wantedLocations"
                 ></v-select>
               </div>
             </div>
@@ -94,12 +84,24 @@
             <div style="display: flex; flex-direction: column">
               <label>Bedrooms</label>
               <div style="margin: 0.4em">
-                <v-text-field
-                  label="insert number of bedrooms"
-                  hide-details="auto"
-                  variant="underlined"
-                  v-model="bedsNo"
-                />
+                <v-row>
+                  <v-col key="11">
+                    <v-text-field
+                      label="min"
+                      v-model="minBeds"
+                      hide-details="auto"
+                      variant="underlined"
+                    />
+                  </v-col>
+                  <v-col key="12">
+                    <v-text-field
+                      label="max"
+                      v-model="maxBeds"
+                      hide-details="auto"
+                      variant="underlined"
+                    />
+                  </v-col>
+                </v-row>
               </div>
             </div>
           </v-card>
@@ -111,12 +113,24 @@
             <div style="display: flex; flex-direction: column">
               <label>Bathrooms</label>
               <div style="margin: 0.4em">
-                <v-text-field
-                  label="insert number of bathrooms"
-                  hide-details="auto"
-                  variant="underlined"
-                  v-model="bathsNo"
-                />
+                <v-row>
+                  <v-col key="11">
+                    <v-text-field
+                      label="min"
+                      v-model="minBaths"
+                      hide-details="auto"
+                      variant="underlined"
+                    />
+                  </v-col>
+                  <v-col key="12">
+                    <v-text-field
+                      label="max"
+                      v-model="maxBaths"
+                      hide-details="auto"
+                      variant="underlined"
+                    />
+                  </v-col>
+                </v-row>
               </div>
             </div>
           </v-card>
@@ -177,12 +191,24 @@
             <div style="display: flex; flex-direction: column">
               <label>Floor</label>
               <div style="margin: 0.4em">
-                <v-text-field
-                  label="insert number of floor"
-                  hide-details="auto"
-                  variant="underlined"
-                  v-model="floorNo"
-                />
+                <v-row>
+                  <v-col key="11">
+                    <v-text-field
+                      label="min"
+                      v-model="minFloor"
+                      hide-details="auto"
+                      variant="underlined"
+                    />
+                  </v-col>
+                  <v-col key="12">
+                    <v-text-field
+                      label="max"
+                      v-model="maxFloor"
+                      hide-details="auto"
+                      variant="underlined"
+                    />
+                  </v-col>
+                </v-row>
               </div>
             </div>
           </v-card>
@@ -194,12 +220,24 @@
             <div style="display: flex; flex-direction: column">
               <label>Parking lots</label>
               <div style="margin: 0.4em">
-                <v-text-field
-                  label="insert number of parking lots if they exist"
-                  hide-details="auto"
-                  variant="underlined"
-                  v-model="parkingNo"
-                />
+                <v-row>
+                  <v-col key="11">
+                    <v-text-field
+                      label="min"
+                      v-model="minParking"
+                      hide-details="auto"
+                      variant="underlined"
+                    />
+                  </v-col>
+                  <v-col key="12">
+                    <v-text-field
+                      label="max"
+                      v-model="maxParking"
+                      hide-details="auto"
+                      variant="underlined"
+                    />
+                  </v-col>
+                </v-row>
               </div>
             </div>
           </v-card>
@@ -211,46 +249,24 @@
             <div style="display: flex; flex-direction: column">
               <label>Sqft</label>
               <div style="margin: 0.4em">
-                <v-text-field
-                  label="insert the sqft"
-                  hide-details="auto"
-                  variant="underlined"
-                  v-model="sqft"
-                />
-              </div>
-            </div>
-          </v-card>
-        </v-col>
-      </v-row>
-      <v-row dense>
-        <v-col key="1">
-          <v-card>
-            <div style="display: flex; flex-direction: column">
-              <label>Balcony</label>
-              <div style="margin: 0.4em">
-                <v-text-field
-                  label="insert number of balconies if they exist"
-                  hide-details="auto"
-                  variant="underlined"
-                  v-model="balconies"
-                />
-              </div>
-            </div>
-          </v-card>
-        </v-col>
-      </v-row>
-      <v-row dense>
-        <v-col key="1">
-          <v-card>
-            <div style="display: flex; flex-direction: column">
-              <label>Construction year</label>
-              <div style="margin: 0.4em">
-                <v-text-field
-                  label="insert an approximate year"
-                  hide-details="auto"
-                  variant="underlined"
-                  v-model="constructionYear"
-                />
+                <v-row>
+                  <v-col key="11">
+                    <v-text-field
+                      label="min"
+                      v-model="minSqft"
+                      hide-details="auto"
+                      variant="underlined"
+                    />
+                  </v-col>
+                  <v-col key="12">
+                    <v-text-field
+                      label="max"
+                      v-model="maxSqft"
+                      hide-details="auto"
+                      variant="underlined"
+                    />
+                  </v-col>
+                </v-row>
               </div>
             </div>
           </v-card>
@@ -262,29 +278,33 @@
             <div style="display: flex; flex-direction: column">
               <label>Utilities</label>
               <div style="margin: 0.4em">
-                <v-checkbox label="electrical curent" hide-details>
+                <v-checkbox
+                  v-model="electricalCurent"
+                  label="electrical curent"
+                  hide-details
+                >
                 </v-checkbox>
-                <v-checkbox label="water pipe" v-model="waterPipe" hide-details>
+                <v-checkbox v-model="waterPipe" label="water pipe" hide-details>
                 </v-checkbox>
-                <v-checkbox label="sewerage" v-model="sewerage" hide-details>
+                <v-checkbox v-model="sewerage" label="sewerage" hide-details>
                 </v-checkbox>
-                <v-checkbox label="gas pipe" v-model="gasPipe" hide-details>
+                <v-checkbox v-model="gasPipe" label="gas pipe" hide-details>
                 </v-checkbox>
                 <v-checkbox
-                  label="thermal power station"
                   v-model="thermalStation"
+                  label="thermal power station"
                   hide-details
                 >
                 </v-checkbox>
                 <v-checkbox
-                  label="new radiators"
                   v-model="newRadiators"
+                  label="new radiators"
                   hide-details
                 >
                 </v-checkbox>
                 <v-checkbox
-                  label="underfloor heating"
                   v-model="underfloorHeating"
+                  label="underfloor heating"
                   hide-details
                 >
                 </v-checkbox>
@@ -300,77 +320,31 @@
               <label>Features</label>
               <div style="margin: 0.4em">
                 <v-checkbox
-                  label="modern furniture"
                   v-model="modernFurniture"
+                  label="modern furniture"
                   hide-details
                 >
                 </v-checkbox>
                 <v-checkbox
-                  label="electric stove"
                   v-model="electricStove"
+                  label="electric stove"
                   hide-details
                 >
                 </v-checkbox>
                 <v-checkbox
-                  label="washing machine"
                   v-model="washingMachine"
+                  label="washing machine"
                   hide-details
                 >
                 </v-checkbox>
                 <v-checkbox
-                  label="dishwasher"
                   v-model="dishwasher"
+                  label="dishwasher"
                   hide-details
                 >
                 </v-checkbox>
-                <v-checkbox label="garage" v-model="garage" hide-details>
+                <v-checkbox v-model="garage" label="garage" hide-details>
                 </v-checkbox>
-              </div>
-            </div>
-          </v-card>
-        </v-col>
-      </v-row>
-      <v-row dense>
-        <v-col key="1">
-          <v-card>
-            <div style="display: flex; flex-direction: column">
-              <label>Pics</label>
-              <div style="margin: 0.5em">
-                <v-file-input 
-                multiple 
-                v-model="pictures" 
-                prepend-icon="mdi-camera"
-                accept="image/*"
-                />
-              </div>
-            </div>
-          </v-card>
-        </v-col>
-      </v-row>
-      <v-row dense>
-        <v-col key="1">
-          <v-card>
-            <div style="display: flex; flex-direction: column">
-              <label>Contact details</label>
-              <div style="margin: 0.4em">
-                <v-text-field
-                  label="your name"
-                  class="v-text-field"
-                  hide-details="auto"
-                  v-model="yourName"
-                />
-                <v-text-field
-                  label="email"
-                  class="v-text-field"
-                  hide-details="auto"
-                  v-model="email"
-                />
-                <v-text-field
-                  label="phone number"
-                  class="v-text-field"
-                  hide-details="auto"
-                  v-model="phoneNo"
-                />
               </div>
             </div>
           </v-card>
@@ -379,8 +353,8 @@
       <v-row dense>
         <v-col key="1">
           <div class="right">
-            <v-btn class="btn-next" @click="GoToLocation('/choosePreferences')"
-              >Next</v-btn
+            <v-btn class="btn-next" @click="GoToLocation('/')"
+              >Post offer</v-btn
             >
           </div>
         </v-col>
@@ -392,22 +366,23 @@
 <script>
 import { ref } from "vue";
 export default {
-  name: "AddOfferView",
+  name: "ChoosePreferencesView",
   setup() {
-    let defaultText = ref(
-      "Please write here a short description about the house/apartment you want to exchange. In this way we will cover some features we may didn't included and will help the potential buyer to make a better idea about your announce :)"
-    );
-    let title = ref();
     let btnHouse = ref(false);
     let btnApartment = ref(false);
-    let bedsNo = ref();
-    let bathsNo = ref();
+    let minBeds = ref(0);
+    let maxBeds = ref();
+    let minBaths = ref(0);
+    let maxBaths = ref();
     let btnDetached = ref(false);
     let btnSemi = ref(false);
     let btnUncompartmented = ref(false);
-    let floorNo = ref();
-    let parkingNo = ref();
-    let sqft = ref();
+    let minFloor = ref(0);
+    let maxFloor = ref();
+    let minParking = ref(0);
+    let maxParking = ref();
+    let minSqft = ref(0);
+    let maxSqft = ref();
     let electricalCurent = ref(false);
     let waterPipe = ref(false);
     let sewerage = ref(false);
@@ -420,13 +395,7 @@ export default {
     let washingMachine = ref(false);
     let dishwasher = ref(false);
     let garage = ref(false);
-    let balconies = ref();
-    let constructionYear = ref();
-    let yourName = ref();
-    let phoneNo = ref();
-    let email = ref();
-    let pictures= ref([]);
-    let offerLocation = ref("Centru");
+    let wantedLocations = ref("Centru");
     let location = ref([
       "Andrei Muresanu",
       "Becas",
@@ -449,45 +418,39 @@ export default {
       "Sopor",
       "Zorilor",
     ]);
+    let defaultText = ref(
+      "Please write here a short description about the house/apartment you want to exchange. In this way we will cover some features we may didn't included and will help the potential buyer to make a better idea about your announce :)"
+    );
     let GoToLocation = (location) => {
       window.location = location;
     };
     let CheckBtn = (type) => {
-      if (type == "house" && !btnHouse.value) {
-        btnHouse.value = !btnHouse.value;
-        btnApartment.value = !btnHouse.value;
-      } else if (type == "apartment" && !btnApartment.value) {
-        btnApartment.value = !btnApartment.value;
-        btnHouse.value = !btnApartment.value;
-      } else if (type == "detached" && !btnDetached.value) {
-        btnDetached.value = !btnDetached.value;
-        btnSemi.value = !btnDetached.value;
-        btnUncompartmented.value = !btnDetached.value;
-      } else if (type == "semi" && !btnSemi.value) {
-        btnSemi.value = !btnSemi.value;
-        btnDetached.value = !btnSemi.value;
-        btnUncompartmented.value = !btnSemi.value;
-      } else if (type == "uncompartmented" && !btnUncompartmented.value) {
+      if (type == "house") btnHouse.value = !btnHouse.value;
+      else if (type == "apartment") btnApartment.value = !btnApartment.value;
+      else if (type == "detached") btnDetached.value = !btnDetached.value;
+      else if (type == "semi") btnSemi.value = !btnSemi.value;
+      else if (type == "uncompartmented")
         btnUncompartmented.value = !btnUncompartmented.value;
-        btnSemi.value = !btnUncompartmented.value;
-        btnDetached.value = !btnUncompartmented.value;
-      }
     };
     return {
       defaultText,
-      title,
       GoToLocation,
-      location,
       btnHouse,
       btnApartment,
-      bedsNo,
-      bathsNo,
+      minBeds,
+      maxBeds,
+      minBaths,
+      maxBaths,
       btnDetached,
       btnSemi,
       btnUncompartmented,
-      floorNo,
-      parkingNo,
-      sqft,
+      minFloor,
+      maxFloor,
+      minParking,
+      maxParking,
+      minSqft,
+      maxSqft,
+      CheckBtn,
       electricalCurent,
       waterPipe,
       sewerage,
@@ -500,14 +463,8 @@ export default {
       washingMachine,
       dishwasher,
       garage,
-      CheckBtn,
-      balconies,
-      constructionYear,
-      yourName,
-      phoneNo,
-      email,
-      offerLocation,
-      pictures
+      location,
+      wantedLocations
     };
   },
 };
@@ -522,6 +479,10 @@ export default {
   float: right;
 }
 
+.warning-label {
+  color: rgb(209, 23, 23);
+}
+
 ::v-deep(.v-text-field .v-field__input) {
   color: rgb(1, 83, 81);
 }
@@ -534,10 +495,6 @@ export default {
 
 ::v-deep(.v-textarea .v-field__field) {
   background-color: white;
-}
-
-::v-deep(.v-checkbox .v-label) {
-  font-size: 1em;
 }
 label {
   color: rgb(252, 158, 1);
@@ -564,6 +521,10 @@ label {
 .btnClicked {
   background-color: rgb(1, 83, 81);
   color: white;
+}
+
+::v-deep(.v-checkbox .v-label) {
+  font-size: 1em;
 }
 
 /* Extra small devices (phones, 600px and down) */
