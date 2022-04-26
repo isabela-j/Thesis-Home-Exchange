@@ -52,6 +52,13 @@
     </div>
     <Filters v-if="showPreferences" />
     <MiniCardsList v-else />
+     <template v-slot:append>
+          <div class="pa-2">
+            <v-btn block class="search-btn">
+              Search
+            </v-btn>
+          </div>
+        </template> 
   </v-navigation-drawer>
 </template>
 
@@ -123,6 +130,11 @@ export default {
   -webkit-box-shadow: none;
   -moz-box-shadow: none;
   box-shadow: none;
+}
+
+.search-btn {
+  background-color: rgb(1, 83, 81);
+  color: white;
 }
 
 .w-50 {

@@ -4,7 +4,7 @@
       <v-row dense>
         <v-col :key="1" md="auto" class="center-content">
           <v-img
-            src="https://images.adsttc.com/media/images/5e68/48ed/b357/658e/fb00/0441/slideshow/AM1506.jpg?1583892706"
+            :src="mainPicture"
             height="156px"
             width="234px"
           />
@@ -84,7 +84,7 @@ export default {
     };
   },
 
-  props: ["title", "details", "type", "price", "offerRequested", "offerSaved"],
+  props: ["title", "details", "type", "price", "offerRequested", "offerSaved", "mainPicture"],
 };
 </script>
 

@@ -18,9 +18,8 @@
                 preferences. Once you have chosen your options, the other users
                 cannot send you offer requests unless their announcements does
                 match with those options. This way we assure that you will not
-                receive unwanted offers from our users. If a certain feature
-                does not seem that important, you can leave it as it is and
-                choose for it later on the main page.
+                receive unwanted offers from our users. If a certain section
+                does not seem that important, you can leave it blank.
               </label>
             </div>
           </v-card>
