@@ -1,6 +1,6 @@
 <template>
   <v-app-bar color="rgb(1, 83, 81)" dense dark clipped-left height="50" app>
-    <v-toolbar-title>Home Exchange</v-toolbar-title>
+    <v-toolbar-title @click="GoToLocation('/')"><img src="../assets/img/logo.png" style="width:110px"/></v-toolbar-title>
 
     <v-spacer></v-spacer>
 
@@ -8,7 +8,7 @@
     <v-btn v-if="largeScreen" class="btn">My offers </v-btn>
     <v-btn v-if="largeScreen" class="btn">Offers Sent</v-btn>
     <v-btn v-if="largeScreen" class="btn">Offers Received</v-btn>
-    <v-btn v-if="largeScreen" class="btn">Saved</v-btn>
+    <v-btn v-if="largeScreen" class="btn"  @click="GoToLocation('/savedOffers')">Saved</v-btn>
 
     <v-btn icon class="btnIcon" @click="showMenuBar">
       <v-app-bar-nav-icon class="btnIcon"></v-app-bar-nav-icon>
@@ -38,7 +38,7 @@
           <v-list-item  title="My offers" value="myOffers"></v-list-item>
           <v-list-item  title="Offers sent" value="offersSent"></v-list-item>
           <v-list-item  title="Offers received" value="offersReceived"></v-list-item>
-          <v-list-item  title="Saved" value="saved"></v-list-item>
+          <v-list-item  title="Saved"  @click="GoToLocation('/savedOffers')"  value="saved"></v-list-item>
         </v-list>
 
         <template v-slot:append>
@@ -53,7 +53,7 @@
 
 <script>
 import { ref, computed, onMounted, onUnmounted } from "vue";
-
+import logo from "@/assets/logo.png"
 export default {
   name: "NavBar",
   setup() {
@@ -117,4 +117,11 @@ export default {
 .org-bkg {
   background-color: rgb(252, 143, 1);
 }
+ ::v-deep(.v-toolbar-title) {
+   padding-left: 0px;
+ }
+
+  ::v-deep(.v-toolbar-title):hover {
+  cursor:pointer;
+ }
 </style>

@@ -54,7 +54,7 @@
     <MiniCardsList v-else />
      <template v-slot:append>
           <div class="pa-2">
-            <v-btn block class="search-btn">
+            <v-btn block class="search-btn" @click="startFilter">
               Search
             </v-btn>
           </div>
@@ -90,6 +90,9 @@ export default {
         showYourAnnounces.value = !showPreferences.value;
       }
     };
+    let startFilter = () => {
+      
+    }
     const windowSize = ref(window.innerWidth * 0.25);
     onMounted(() => {
       window.addEventListener("resize", () => {
@@ -156,11 +159,17 @@ export default {
   .btnPressed, .btnNotPressed {
     font-size: 0.5em;
   }
+    .search-btn {
+    font-size: 10px;
+  }
 }
 /* Small devices (portrait tablets and large phones, 600px and up) */
 @media only screen and (min-width: 600px) {
   .btnPressed, .btnNotPressed {
     font-size: 0.5em;
+  }
+    .search-btn {
+    font-size: 11px;
   }
 }
 
@@ -169,12 +178,18 @@ export default {
   .btnPressed, .btnNotPressed {
     font-size: 0.6em;
   }
+    .search-btn {
+    font-size: 12px;
+  }
 }
 
 /* Large devices (laptops/desktops, 992px and up) */
 @media only screen and (min-width: 992px) {
   .btnPressed, .btnNotPressed {
     font-size: 0.9em;
+  }
+   .search-btn {
+    font-size: 14px;
   }
 }
 </style>

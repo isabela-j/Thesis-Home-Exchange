@@ -532,7 +532,7 @@ export default {
   }
 }
 /* Small devices (portrait tablets and large phones, 600px and up) */
-@media only screen and (min-width: 500px) {
+@media only screen and (max-width:768px) {
   div {
     font-size: 12px;
   }
