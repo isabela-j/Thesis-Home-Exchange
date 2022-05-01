@@ -14,7 +14,7 @@
             <v-row dense>
               <v-col :key="3" class="cardTitle" md="auto">{{ title }}</v-col>
               <v-col :key="4" class="cardOfferType">• {{ offerType }}</v-col>
-              <v-col :key="5" align="right">
+              <v-col v-if="showSave" :key="5" align="right">
                 <v-btn
                   v-if="isSaved"
                   @click="addToFavourites"
@@ -68,6 +68,8 @@ export default {
     };
 
     let isSaved = ref(props.offerSaved);
+    let showSave = ref(props.showSaveBtn);
+
     let addToFavourites = () => {
       isSaved.value = !isSaved.value;
     };
@@ -80,11 +82,12 @@ export default {
       requestOffer,
       isSaved,
       addToFavourites,
+      showSave,
       GoToLocation
     };
   },
 
-  props: ["title", "details", "type", "price", "offerRequested", "offerSaved", "mainPicture"],
+  props: ["title", "details", "type", "price", "offerRequested", "offerSaved", "mainPicture", "showSaveBtn"],
 };
 </script>
 

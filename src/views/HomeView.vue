@@ -31,6 +31,7 @@
             :offerRequested="item.offerRequested"
             :offerSaved="item.offerSaved"
             :mainPicture="item.mainPicture"
+            showSaveBtn = "true"
           />
         </v-col> 
       </v-row>

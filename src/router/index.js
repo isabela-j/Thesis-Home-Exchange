@@ -5,6 +5,7 @@ import SignupView from '../views/SignupView.vue'
 import AddOfferView from '../views/AddOfferView.vue'
 import ChoosePreferencesView from '../views/ChoosePreferencesView.vue'
 import SavedOffersView from '../views/SavedOffersView.vue'
+import MyOffersView from '../views/MyOffersView.vue'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -51,6 +52,11 @@ const router = createRouter({
       path: '/savedOffers',
       name: 'savedOffers',
       component: SavedOffersView, 
+    },
+    {
+      path: '/myOffers',
+      name: 'myOffers',
+      component: MyOffersView, 
     }
   ]
 })

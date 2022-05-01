@@ -1,8 +1,8 @@
 <template>
 <v-main>
       <v-container class="container-custom" fluid>
-      <label class="bold pa-3"> {{ savedOffersCount }} saved offers</label>
-      <v-row v-for="(item, index) in savedOffersData" :key="index" dense>
+      <label class="bold pa-3">You have  {{ postedOffers }} offers</label>
+      <v-row v-for="(item, index) in postedOffersData" :key="index" dense>
         <v-col :key="index">
           <OfferCard
             :title="item.title"
@@ -12,7 +12,7 @@
             :offerRequested="item.offerRequested"
             :offerSaved="item.offerSaved"
             :mainPicture="item.mainPicture"
-            showSaveBtn="true"
+            showSaveBtn="false"
           />
         </v-col>
       </v-row>
@@ -23,15 +23,15 @@
 <script>
 import { ref, computed } from "vue";
 import OfferCard from "@/components/OfferCard.vue";
-export default {
-    name: "SavedOfferView",
+export default {       
+    name: "MyOffersView",
     components: {
      OfferCard, 
   },
   setup() {
-    const savedOffersData = ref([
+    const postedOffersData = ref([
       {
-        title: "Marasti Street Nr 3",
+        title: "My",
         type: 1,
         details: "5 bed- 2 baths- 2 parking lot",
         price: "230 000",
@@ -40,7 +40,7 @@ export default {
         mainPicture: "https://images.adsttc.com/media/images/5e68/48ed/b357/658e/fb00/0441/large_jpg/AM1506.jpg?1583892706",
       },
       {
-        title: "Iris Street Nr 1",
+        title: "My 2",
         type: 0,
         details: "2 bed- 2 baths- 1 parking lot",
         price: "150 000",
@@ -49,30 +49,21 @@ export default {
         mainPicture: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSjZoqOcp2UUh7Y2bXVpo46koYw29UamuHWiQ&usqp=CAU",
       },
        {
-        title: "Manastur Street Nr 14",
+        title: "My 3",
         type: 0,
         details: "2 bed- 2 baths- 1 parking lot",
         price: "180 000",
         offerRequested: false,
         offerSaved: true,
         mainPicture: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSh4O9GCySQw_9C24XfInhq-lYgfnHlRSMB5g&usqp=CAU",
-      },
-       {
-        title: "Venus Street Nr 20",
-        type: 0,
-        details: "2 bed- 2 baths- 1 parking lot",
-        price: "250 000",
-        offerRequested: false,
-        offerSaved: true,
-        mainPicture: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQoLSG2pHU9KTA7tHA62H0jXspw4tzlr1UYBg&usqp=CAU",
-      },
+      }
     ]);
-    const savedOffersCount = computed(() => {
-      return savedOffersData.value.length;
+    const postedOffers = computed(() => {
+      return postedOffersData.value.length;
     });
     return {
-      savedOffersData,
-      savedOffersCount,
+      postedOffersData,
+      postedOffers,
     };
   },
 }

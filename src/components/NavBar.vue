@@ -5,7 +5,7 @@
     <v-spacer></v-spacer>
 
     <v-btn v-if="largeScreen" class="btn org-bkg" @click="GoToLocation('/addoffer')">Add an offer </v-btn>
-    <v-btn v-if="largeScreen" class="btn">My offers </v-btn>
+    <v-btn v-if="largeScreen" class="btn" @click="GoToLocation('/myOffers')">My offers</v-btn>
     <v-btn v-if="largeScreen" class="btn">Offers Sent</v-btn>
     <v-btn v-if="largeScreen" class="btn">Offers Received</v-btn>
     <v-btn v-if="largeScreen" class="btn"  @click="GoToLocation('/savedOffers')">Saved</v-btn>
@@ -35,7 +35,7 @@
           <v-list-item  title="Home"  @click="GoToLocation('/')" value="home"></v-list-item>
           <v-list-item  title="My Account" value="account"></v-list-item>
           <v-list-item  title="Add an offer" value="addOffer" @click="GoToLocation('/addoffer')"></v-list-item>
-          <v-list-item  title="My offers" value="myOffers"></v-list-item>
+          <v-list-item  title="My offers" value="myOffers" @click="GoToLocation('/myOffers')"></v-list-item>
           <v-list-item  title="Offers sent" value="offersSent"></v-list-item>
           <v-list-item  title="Offers received" value="offersReceived"></v-list-item>
           <v-list-item  title="Saved"  @click="GoToLocation('/savedOffers')"  value="saved"></v-list-item>
