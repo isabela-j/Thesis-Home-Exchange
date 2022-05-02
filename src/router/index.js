@@ -8,6 +8,7 @@ import SavedOffersView from '../views/SavedOffersView.vue'
 import MyOffersView from '../views/MyOffersView.vue'
 import SentOffersView from '../views/SentOffersView.vue'
 import ReceivedOffersView from '../views/ReceivedOffersView.vue'
+import EditProfileView from '../views/EditProfileView.vue'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -69,6 +70,11 @@ const router = createRouter({
       path: '/receivedOffers',
       name: 'receivedOffers',
       component: ReceivedOffersView, 
+    },
+    {
+      path: '/editProfile',
+      name: 'editProfile',
+      component: EditProfileView, 
     }
   ]
 })

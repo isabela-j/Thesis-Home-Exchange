@@ -33,7 +33,7 @@
 
       <v-list density="compact" nav>
           <v-list-item  title="Home"  @click="GoToLocation('/')" value="home"></v-list-item>
-          <v-list-item  title="My Account" value="account"></v-list-item>
+          <v-list-item  title="My Account" value="account" @click="GoToLocation('/editProfile')"></v-list-item>
           <v-list-item  title="Add an offer" value="addOffer" @click="GoToLocation('/addoffer')"></v-list-item>
           <v-list-item  title="My offers" value="myOffers" @click="GoToLocation('/myOffers')"></v-list-item>
           <v-list-item  title="Offers sent" value="offersSent" @click="GoToLocation('/sentOffers')"></v-list-item>

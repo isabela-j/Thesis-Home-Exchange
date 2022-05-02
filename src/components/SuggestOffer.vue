@@ -111,7 +111,7 @@ export default {
 }
 
 /* Extra small devices (phones, 600px and down) */
-@media only screen and (min-width: 300px) {
+@media only screen and (max-width: 599px) {
   .main-label {
     font-size: 13px;
   }
