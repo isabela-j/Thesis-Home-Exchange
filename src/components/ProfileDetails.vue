@@ -1,5 +1,5 @@
 <template>
-  <v-card class="ma-2">
+  <v-card >
   <v-container fluid>
     <v-row dense>
       <v-col :key="1" class="cardTitle" md="auto">{{ title }}</v-col>

@@ -1,17 +1,18 @@
 <template>
   <v-main class="background">
-    <v-container class="container-custom ma-2" fluid>
+    <v-container class="container-custom" fluid>
       <v-row dense>
         <v-col key="1">
           <PicturesSlideShow />
         </v-col>
-        <v-row class="fill-height" dense>
-          <v-col key="11" >
-            <ProfileDetails
-              title="Marasti Street nr 3"
-              type="1"
-              details="5 bed - 2 baths - 2 parking lot - 130 sqft"
-              description="Lorem Ipsum is simply dummy text of
+      </v-row>
+      <v-row class="fill-height" dense>
+        <v-col key="11" class="ma-2">
+          <ProfileDetails
+            title="Marasti Street nr 3"
+            type="1"
+            details="5 bed - 2 baths - 2 parking lot - 130 sqft"
+            description="Lorem Ipsum is simply dummy text of
                            the printing and typesetting industry. Lorem Ipsum has been the industry's
                             standard dummy text ever since the 1500s, when an unknown printer took a
                             galley of type and scrambled it to make a type specimen book. It has survived
@@ -20,35 +21,71 @@
                             release of Letraset sheets containing Lorem Ipsum passages, and more recently
                             with desktop publishing software like Aldus PageMaker including versions of
                             Lorem Ipsum."
-              price="130 000"
-              offerSaved="false"
-            />
-          </v-col>
-          <v-col key="12" class="show-right">
-            <OwnerSmallDetails
-              name="Viorel Barbos"
-              ownerType="0"
-              brokerageName=""
-              phoneNo="0745628364"
-              email="virelbar@gmail.com"
-            />
-            <SuggestOffer
-            offerRequested="true" />
-          </v-col>
-        </v-row>
-         <v-row class="show-bottom" dense>
-           <v-col>
-            <OwnerSmallDetails
-              name="Viorel Barbos"
-              ownerType="0"
-              brokerageName=""
-              phoneNo="0745628364"
-              email="virelbar@gmail.com"
-              class="ma-2"
-            />
-            <SuggestOffer />
-           </v-col>
-          </v-row>
+            price="130 000"
+            offerSaved="false"
+          />
+        </v-col>
+        <v-col key="12" class="show-right ma-2">
+          <OwnerSmallDetails
+            name="Viorel Barbos"
+            ownerType="0"
+            brokerageName=""
+            phoneNo="0745628364"
+            email="virelbar@gmail.com"
+          />
+          <SuggestOffer offerRequested="true" style="margin-top: 0.5em;" />
+        </v-col>
+      </v-row>
+      <v-row class="show-bottom" dense>
+        <v-col>
+          <OwnerSmallDetails
+            name="Viorel Barbos"
+            ownerType="0"
+            brokerageName=""
+            phoneNo="0745628364"
+            email="virelbar@gmail.com"
+            class="ma-2"
+          />
+          <SuggestOffer />
+        </v-col>
+      </v-row>
+      <v-row dense>
+        <v-card width="100%" class="ma-2">
+          <MainCharacteristics 
+          type = "house"
+          street = "fdbghfg strada"
+          bedrooms = "2"
+          bathrooms="1"
+
+          partition="detached"
+          floor="3"
+          parkingNo="1"
+          sqft="150"
+          balconyNo="1"
+          construction="2010"/>
+        </v-card>
+      </v-row>
+      <v-row dense>
+        <v-card width="100%" class="ma-2">
+          <Utilities
+            electrical="true"
+            waterPipe="false"
+            sewerage="true"
+            gasPipe="true"
+            thermalPS="true"
+            underfloorHeating="false" />
+        </v-card>
+      </v-row>
+        <v-row dense>
+        <v-card width="100%" class="ma-2">
+          <Features
+          furniture ="true"
+          electricStove ="false"
+          washingMachine ="true"
+          dishwasher ="true"
+          garage = "true"
+           />
+        </v-card>
       </v-row>
     </v-container>
   </v-main>
@@ -59,6 +96,9 @@ import ProfileDetails from "@/components/ProfileDetails.vue";
 import OwnerSmallDetails from "@/components/OwnerSmallDetails.vue";
 import PicturesSlideShow from "@/components/PicturesSlideShow.vue";
 import SuggestOffer from "@/components/SuggestOffer.vue";
+import MainCharacteristics from "@/components/MainCharacteristics.vue";
+import Utilities from "@/components/Utilities.vue";
+import Features from "@/components/Features.vue";
 export default {
   name: "AnnounceView",
   components: {
@@ -66,6 +106,9 @@ export default {
     OwnerSmallDetails,
     PicturesSlideShow,
     SuggestOffer,
+    MainCharacteristics,
+    Utilities,
+    Features
   },
   setup() {},
 };

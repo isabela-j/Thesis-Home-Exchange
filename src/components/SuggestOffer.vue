@@ -1,5 +1,5 @@
 <template>
-  <v-card class="ma-2">
+  <v-card>
     <label class="main-label pa-3 orange-clr">Suggest an offer: </label>
     <v-container fluid>
       <v-row dense>
