@@ -23,13 +23,18 @@
               <v-col :key="7" class="">{{ msg }}</v-col>
             </v-row>
             <v-row class="pab" dense>
-              <v-col :key="8" align="right">
-                <v-btn v-if="isSentOffer" class="btn btnSentAccept"
-                  >Unsent offer</v-btn
+              <v-col v-if="OfferInPending" :key="8" align="right">
+                <v-btn v-if="isSentOffer" class="btn btnSentAccept" @click="UnsendOffer"
+                  >Unsend offer</v-btn
                 >
-                <v-btn v-else class="btn btnSentAccept">Accept offer</v-btn>
+                <v-btn v-else class="btn btnSentAccept" @click="AcceptOffer">Accept offer</v-btn>
+                <v-btn v-if="!isSentOffer" class="btn btnRefuse" @click="RefuseOffer">
+                  Refuse Offer</v-btn
+                >
               </v-col>
-              <v-col :key="9" align="right" md="auto">
+              <v-col v-else-if="OfferAccepted" :key="10" align="right"  class="acceptedLabel"> <label>The offer was accepted</label></v-col>
+              <v-col v-else-if="OfferRefused" :key="11" align="right"  class="refusedLabel"><label>The offer was refused</label></v-col>
+              <v-col v-if="OfferInPending" :key="9" align="right" md="auto">
                 <v-btn class="btn btnClicked" @click="GoToLocation('/announce')"
                   >See details</v-btn
                 >
@@ -68,6 +73,25 @@ export default {
     };
     let msg = ref(props.message);
     let isSentOffer = ref(props.sentOffer);
+    let offerStatus = ref(props.offerStatus);
+    let AcceptOffer = () => {
+      offerStatus.value = 1;
+    };
+     let RefuseOffer = () => {
+      offerStatus.value = 2;
+    };
+    let UnsendOffer = () => {
+      //delete offer from list
+    }
+    const OfferInPending = computed(() => {
+      return offerStatus.value === 0 ? true : false;
+    });
+     const OfferAccepted = computed(() => {
+      return offerStatus.value === 1 ? true : false;
+    });
+     const OfferRefused = computed(() => {
+      return offerStatus.value === 2 ? true : false;
+    })
     return {
       offerType,
       isRequested,
@@ -78,6 +102,13 @@ export default {
       GoToLocation,
       msg,
       isSentOffer,
+      offerStatus,
+      AcceptOffer,
+      RefuseOffer,
+      OfferInPending,
+      OfferAccepted,
+      OfferRefused,
+      UnsendOffer
     };
   },
 
@@ -92,6 +123,7 @@ export default {
     "showSaveBtn",
     "message",
     "sentOffer",
+    "offerStatus"
   ],
 };
 </script>
@@ -102,19 +134,34 @@ export default {
   text-transform: none;
 }
 .btnNormal {
-  color: rgb(1, 83, 81);
+  color: rgb(252, 143, 1);
   font-weight: bold;
 }
 .btnClicked {
-  border: 2.5px solid rgb(1, 83, 81);
-  background-color: rgb(1, 83, 81);
+  border: 2.5px solid rgb(252, 143, 1);
+  background-color: rgb(252, 143, 1);
   color: white;
 }
 
 .btnSentAccept {
-  background-color: rgb(252, 143, 1);
-  border: 2.5px solid rgb(252, 143, 1);
+  background-color: rgb(1, 83, 81);
+  border: 2.5px solid rgb(1, 83, 81);
   color: white;
+}
+
+.btnRefuse {
+  background-color: rgb(199, 62, 62);
+  border: 2.5px solid rgb(199, 62, 62);
+  color: white;
+  margin-left: 0.5em;
+}
+.acceptedLabel {
+  color:  rgb(1, 83, 81);
+  font-weight: bold;
+ }
+.refusedLabel {
+  color:rgb(199, 62, 62); 
+   font-weight: bold;
 }
 .priceFont {
   font-weight: bold;

@@ -14,6 +14,7 @@
             :mainPicture="item.mainPicture"
             :message="item.message"
             sentOffer= "true"
+            :offerStatus = "item.offerStatus"
           />
         </v-col>
       </v-row>
@@ -31,7 +32,7 @@ export default {
   },
   setup() {
     const sentOffersData = ref([
-      {
+       {
         title: "Marasti Street Nr 3",
         type: 1,
         details: "5 bed- 2 baths- 2 parking lot",
@@ -41,6 +42,7 @@ export default {
         mainPicture:
           "https://images.adsttc.com/media/images/5e68/48ed/b357/658e/fb00/0441/large_jpg/AM1506.jpg?1583892706",
         message: "this is a message sent",
+        offerStatus: 0,
       },
       {
         title: "Iris Street Nr 1",
@@ -52,6 +54,7 @@ export default {
         mainPicture:
           "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSjZoqOcp2UUh7Y2bXVpo46koYw29UamuHWiQ&usqp=CAU",
         message: "this is a another message",
+           offerStatus: 0,
       },
       {
         title: "Manastur Street Nr 14",
@@ -63,6 +66,7 @@ export default {
         mainPicture:
           "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSh4O9GCySQw_9C24XfInhq-lYgfnHlRSMB5g&usqp=CAU",
         message: "f type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of L",
+           offerStatus: 1,
       },
       {
         title: "Venus Street Nr 20",
@@ -75,6 +79,7 @@ export default {
           "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQoLSG2pHU9KTA7tHA62H0jXspw4tzlr1UYBg&usqp=CAU",
         message:
           "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors",
+             offerStatus: 2,
       },
     ]);
     const sentOffersCount = computed(() => {
