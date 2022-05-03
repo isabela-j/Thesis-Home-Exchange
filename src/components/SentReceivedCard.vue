@@ -13,7 +13,7 @@
                 >• {{ offerType }}</v-col
               >
               <v-col :key="5" class="cardOfferDetails" md="auto"
-                >• {{ details }}
+                >• {{ ShortDetails }}
               </v-col>
               <v-col :key="6" class="priceFont align-self-end"
                 >• {{ price }}€</v-col
@@ -91,7 +91,21 @@ export default {
     });
      const OfferRefused = computed(() => {
       return offerStatus.value === 2 ? true : false;
-    })
+    });
+    let beds = ref(props.beds);
+    let baths = ref(props.baths);
+    let parkingLot = ref(props.parkingLot);
+
+    let ShortDetails = computed(() => {
+      return (
+        beds.value +
+        " beds - " +
+        baths.value +
+        " baths - " +
+        parkingLot.value +
+        " parking lot"
+      );
+    });
     return {
       offerType,
       isRequested,
@@ -108,13 +122,13 @@ export default {
       OfferInPending,
       OfferAccepted,
       OfferRefused,
-      UnsendOffer
+      UnsendOffer,
+      ShortDetails
     };
   },
 
   props: [
     "title",
-    "details",
     "type",
     "price",
     "offerRequested",
@@ -123,7 +137,10 @@ export default {
     "showSaveBtn",
     "message",
     "sentOffer",
-    "offerStatus"
+    "offerStatus",
+    "beds",
+    "baths",
+    "parkingLot"
   ],
 };
 </script>

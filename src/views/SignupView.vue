@@ -1,9 +1,28 @@
 <template>
   <span class="container-custom center-content">
-    <v-card class="container overflow-y-auto" >
-      <v-container style="width: 80%" fluid class=" overflow-y-auto"  v-scroll.self="onScroll">
+    <v-card class="container overflow-y-auto">
+      <v-container
+        style="width: 80%"
+        fluid
+        class="overflow-y-auto"
+        v-scroll.self="onScroll"
+      >
         <div class="center-content pa-6">
           <font-awesome-icon icon="fingerprint" class="fa-w fa-3x" />
+        </div>
+        <div class="center-content rev-pa">
+         <v-radio-group  v-model="radios" inline hide-details="auto" mandatory>
+          <v-radio
+            label="Householder"
+            value="householder"
+            color="rgb(139, 177, 176)"
+          ></v-radio>
+          <v-radio
+            label="Broker"
+            value="broker"
+            color="rgb(139, 177, 176)"
+          ></v-radio>
+        </v-radio-group>
         </div>
         <v-text-field label="First name" variant="underlined" height="4em">
           <template v-slot:append>
@@ -79,9 +98,9 @@
         </div>
       </v-container>
       <div style="text-align: center">
-          <label class="main-label">Already have an account?</label>
-          <a class="btn-redirect" href="/login"> Login </a>
-        </div>
+        <label class="main-label">Already have an account?</label>
+        <a class="btn-redirect" href="/login"> Login </a>
+      </div>
     </v-card>
   </span>
 </template>
@@ -96,17 +115,19 @@ export default {
     let password = ref("");
     let passwordConfirmation = ref("");
     let scrollInvoked = ref(0);
+    let radios = ref("householder");
     let onScroll = () => {
-        scrollInvoked.value ++;
-        console.log(scrollInvoked)
-    }
+      scrollInvoked.value++;
+      console.log(scrollInvoked);
+    };
     return {
       showPass,
       showPassConf,
       password,
       passwordConfirmation,
       scrollInvoked,
-      onScroll
+      onScroll,
+      radios,
     };
   },
 };
@@ -162,8 +183,12 @@ label {
   font-weight: bold;
 }
 
+.rev-pa {
+  margin-left: -4%;
+}
+
 .label-type {
-    font-weight: normal;
+  font-weight: normal;
 }
 .bottom-div {
   position: relative;
@@ -172,13 +197,25 @@ label {
   color: rgb(139, 177, 176);
 }
 
-::v-deep(.v-text-field .v-input__details)
-{
+::v-deep(.v-radio-group label) {
+  color: rgb(139, 177, 176);
+  font-size: 1em;
+}
+
+::v-deep(.v-selection-control .v-icon) {
+  color: rgb(139, 177, 176);
+}
+
+::v-deep(.v-text-field .v-input__details) {
   margin-bottom: 0px;
+}
+
+::v-deep(.v-radio-group) {
+    width: fit-content;
 }
 /* Extra small devices (phones, 600px and down) */
 @media only screen and (min-width: 300px) {
-   ::v-deep(.v-text-field label) {
+  ::v-deep(.v-text-field label) {
     font-size: 0.5em;
   }
   ::v-deep(.v-text-field input) {
@@ -188,35 +225,35 @@ label {
     height: 35em;
     width: 20em;
   }
-   .main-label {
+  .main-label {
     font-size: 10px;
   }
   .btn-redirect {
     font-size: 10px;
   }
-   .btn-login {
+  .btn-login {
     font-size: 11px;
   }
 }
 /* Small devices (portrait tablets and large phones, 600px and up) */
 @media only screen and (min-width: 600px) {
-   ::v-deep(.v-text-field label) {
+  ::v-deep(.v-text-field label) {
     font-size: 0.6em;
   }
   ::v-deep(.v-text-field input) {
     font-size: 0.8em;
   }
-    .container {
+  .container {
     height: 30em;
     width: 25em;
   }
-   .main-label {
+  .main-label {
     font-size: 11px;
   }
   .btn-redirect {
     font-size: 11px;
   }
-   .btn-login {
+  .btn-login {
     font-size: 12px;
   }
 }
@@ -233,43 +270,42 @@ label {
     height: 45em;
     width: 30em;
   }
-   .main-label {
+  .main-label {
     font-size: 12px;
   }
   .btn-redirect {
     font-size: 12px;
   }
-   .btn-login {
+  .btn-login {
     font-size: 13px;
   }
 }
 
 /* Large devices (laptops/desktops, 992px and up) */
 @media only screen and (min-width: 992px) {
-
   ::v-deep(.v-text-field label) {
     font-size: 0.8em;
   }
   ::v-deep(.v-text-field input) {
     font-size: 1em;
   }
-    .container {
+  .container {
     height: 50em;
     width: 35em;
   }
-   .main-label {
+  .main-label {
     font-size: 13px;
   }
   .btn-redirect {
     font-size: 13px;
   }
-   .btn-login {
+  .btn-login {
     font-size: 14px;
   }
 }
 
 @media only screen and (max-width: 1800px) and (min-height: 200px) {
-   ::v-deep(.v-text-field label) {
+  ::v-deep(.v-text-field label) {
     font-size: 0.8em;
   }
   ::v-deep(.v-text-field input) {
@@ -279,22 +315,21 @@ label {
     height: 40em;
     width: 24em;
   }
-   .main-label {
+  .main-label {
     font-size: 11px;
   }
   .btn-redirect {
     font-size: 11px;
   }
-   .btn-login {
+  .btn-login {
     font-size: 11px;
   }
 }
 
 @media only screen and (min-width: 1366px) and (max-height: 900px) {
-    .container {
+  .container {
     height: 40em;
     width: 30em;
   }
 }
 </style>
-

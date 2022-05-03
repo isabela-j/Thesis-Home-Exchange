@@ -3,11 +3,7 @@
     <v-container fluid>
       <v-row dense>
         <v-col :key="1" md="auto" class="center-content">
-          <v-img
-            :src="mainPicture"
-            height="156px"
-            width="234px"
-          />
+          <v-img :src="mainPicture" height="156px" width="234px" />
         </v-col>
         <v-col :key="2" class="pad-0">
           <v-container fluid>
@@ -27,7 +23,9 @@
               </v-col>
             </v-row>
             <v-row dense>
-              <v-col :key="6" class="cardOfferDetails">{{ details }} </v-col>
+              <v-col :key="6" class="cardOfferDetails"
+                >{{ ShortDetails }}
+              </v-col>
             </v-row>
             <v-row class="pab" dense>
               <v-col :key="7" class="priceFont align-self-end"
@@ -37,10 +35,13 @@
                 <v-btn
                   v-if="isRequested"
                   class="btn btnClicked"
-                   @click="GoToLocation('/announce')"
+                  @click="GoToLocation('/announce')"
                   >Offer requested</v-btn
                 >
-                <v-btn v-else class="btn btnNormal"  @click="GoToLocation('/announce')"
+                <v-btn
+                  v-else
+                  class="btn btnNormal"
+                  @click="GoToLocation('/announce')"
                   >See details</v-btn
                 >
               </v-col>
@@ -74,8 +75,23 @@ export default {
       isSaved.value = !isSaved.value;
     };
     let GoToLocation = (location) => {
-      window.location = location; 
-    }
+      window.location = location;
+    };
+
+    let beds = ref(props.beds);
+    let baths = ref(props.baths);
+    let parkingLot = ref(props.parkingLot);
+
+    let ShortDetails = computed(() => {
+      return (
+        beds.value +
+        " beds - " +
+        baths.value +
+        " baths - " +
+        parkingLot.value +
+        " parking lot"
+      );
+    });
     return {
       offerType,
       isRequested,
@@ -83,11 +99,23 @@ export default {
       isSaved,
       addToFavourites,
       showSave,
-      GoToLocation
+      GoToLocation,
+      ShortDetails,
     };
   },
 
-  props: ["title", "details", "type", "price", "offerRequested", "offerSaved", "mainPicture", "showSaveBtn"],
+  props: [
+    "title",
+    "type",
+    "price",
+    "offerRequested",
+    "offerSaved",
+    "mainPicture",
+    "showSaveBtn",
+    "beds",
+    "baths",
+    "parkingLot",
+  ],
 };
 </script>
 

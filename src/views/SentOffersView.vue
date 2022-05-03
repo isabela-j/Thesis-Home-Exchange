@@ -7,7 +7,9 @@
           <SentReceivedCard
             :title="item.title"
             :type="item.type"
-            :details="item.details"
+            :beds= "item.beds"
+            :baths = "item.baths"
+            :parkingLot = "item.parkingLot"
             :price="item.price"
             :offerRequested="item.offerRequested"
             :offerSaved="item.offerSaved"
@@ -35,7 +37,9 @@ export default {
        {
         title: "Marasti Street Nr 3",
         type: 1,
-        details: "5 bed- 2 baths- 2 parking lot",
+        beds: 4,
+        baths: 2,
+        parkingLot: 1,
         price: "230 000",
         offerRequested: true,
         offerSaved: true,
@@ -47,7 +51,9 @@ export default {
       {
         title: "Iris Street Nr 1",
         type: 0,
-        details: "2 bed- 2 baths- 1 parking lot",
+        beds: 4,
+        baths: 2,
+        parkingLot: 1,
         price: "150 000",
         offerRequested: false,
         offerSaved: true,
@@ -59,7 +65,9 @@ export default {
       {
         title: "Manastur Street Nr 14",
         type: 0,
-        details: "2 bed- 2 baths- 1 parking lot",
+        beds: 4,
+        baths: 2,
+        parkingLot: 1,
         price: "180 000",
         offerRequested: false,
         offerSaved: true,
@@ -71,7 +79,9 @@ export default {
       {
         title: "Venus Street Nr 20",
         type: 0,
-        details: "2 bed- 2 baths- 1 parking lot",
+        beds: 4,
+        baths: 2,
+        parkingLot: 1,
         price: "250 000",
         offerRequested: false,
         offerSaved: true,

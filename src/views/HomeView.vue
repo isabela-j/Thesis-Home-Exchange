@@ -9,7 +9,9 @@
           <OfferCard
             :title="item.title"
             :type="item.type"
-            :details="item.details"
+            :beds="item.beds"
+            :baths="item.baths"
+            :parkingLot="item.parkingLot"
             :price="item.price"
             :offerRequested="item.offerRequested"
             :offerSaved="item.offerSaved"
@@ -26,7 +28,9 @@
           <OfferCard
             :title="item.title"
             :type="item.type"
-            :details="item.details"
+            :beds="item.beds"
+            :baths="item.baths"
+            :parkingLot="item.parkingLot"
             :price="item.price"
             :offerRequested="item.offerRequested"
             :offerSaved="item.offerSaved"
@@ -46,7 +50,7 @@ import NavBar from "@/components/NavBar.vue";
 import SideFilterBar from "@/components/SideFilterBar.vue";
 import BasicFilterBar from "@/components/BasicFilterBar.vue";
 import { computed } from "vue";
-
+import offers from "../offers.json";
 export default {
   name: "HomeView",
   components: {
@@ -56,44 +60,7 @@ export default {
     BasicFilterBar
   },
   setup() {
-    const offerCards = ref([
-      {
-        title: "Marasti Street Nr 3",
-        type: 1,
-        details: "5 bed- 2 baths- 2 parking lot",
-        price: "230 000",
-        offerRequested: true,
-        offerSaved: false,
-        mainPicture: "https://images.adsttc.com/media/images/5e68/48ed/b357/658e/fb00/0441/large_jpg/AM1506.jpg?1583892706",
-      },
-      {
-        title: "Iris Street Nr 1",
-        type: 0,
-        details: "2 bed- 2 baths- 1 parking lot",
-        price: "150 000",
-        offerRequested: false,
-        offerSaved: true,
-        mainPicture: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSjZoqOcp2UUh7Y2bXVpo46koYw29UamuHWiQ&usqp=CAU",
-      },
-       {
-        title: "Manastur Street Nr 14",
-        type: 0,
-        details: "2 bed- 2 baths- 1 parking lot",
-        price: "180 000",
-        offerRequested: false,
-        offerSaved: true,
-        mainPicture: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSh4O9GCySQw_9C24XfInhq-lYgfnHlRSMB5g&usqp=CAU",
-      },
-       {
-        title: "Venus Street Nr 20",
-        type: 0,
-        details: "2 bed- 2 baths- 1 parking lot",
-        price: "250 000",
-        offerRequested: false,
-        offerSaved: true,
-        mainPicture: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQoLSG2pHU9KTA7tHA62H0jXspw4tzlr1UYBg&usqp=CAU",
-      },
-    ]);
+    const offerCards = ref(offers);
     const offersShown = computed(() => {
       return offerCards.value.length;
     });
