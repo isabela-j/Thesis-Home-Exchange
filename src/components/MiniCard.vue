@@ -1,10 +1,6 @@
 <template>
   <v-card>
     <v-list-item>
-      <v-list-item-action>
-        <v-radio :value="mainPicture" class="color-org"/>
-      </v-list-item-action>
-      <v-list-item-content>
         <v-container fluid>
           <v-row dense>
             <v-col :key="2" class="pad-0">
@@ -31,7 +27,6 @@
             </v-col>
           </v-row>
         </v-container>
-      </v-list-item-content>
     </v-list-item>
   </v-card>
 </template>

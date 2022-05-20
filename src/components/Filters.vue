@@ -1,16 +1,13 @@
 <template>
   <v-list-item dense class="example">
-    <v-list-item-content class="example">
-      <v-list-item-title dense>Filters</v-list-item-title>
-    </v-list-item-content>
+      <v-list-item-title class="example" dense>Filters</v-list-item-title>
     <v-spacer></v-spacer>
-    <v-list-item-content class="alignEnd" dense>
+    <v-list-item-title class="alignEnd" dense>
       <v-btn class="btnReset" @click="ResetAllOptions">Reset all</v-btn>
-    </v-list-item-content>
+    </v-list-item-title>
   </v-list-item>
 
   <v-divider></v-divider>
-
   <v-container class="pa-0" dense>
     <v-expansion-panels multiple>
       <v-expansion-panel>
@@ -89,40 +86,15 @@
         <v-expansion-panel-title>Partition</v-expansion-panel-title>
         <v-expansion-panel-text>
           <div class="justif">
-            <v-btn
-              v-if="!btnDetached"
-              class="btn btnNormal"
-              @click="CheckBtn('detached')"
-            >
-              detached
-            </v-btn>
-            <v-btn v-else class="btn btnClicked" @click="CheckBtn('detached')">
-              detached</v-btn
-            >
-            <v-btn
-              v-if="!btnSemi"
-              class="btn btnNormal"
-              @click="CheckBtn('semi')"
-            >
-              semi-detached
-            </v-btn>
-            <v-btn v-else class="btn btnClicked" @click="CheckBtn('semi')">
-              semi-detached</v-btn
-            >
-            <v-btn
-              v-if="!btnUncompartmented"
-              class="btn btnNormal"
-              @click="CheckBtn('uncompartmented')"
-            >
-              uncompartmented</v-btn
-            >
-            <v-btn
-              v-else
-              class="btn btnClicked"
-              @click="CheckBtn('uncompartmented')"
-            >
-              uncompartmented</v-btn
-            >
+             <v-select
+            :items="partitionModel"
+            label="choose the partitioning"
+            v-model="partition"
+            multiple
+            persistent-hint
+            return-object
+            single-line
+          ></v-select>
           </div>
         </v-expansion-panel-text>
       </v-expansion-panel>
@@ -149,7 +121,7 @@
         <v-expansion-panel-text>
           <v-container fluid>
             <v-row dense>
-              <v-col :key="1">
+              <v-col :key="7">
                 <v-text-field
                   label="min price"
                   hide-details="auto"
@@ -158,7 +130,7 @@
                   <font-awesome-icon icon="euro-sign" color="rgb(252,158,1)" />
                 </v-text-field>
               </v-col>
-              <v-col :key="2">
+              <v-col :key="8">
                 <v-text-field
                   label="max price"
                   hide-details="auto"
@@ -176,14 +148,14 @@
         <v-expansion-panel-text>
           <v-container fluid>
             <v-row dense>
-              <v-col :key="1">
+              <v-col :key="3">
                 <v-text-field
                   label="min sqft"
                   hide-details="auto"
                   v-model="minSqft"
                 />
               </v-col>
-              <v-col :key="2">
+              <v-col :key="4">
                 <v-text-field
                   label="max sqft"
                   hide-details="auto"
@@ -199,14 +171,14 @@
         <v-expansion-panel-text>
           <v-container fluid>
             <v-row dense>
-              <v-col :key="1">
+              <v-col :key="5">
                 <v-text-field
                   label="min year"
                   hide-details="auto"
                   v-model="minYear"
                 />
               </v-col>
-              <v-col :key="2">
+              <v-col :key="6">
                 <v-text-field
                   label="max year"
                   hide-details="auto"
@@ -288,6 +260,7 @@
       </v-expansion-panel>
     </v-expansion-panels>
   </v-container>
+   
 </template>
 
 <script>
@@ -314,6 +287,12 @@ export default {
       "6+",
       "mansard",
     ]);
+    let partitionModel = ref([
+      "detached",
+      "semi-detached",
+      "uncompartmented"
+    ]);
+    let partition = ref([]);
     let floorNo = ref([]);
     let features = ref([
       "modern furniture",
@@ -333,9 +312,6 @@ export default {
     let panel = ref([0, 1]);
     let btnHouse = ref(false);
     let btnApartment = ref(false);
-    let btnDetached = ref(false);
-    let btnSemi = ref(false);
-    let btnUncompartmented = ref(false);
     let minPrice = ref();
     let maxPrice = ref();
     let minSqft = ref();
@@ -380,19 +356,12 @@ export default {
     let CheckBtn = (type) => {
       if (type == "house") btnHouse.value = !btnHouse.value;
       else if (type == "apartment") btnApartment.value = !btnApartment.value;
-      else if (type == "detached") btnDetached.value = !btnDetached.value;
-      else if (type == "semi") btnSemi.value = !btnSemi.value;
-      else if (type == "uncompartmented")
-        btnUncompartmented.value = !btnUncompartmented.value;
     };
 
     let ResetAllOptions = () => {
       offerLocation.value = [];
       btnHouse.value = false;
       btnApartment.value = false;
-      btnDetached.value = false;
-      btnSemi.value = false;
-      btnUncompartmented.value = false;
       minPrice.value = '';
       maxPrice.value = '';
       minSqft.value = '';
@@ -415,6 +384,7 @@ export default {
       bathsNo.value = [];
       parkingNo.value = [];
       floorNo.value = [];
+      partition.value=[];
     };
     return {
       ResetAllOptions,
@@ -425,9 +395,8 @@ export default {
       offerLocation,
       btnHouse,
       btnApartment,
-      btnDetached,
-      btnSemi,
-      btnUncompartmented,
+      partition,
+      partitionModel,
       minPrice,
       maxPrice,
       minSqft,
@@ -498,7 +467,6 @@ export default {
 .justif {
   justify-content: space-evenly;
 }
-
 
 /* Extra small devices (phones, 600px and down) */
 @media only screen and (max-width: 500px) {

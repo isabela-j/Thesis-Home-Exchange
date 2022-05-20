@@ -19,18 +19,18 @@
         "price": "150 000",
         "offerRequested": false,
         "offerSaved": true,
-        "mainPicture": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSjZoqOcp2UUh7Y2bXVpo46koYw29UamuHWiQ&usqp=CAU"
+        "mainPicture": "https://ireland.apollo.olxcdn.com/v1/files/eyJmbiI6ImtsMXk2emh5ZmI1Mi1BUk8iLCJ3IjpbeyJmbiI6Im8xemN3cmR4dDZ4bi1BUk8iLCJzIjoiMTQiLCJwIjoiMTAsLTEwIiwiYSI6IjAifV19.ZeYxU11-M5ou9E2YjTxzDAK4kCytk8wOwQo6gkeFH1s/image;s=1280x1024;q=80"
     },
     {
-        "title": "Manastur Street Nr 14",
-        "type": 0,
-        "beds": 3,
-        "baths": 1,
-        "parkingLot": 2,
-        "price": "180 000",
+        "title": "Beautiful house near Tarnita Forest Lake",
+        "type": 1,
+        "beds": 4,
+        "baths": 2,
+        "parkingLot": 1,
+        "price": "380 000",
         "offerRequested": false,
         "offerSaved": true,
-        "mainPicture": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSh4O9GCySQw_9C24XfInhq-lYgfnHlRSMB5g&usqp=CAU"
+        "mainPicture": "https://static01.nyt.com/images/2019/06/25/realestate/25domestic-zeff/a1c1a1a36c9e4ff8adcb958c4276f28d-jumbo.jpg?quality=75&auto=webp"
     },
     {
         "title": "Venus Street Nr 20",
