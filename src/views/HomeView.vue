@@ -1,5 +1,5 @@
 <template>
-  <SideFilterBar v-if="!smallScreen" class="compact-form" />
+  <SideFilterBar v-if="!smallScreen" class="compact-form"  @filterPosts="getFilteredPosts" />
   <v-main>
     <v-btn v-if="smallScreen" @click="showFilterBar" class="filter-button" margin-top="50">Filter</v-btn>
     <v-container v-if="smallScreen && !showFilterMob" class="container-custom  sticky-after" fluid>
@@ -20,7 +20,7 @@
         </v-col>
       </v-row>
     </v-container>
-    <BasicFilterBar v-if="smallScreen && showFilterMob" class="sticky-after"/>
+    <BasicFilterBar v-if="smallScreen && showFilterMob"  @filterPosts="getFilteredPosts" class="sticky-after"/>
     <v-container v-if="!smallScreen" class="container-custom" fluid>
       <label class="bold pa-3"> {{ offersShown }} listings</label>
       <v-row v-for="(item, index) in offerCards" :key="index" dense>
@@ -44,6 +44,7 @@
 </template>
 
 <script>
+import axios from 'axios';
 import { ref, onMounted, onUnmounted } from "vue";
 import OfferCard from "@/components/OfferCard.vue";
 import NavBar from "@/components/NavBar.vue";
@@ -59,6 +60,9 @@ export default {
     SideFilterBar,
     BasicFilterBar
   },
+  created() {
+    this.getAllPosts()
+  },
   setup() {
     const offerCards = ref(offers);
     const offersShown = computed(() => {
@@ -70,9 +74,27 @@ export default {
     const smallScreen = ref(IsMobileWidth());
     let showFilterMob = ref(false);
     let showFilterBar = () => {
-      showFilterMob.value = !showFilterMob.value;
-
-      //here we should apply the new filters 
+      showFilterMob.value = !showFilterMob.value; 
+    }
+    let posts = ref([]);
+    const getAllPosts = () => {
+     /* axios.get("https://jsonplaceholder.typicode.com/posts")
+      .then((response) => {
+          console.log(response.data);
+          posts.value = response.data;
+      })
+      .catch((error => {
+        console.log(error)
+      }))*/
+    }
+    const getFilteredPosts = (filters) => {
+      console.log(filters);
+     /* axios.post("", filters)
+      .then((response) => {
+        console.log(response.data);
+        posts.value = response.data;
+      })
+      .catch(error => console.log(error))*/
     }
     onMounted(() => {
       window.addEventListener("resize", () => {
@@ -84,13 +106,17 @@ export default {
         smallScreen.value = IsMobileWidth();
       });
     });
+  
     return {
       offerCards,
       offersShown,
       IsMobileWidth,
       smallScreen,
       showFilterMob,
-      showFilterBar
+      showFilterBar,
+      posts,
+      getAllPosts,
+      getFilteredPosts
     };
   },
 };

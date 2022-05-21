@@ -18,7 +18,7 @@
       <v-btn v-else class="btnNotPressed w-50 " @click="setShowYourAnnounces"
         >What you have</v-btn
       >
-    <Filters v-if="showPreferences" />
+    <Filters @newFilters="startFilter" v-if="showPreferences" />
     <MiniCardsList v-else />
   </v-container>
 </template>
@@ -33,8 +33,8 @@ export default {
     Filters,
     MiniCardsList,
   },
-
-  setup() {
+  emits: ["filterPosts"],
+  setup(_, { emit }) {
     let showPreferences = ref(true);
     let showYourAnnounces = ref(false);
     let drawer = ref(true);
@@ -51,12 +51,16 @@ export default {
         showYourAnnounces.value = !showPreferences.value;
       }
     };
+    let startFilter = (filters) => {
+       emit("filterPosts", filters);
+    }
     return {
       drawer,
       showPreferences,
       showYourAnnounces,
       setShowPreferences,
       setShowYourAnnounces,
+      startFilter
     };
   },
 };

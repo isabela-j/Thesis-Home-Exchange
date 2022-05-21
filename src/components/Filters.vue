@@ -16,7 +16,7 @@
           <v-select
             :items="location"
             label="choose offer location"
-            v-model="offerLocation"
+            v-model="filters.offerLocation"
             multiple
             persistent-hint
             return-object
@@ -28,7 +28,7 @@
         <v-expansion-panel-title>Type</v-expansion-panel-title>
         <v-expansion-panel-text>
           <v-btn
-            v-if="btnHouse"
+            v-if="filters.house"
             class="btn btnClicked"
             @click="CheckBtn('house')"
             >House</v-btn
@@ -37,7 +37,7 @@
             >House</v-btn
           >
           <v-btn
-            v-if="btnApartment"
+            v-if="filters.apartment"
             class="btn btnClicked"
             @click="CheckBtn('apartment')"
             >Apartment</v-btn
@@ -55,7 +55,7 @@
             <v-select
               :items="bedrooms"
               label="choose number of rooms"
-              v-model="roomsNo"
+              v-model="filters.roomsNo"
               multiple
               persistent-hint
               return-object
@@ -72,7 +72,7 @@
             <v-select
               :items="bathrooms"
               label="choose number of bathrooms"
-              v-model="bathsNo"
+              v-model="filters.bathsNo"
               multiple
               persistent-hint
               return-object
@@ -89,7 +89,7 @@
              <v-select
             :items="partitionModel"
             label="choose the partitioning"
-            v-model="partition"
+            v-model="filters.partition"
             multiple
             persistent-hint
             return-object
@@ -106,7 +106,7 @@
             <v-select
               :items="parkingLots"
               label="choose number of parking lots"
-              v-model="parkingNo"
+              v-model="filters.parkingNo"
               multiple
               persistent-hint
               return-object
@@ -125,7 +125,7 @@
                 <v-text-field
                   label="min price"
                   hide-details="auto"
-                  v-model="minPrice"
+                  v-model="filters.minPrice"
                 >
                   <font-awesome-icon icon="euro-sign" color="rgb(252,158,1)" />
                 </v-text-field>
@@ -134,7 +134,7 @@
                 <v-text-field
                   label="max price"
                   hide-details="auto"
-                  v-model="maxPrice"
+                  v-model="filters.maxPrice"
                 >
                   <font-awesome-icon icon="euro-sign" color="rgb(252,158,1)" />
                 </v-text-field>
@@ -152,14 +152,14 @@
                 <v-text-field
                   label="min sqft"
                   hide-details="auto"
-                  v-model="minSqft"
+                  v-model="filters.minSqft"
                 />
               </v-col>
               <v-col :key="4">
                 <v-text-field
                   label="max sqft"
                   hide-details="auto"
-                  v-model="maxSqft"
+                  v-model="filters.maxSqft"
                 />
               </v-col>
             </v-row>
@@ -175,14 +175,14 @@
                 <v-text-field
                   label="min year"
                   hide-details="auto"
-                  v-model="minYear"
+                  v-model="filters.minYear"
                 />
               </v-col>
               <v-col :key="6">
                 <v-text-field
                   label="max year"
                   hide-details="auto"
-                  v-model="maxYear"
+                  v-model="filters.maxYear"
                 />
               </v-col>
             </v-row>
@@ -196,7 +196,7 @@
             :items="floors"
             label="floor number"
             multiple
-            v-model="floorNo"
+            v-model="filters.floorNo"
           ></v-select>
         </v-expansion-panel-text>
       </v-expansion-panel>
@@ -204,27 +204,27 @@
         <v-expansion-panel-title>Utilities</v-expansion-panel-title>
         <v-expansion-panel-text>
           <v-checkbox
-            v-model="electricalCurent"
+            v-model="filters.electricalCurent"
             label="electrical curent"
             hide-details
           >
           </v-checkbox>
-          <v-checkbox v-model="waterPipe" label="water pipe" hide-details>
+          <v-checkbox v-model="filters.waterPipe" label="water pipe" hide-details>
           </v-checkbox>
-          <v-checkbox v-model="sewerage" label="sewerage" hide-details>
+          <v-checkbox v-model="filters.sewerage" label="sewerage" hide-details>
           </v-checkbox>
-          <v-checkbox v-model="gasPipe" label="gas pipe" hide-details>
+          <v-checkbox v-model="filters.gasPipe" label="gas pipe" hide-details>
           </v-checkbox>
           <v-checkbox
-            v-model="thermalStation"
+            v-model="filters.thermalStation"
             label="thermal power station"
             hide-details
           >
           </v-checkbox>
-          <v-checkbox v-model="newRadiators" label="new radiators" hide-details>
+          <v-checkbox v-model="filters.newRadiators" label="new radiators" hide-details>
           </v-checkbox>
           <v-checkbox
-            v-model="underfloorHeating"
+            v-model="filters.underfloorHeating"
             label="underfloor heating"
             hide-details
           >
@@ -235,26 +235,26 @@
         <v-expansion-panel-title>Features</v-expansion-panel-title>
         <v-expansion-panel-text>
           <v-checkbox
-            v-model="modernFurniture"
+            v-model="filters.modernFurniture"
             label="modern furniture"
             hide-details
           >
           </v-checkbox>
           <v-checkbox
-            v-model="electricStove"
+            v-model="filters.electricStove"
             label="electric stove"
             hide-details
           >
           </v-checkbox>
           <v-checkbox
-            v-model="washingMachine"
+            v-model="filters.washingMachine"
             label="washing machine"
             hide-details
           >
           </v-checkbox>
-          <v-checkbox v-model="dishwasher" label="dishwasher" hide-details>
+          <v-checkbox v-model="filters.dishwasher" label="dishwasher" hide-details>
           </v-checkbox>
-          <v-checkbox v-model="garage" label="garage" hide-details>
+          <v-checkbox v-model="filters.garage" label="garage" hide-details>
           </v-checkbox>
         </v-expansion-panel-text>
       </v-expansion-panel>
@@ -268,13 +268,11 @@ import { ref, reactive } from "vue";
 
 export default {
   name: "Filters",
-  setup() {
+  emits: ["newFilters"],
+  setup(_, { emit }) {
     let bedrooms = ref(["1", "2", "3", "4", "4+"]);
-    let roomsNo = ref([]);
     let bathrooms = ref(["1", "2", "3", "3+"]);
-    let bathsNo = ref([]);
     let parkingLots = ref(["1", "2", "3", "3+"]);
-    let parkingNo = ref([]);
     let floors = ref([
       "semi-basement",
       "ground floor",
@@ -309,27 +307,6 @@ export default {
       "thermal power station",
       "new radiators",
     ]);
-    let panel = ref([0, 1]);
-    let btnHouse = ref(false);
-    let btnApartment = ref(false);
-    let minPrice = ref();
-    let maxPrice = ref();
-    let minSqft = ref();
-    let maxSqft = ref();
-    let minYear = ref();
-    let maxYear = ref();
-    let electricalCurent = ref(false);
-    let waterPipe = ref(false);
-    let sewerage = ref(false);
-    let gasPipe = ref(false);
-    let thermalStation = ref(false);
-    let newRadiators = ref(false);
-    let underfloorHeating = ref(false);
-    let modernFurniture = ref(false);
-    let electricStove = ref(false);
-    let washingMachine = ref(false);
-    let dishwasher = ref(false);
-    let garage = ref(false);
     let location = ref([
       "Andrei Muresanu",
       "Becas",
@@ -352,80 +329,171 @@ export default {
       "Sopor",
       "Zorilor",
     ]);
-    let offerLocation = ref([]);
+  
     let CheckBtn = (type) => {
-      if (type == "house") btnHouse.value = !btnHouse.value;
-      else if (type == "apartment") btnApartment.value = !btnApartment.value;
+      if (type == "house") filters.value.house = !filters.value.house;
+      else if (type == "apartment") filters.value.apartment = !filters.value.apartment;
     };
 
+     let filters = ref( {
+      roomsNo: [],
+      offerLocation: [],
+      bathsNo: [],
+      parkingNo: [],
+      partition: [],
+      floorNo: [],
+      house: false,
+      apartment: false,
+      minPrice: 0,
+      maxPrice: 0,
+      minSqft: 0,
+      maxSqft: 0,
+      minYear: 0,
+      maxYear: 0,
+      electricalCurent: false,
+      waterPipe: false,
+      sewerage: false,
+      gasPipe: false,
+      thermalStation: false,
+      newRadiators: false,
+      underfloorHeating: false,
+      modernFurniture: false,
+      electricStove: false,
+      washingMachine: false,
+      dishwasher: false,
+      garage: false,
+    })
     let ResetAllOptions = () => {
-      offerLocation.value = [];
-      btnHouse.value = false;
-      btnApartment.value = false;
-      minPrice.value = '';
-      maxPrice.value = '';
-      minSqft.value = '';
-      maxSqft.value = '';
-      minYear.value = '';
-      maxYear.value = '';
-      electricalCurent.value  = false;
-      waterPipe.value  = false;
-      sewerage.value  = false;
-      gasPipe.value  = false;
-      thermalStation.value  = false;
-      newRadiators.value  = false;
-      underfloorHeating.value  = false;
-      modernFurniture.value  = false;
-      electricStove.value  = false;
-      washingMachine.value  = false;
-      dishwasher.value  = false;
-      garage.value  = false;
-      roomsNo.value = [];
-      bathsNo.value = [];
-      parkingNo.value = [];
-      floorNo.value = [];
-      partition.value=[];
+      filters.value.offerLocation = [];
+      filters.value.house = false;
+      filters.value.apartment = false;
+      filters.value.minPrice = '';
+      filters.value.maxPrice = '';
+      filters.value.minSqft = '';
+      filters.value.maxSqft = '';
+      filters.value.minYear = '';
+      filters.value.maxYear = '';
+      filters.value.electricalCurent  = false;
+      filters.value.waterPipe  = false;
+      filters.value.sewerage  = false;
+      filters.value.gasPipe  = false;
+      filters.value.thermalStation  = false;
+      filters.value.newRadiators  = false;
+      filters.value.underfloorHeating  = false;
+      filters.value.modernFurniture  = false;
+      filters.value.electricStove  = false;
+      filters.value.washingMachine  = false;
+      filters.value.dishwasher  = false;
+      filters.value.garage  = false;
+      filters.value.roomsNo = [];
+      filters.value.bathsNo = [];
+      filters.value.parkingNo = [];
+      filters.value.floorNo = [];
+      filters.value.partition=[];
     };
+     let filtersChanged = () => {
+      var el = JSON.parse(JSON.stringify(filters.value));
+      emit("newFilters", el);
+    }
     return {
       ResetAllOptions,
       features,
       utilities,
-      panel,
       location,
-      offerLocation,
-      btnHouse,
-      btnApartment,
-      partition,
       partitionModel,
-      minPrice,
-      maxPrice,
-      minSqft,
-      maxSqft,
-      minYear,
-      maxYear,
       CheckBtn,
-      electricalCurent,
-      waterPipe,
-      sewerage,
-      gasPipe,
-      thermalStation,
-      newRadiators,
-      underfloorHeating,
-      modernFurniture,
-      electricStove,
-      washingMachine,
-      dishwasher,
-      garage,
       bedrooms,
       bathrooms,
       parkingLots,
-      roomsNo,
-      bathsNo,
-      parkingNo,
       floors,
-      floorNo,
+      filters,
+      filtersChanged
     };
   },
+   watch: {
+     'filters.offerLocation' : function(val, oldval) {
+       this.filtersChanged();
+      },
+       'filters.house' : function(val, oldval) {
+       this.filtersChanged();
+      },
+       'filters.apartment' : function(val, oldval) {
+       this.filtersChanged();
+      },
+       'filters.minPrice' : function(val, oldval) {
+       this.filtersChanged();
+      },
+       'filters.maxPrice' : function(val, oldval) {
+       this.filtersChanged();
+      },
+       'filters.minSqft' : function(val, oldval) {
+       this.filtersChanged();
+      },
+       'filters.maxSqft' : function(val, oldval) {
+       this.filtersChanged();
+      },
+       'filters.minYear' : function(val, oldval) {
+       this.filtersChanged();
+      },
+       'filters.maxYear' : function(val, oldval) {
+       this.filtersChanged();
+      },
+       'filters.electricalCurent' : function(val, oldval) {
+       this.filtersChanged();
+      },
+       'filters.waterPipe' : function(val, oldval) {
+       this.filtersChanged();
+      },
+      'filters.gasPipe' : function(val, oldval) {
+       this.filtersChanged();
+      },
+       'filters.sewerage' : function(val, oldval) {
+       this.filtersChanged();
+      },
+       'filters.thermalStation' : function(val, oldval) {
+       this.filtersChanged();
+      },
+       'filters.newRadiators' : function(val, oldval) {
+       this.filtersChanged();
+      },
+       'filters.underfloorHeating' : function(val, oldval) {
+       this.filtersChanged();
+      },
+      'filters.modernFurniture' : function(val, oldval) {
+       this.filtersChanged();
+      },
+      'filters.electricStove' : function(val, oldval) {
+       this.filtersChanged();
+      },
+      'filters.washingMachine' : function(val, oldval) {
+       this.filtersChanged();
+      },
+      'filters.dishwasher' : function(val, oldval) {
+       this.filtersChanged();
+      },
+      'filters.garage' : function(val, oldval) {
+       this.filtersChanged();
+      },
+      'filters.roomsNo' : function(val, oldval) {
+       this.filtersChanged();
+      },
+      'filters.bathsNo' : function(val, oldval) {
+       this.filtersChanged();
+      },
+      'filters.parkingNo' : function(val, oldval) {
+       this.filtersChanged();
+      },
+      'filters.floorNo' : function(val, oldval) {
+       this.filtersChanged();
+      },
+      'filters.partition' : function(val, oldval) {
+       this.filtersChanged();
+      },
+
+   
+   
+   
+   },
 };
 </script>
 
