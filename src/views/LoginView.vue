@@ -5,14 +5,20 @@
         <div class="center-content pa-10">
           <font-awesome-icon icon="fingerprint" class="fa-w fa-3x" />
         </div>
-        <v-text-field label="email address" variant="underlined">
+        <v-text-field label="email address" v-model="emailAddress" variant="underlined">
           <template v-slot:append>
             <v-icon icon="mdi-email" color="rgb(139, 177, 176)" />
           </template>
         </v-text-field>
-        <v-text-field label="password" hide-details="auto" variant="underlined">
+        <v-text-field 
+        label="password" 
+        v-model="password" 
+        hide-details="auto" 
+        variant="underlined"
+         :type="showPass ? 'text' : 'password'"
+        >
           <template v-slot:append>
-            <v-icon
+             <v-icon
               v-if="showPass"
               @click="showPass = !showPass"
               icon="mdi-eye"
@@ -27,7 +33,7 @@
           </template>
         </v-text-field>
         <div class="center-content pa-2 ma-2">
-          <v-btn class="btn-login"> Login </v-btn>
+          <v-btn class="btn-login" @click="login"> Login </v-btn>
         </div>
       </v-container>
       <div style="text-align: center">
@@ -40,12 +46,29 @@
 
 <script>
 import { ref } from "vue";
+import LoginAPI from '@/api/resources/Login.js';
 export default {
   name: "LoginView",
   setup() {
     let showPass = ref(false);
+    let emailAddress = ref();
+    let password = ref();
+    let loadLogins = ref([]);
+    let login = async() => {
+      try{
+      loadLogins.value = await LoginAPI.getAllLogins();
+      console.log(loadLogins.value)
+      } catch(error)
+      {
+        console.log("Error", error);
+      }
+      
+    }
     return {
       showPass,
+      emailAddress,
+      password,
+      login
     };
   },
 };

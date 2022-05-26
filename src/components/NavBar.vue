@@ -78,6 +78,13 @@ export default {
     let userTitle=ref("ileana");
     let userDescription=ref("cioban la oi");
     let GoToLocation = (location) => {
+      //data from announcemaindetails with user id
+        /* axios.post("", filters)
+           .then((response) => {
+             console.log(response.data);
+             posts.value = response.data; 
+          })
+          .catch(error => console.log(error))*/
       window.location = location; 
     }
     let menuBarHeight=ref(window.innerHeight);

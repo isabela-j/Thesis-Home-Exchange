@@ -35,7 +35,7 @@
                 <v-btn
                   v-if="isRequested"
                   class="btn btnClicked"
-                  @click="GoToLocation('/announce')"
+                  @click="requestOffer"
                   >Offer requested</v-btn
                 >
                 <v-btn
@@ -66,6 +66,12 @@ export default {
     let isRequested = ref(props.offerRequested);
     let requestOffer = () => {
       isRequested.value = !isRequested.value;
+      var savedData = {
+        userId: 1,
+        announceId: 2,
+      };
+      /* axios.post("deleteRequest", savedData)
+       */
     };
 
     let isSaved = ref(props.offerSaved);
@@ -73,6 +79,17 @@ export default {
 
     let addToFavourites = () => {
       isSaved.value = !isSaved.value;
+      var savedData = {
+        userId: 1,
+        announceId: 2,
+      };
+      if (isSaved.value) {
+        /* axios.post("saveAnnounce", savedData)
+         */
+      } else {
+        /* axios.post("unsaveAnnounce", savedData)
+         */
+      }
     };
     let GoToLocation = (location) => {
       window.location = location;

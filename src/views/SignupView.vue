@@ -11,35 +11,56 @@
           <font-awesome-icon icon="fingerprint" class="fa-w fa-3x" />
         </div>
         <div class="center-content rev-pa">
-         <v-radio-group  v-model="radios" inline hide-details="auto" mandatory>
-          <v-radio
-            label="Householder"
-            value="householder"
-            color="rgb(139, 177, 176)"
-          ></v-radio>
-          <v-radio
-            label="Broker"
-            value="broker"
-            color="rgb(139, 177, 176)"
-          ></v-radio>
-        </v-radio-group>
+          <v-radio-group v-model="radios" inline hide-details="auto" mandatory>
+            <v-radio
+              label="Householder"
+              value="householder"
+              color="rgb(139, 177, 176)"
+            ></v-radio>
+            <v-radio
+              label="Broker"
+              value="broker"
+              color="rgb(139, 177, 176)"
+            ></v-radio>
+          </v-radio-group>
         </div>
-        <v-text-field label="First name" variant="underlined" height="4em">
+        <v-text-field
+          label="First name"
+          v-model="ownerDetails.firstName"
+          variant="underlined"
+          height="4em"
+        >
           <template v-slot:append>
             <v-icon icon="mdi-account" color="rgb(139, 177, 176)" />
           </template>
         </v-text-field>
-        <v-text-field label="Last name" variant="underlined" height="4em">
+        <v-text-field
+          label="Last name"
+          v-model="ownerDetails.lastName"
+          variant="underlined"
+          height="4em"
+        >
           <template v-slot:append>
             <v-icon icon="mdi-account" color="rgb(139, 177, 176)" />
           </template>
         </v-text-field>
-        <v-text-field label="Phone number" variant="underlined" height="4em">
+        <v-text-field
+          label="Phone number"
+          v-model="ownerDetails.phoneNumber"
+          variant="underlined"
+          height="4em"
+        >
           <template v-slot:append>
             <v-icon icon="mdi-phone" color="rgb(139, 177, 176)" />
           </template>
         </v-text-field>
-        <v-text-field label="E-mail" required variant="underlined" height="4em">
+        <v-text-field
+          label="E-mail"
+          v-model="ownerMainData.emailAdress"
+          required
+          variant="underlined"
+          height="4em"
+        >
           <template v-slot:append>
             <v-icon icon="mdi-email" color="rgb(139, 177, 176)" />
           </template>
@@ -47,7 +68,7 @@
         <v-text-field
           :type="showPass ? 'text' : 'password'"
           name="input-10-2"
-          v-model="password"
+          v-model="ownerMainData.passwordHash"
           label="Password"
           class="input-group--focused"
           variant="underlined"
@@ -94,7 +115,7 @@
           </template>
         </v-text-field>
         <div class="center-content pa-2 ma-2">
-          <v-btn class="btn-login"> Sign up </v-btn>
+          <v-btn class="btn-login" @click="SignUp"> Sign up </v-btn>
         </div>
       </v-container>
       <div style="text-align: center">
@@ -107,12 +128,28 @@
 
 <script>
 import { ref, reactive } from "vue";
+import LoginAPI from "@/api/resources/Login.js";
+import OwnerAPI from "@/api/resources/Owner.js";
 export default {
   name: "SignupView",
   setup() {
+    let ownerMainData = ref(
+      {
+        emailAdress: '',
+        passwordHash: '',
+      },
+    );
+    let ownerDetails = reactive(
+      {
+        firstName: "",
+        lastName: "",
+        phoneNumber: "",
+        ownerTypeId: 1,
+        loginId: 1,
+      },
+    );
     let showPass = ref(false);
     let showPassConf = ref(false);
-    let password = ref("");
     let passwordConfirmation = ref("");
     let scrollInvoked = ref(0);
     let radios = ref("householder");
@@ -120,14 +157,34 @@ export default {
       scrollInvoked.value++;
       console.log(scrollInvoked);
     };
+    let SignUp = async () => {
+      try {
+        let res = await LoginAPI.store(ownerMainData.value);
+        ownerDetails.loginId = JSON.parse(res.id);
+        SignUpDetails();
+      } catch (error) {
+        console.log(error.value);
+      }
+    };
+    let SignUpDetails = async () => {
+      try {
+        let resDetails = await OwnerAPI.storeOwner(ownerDetails);
+        console.log(resDetails);
+      } catch (error) {
+        console.log(error.value);
+      }
+    };
     return {
       showPass,
       showPassConf,
-      password,
       passwordConfirmation,
       scrollInvoked,
       onScroll,
       radios,
+      ownerMainData,
+      ownerDetails,
+      SignUp,
+      SignUpDetails
     };
   },
 };
@@ -211,7 +268,7 @@ label {
 }
 
 ::v-deep(.v-radio-group) {
-    width: fit-content;
+  width: fit-content;
 }
 /* Extra small devices (phones, 600px and down) */
 @media only screen and (min-width: 300px) {

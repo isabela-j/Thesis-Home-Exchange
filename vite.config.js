@@ -4,6 +4,16 @@ import vuetify from '@vuetify/vite-plugin'
 
 import path from 'path'
 
+const proxy = require('koa-proxy')
+
+const myPlugin = ({ app }) => {
+  app.use(proxy({
+    host: 'http://localhost:3000',
+    match: /^\/api\//
+  }))
+}
+
+
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
@@ -18,6 +28,7 @@ export default defineConfig({
     alias: {
       '@': path.resolve(__dirname, 'src'),
     },
+  plugins: [myPlugin]
   },
   /* remove the need to specify .vue files https://vitejs.dev/config/#resolve-extensions
   resolve: {
