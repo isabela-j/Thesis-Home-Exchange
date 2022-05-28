@@ -60,7 +60,7 @@ export default {
   name: "OfferCard",
   setup(props) {
     const offerType = computed(() => {
-      return props.type > 0 ? "House" : "Apartment";
+      return props.type === 1 ? "House" : "Apartment";
     });
 
     let isRequested = ref(props.offerRequested);

@@ -70,4 +70,4 @@ export default {
   }
 };
 
-export let idLogin = -1;
+export let idLogin = 1;

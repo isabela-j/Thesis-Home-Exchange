@@ -26,6 +26,7 @@ export default {
     });
   },
   getAnnounceMainDetail(announceMainDetailId) {
+    console.log(Service.baseURL + "/AnnounceMainDetails/" + announceMainDetailId);
     return fetch(
       Service.baseURL + "/AnnounceMainDetails/" + announceMainDetailId,
       {

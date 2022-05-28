@@ -1,8 +1,22 @@
 <template>
-  <SideFilterBar v-if="!smallScreen" class="compact-form"  @filterPosts="getFilteredPosts" />
+  <SideFilterBar
+    v-if="!smallScreen"
+    class="compact-form"
+    @filterPosts="getFilteredPosts"
+  />
   <v-main>
-    <v-btn v-if="smallScreen" @click="showFilterBar" class="filter-button" margin-top="50">Filter</v-btn>
-    <v-container v-if="smallScreen && !showFilterMob" class="container-custom  sticky-after" fluid>
+    <v-btn
+      v-if="smallScreen"
+      @click="showFilterBar"
+      class="filter-button"
+      margin-top="50"
+      >Filter</v-btn
+    >
+    <v-container
+      v-if="smallScreen && !showFilterMob"
+      class="container-custom sticky-after"
+      fluid
+    >
       <label class="bold pa-3"> {{ offersShown }} listings</label>
       <v-row v-for="(item, index) in offerCards" :key="index" dense>
         <v-col :key="index">
@@ -20,7 +34,11 @@
         </v-col>
       </v-row>
     </v-container>
-    <BasicFilterBar v-if="smallScreen && showFilterMob"  @filterPosts="getFilteredPosts" class="sticky-after"/>
+    <BasicFilterBar
+      v-if="smallScreen && showFilterMob"
+      @filterPosts="getFilteredPosts"
+      class="sticky-after"
+    />
     <v-container v-if="!smallScreen" class="container-custom" fluid>
       <label class="bold pa-3"> {{ offersShown }} listings</label>
       <v-row v-for="(item, index) in offerCards" :key="index" dense>
@@ -35,21 +53,23 @@
             :offerRequested="item.offerRequested"
             :offerSaved="item.offerSaved"
             :mainPicture="item.mainPicture"
-            showSaveBtn = "true"
+            showSaveBtn="true"
           />
-        </v-col> 
+        </v-col>
       </v-row>
     </v-container>
   </v-main>
 </template>
 
 <script>
-import axios from 'axios';
-import { ref, onMounted, onUnmounted } from "vue";
+import axios from "axios";
+import { ref, onMounted, onUnmounted, reactive, toRef } from "vue";
 import OfferCard from "@/components/OfferCard.vue";
 import NavBar from "@/components/NavBar.vue";
 import SideFilterBar from "@/components/SideFilterBar.vue";
 import BasicFilterBar from "@/components/BasicFilterBar.vue";
+import AnnounceMainDetailsAPI from "@/api/resources/AnnounceMainDetails.js";
+import LoginAPI from "@/api/resources/Login.js";
 import { computed } from "vue";
 import offers from "../offers.json";
 export default {
@@ -58,15 +78,16 @@ export default {
     OfferCard,
     NavBar,
     SideFilterBar,
-    BasicFilterBar
+    BasicFilterBar,
   },
   created() {
-    this.getAllPosts()
+    this.getAllPosts();
   },
   setup() {
-    const offerCards = ref(offers);
-    const offersShown = computed(() => {
-      return offerCards.value.length;
+    let currentOwnerId = ref();
+    let offerCards = reactive([]);
+    let offersShown = computed(() => {
+      return offerCards.length;
     });
     const IsMobileWidth = () => {
       return window.innerWidth < 650;
@@ -74,28 +95,67 @@ export default {
     const smallScreen = ref(IsMobileWidth());
     let showFilterMob = ref(false);
     let showFilterBar = () => {
-      showFilterMob.value = !showFilterMob.value; 
-    }
-    let posts = ref([]);
-    const getAllPosts = () => {
-     /* axios.get("https://jsonplaceholder.typicode.com/posts")
-      .then((response) => {
-          console.log(response.data);
-          posts.value = response.data;
-      })
-      .catch((error => {
-        console.log(error)
-      }))*/
-    }
+      showFilterMob.value = !showFilterMob.value;
+    };
+    let posts = reactive([]);
+    let sentDetails = reactive([]);
+    let parsePosts = async (posts, sentDetails) => {
+      posts.forEach((post) => {
+        let listing = {};
+        listing.announceMainDetailsId = post.id_announceMainDetails;
+        listing.title = post.title;
+        listing.beds = post.bedroomsNo;
+        listing.baths = post.bathroomsNo;
+        listing.parkingLot = post.parkingLotsNo;
+        listing.price = post.price;
+        listing.offerRequested = false;
+        post.offerReceived.forEach((received) => {
+          if (received.id_received == post.id_announceMainDetails) {
+            sentDetails.forEach((userOffers) => {
+              if (received.id_sender == userOffers.id_announceMainDetails) {
+                listing.offerRequested = true;
+              }
+            });
+          }
+        });
+        post.announceCharacteristic.forEach((characteristic) => {
+          if (
+            characteristic.announceMainDetailId == post.id_announceMainDetails
+          ) {
+            listing.type = characteristic.realEstateTypeId;
+          }
+        });
+        post.offerSaved.forEach((saved) => {
+          if (saved.ownerId == currentOwnerId.value) {
+            listing.offerSaved = true;
+          }
+        });
+        listing.mainPicture =
+          "https://static01.nyt.com/images/2019/06/25/realestate/25domestic-zeff/a1c1a1a36c9e4ff8adcb958c4276f28d-jumbo.jpg?quality=75&auto=webp"; //SCHIMBA
+        offerCards.push(listing);
+      });
+    };
+    let getAllPosts = async () => {
+      try {
+        currentOwnerId.value = 1; //SCHIMBA cu ce ownerID ai tu
+        posts = await AnnounceMainDetailsAPI.getAllAnnounceAvailable();
+        sentDetails =
+          await AnnounceMainDetailsAPI.getAllAnnounceMainDetailsFromOwner(
+            currentOwnerId.value
+          );
+        parsePosts(posts, sentDetails);
+      } catch (error) {}
+    };
     const getFilteredPosts = (filters) => {
+      offerCards.splice(0);
       console.log(filters);
-     /* axios.post("", filters)
+      /* axios.post("", filters)
       .then((response) => {
         console.log(response.data);
         posts.value = response.data;
       })
       .catch(error => console.log(error))*/
-    }
+    };
     onMounted(() => {
       window.addEventListener("resize", () => {
         smallScreen.value = IsMobileWidth();
@@ -106,7 +166,7 @@ export default {
         smallScreen.value = IsMobileWidth();
       });
     });
-  
+
     return {
       offerCards,
       offersShown,
@@ -116,7 +176,9 @@ export default {
       showFilterBar,
       posts,
       getAllPosts,
-      getFilteredPosts
+      getFilteredPosts,
+      sentDetails,
+      currentOwnerId,
     };
   },
 };
@@ -133,12 +195,12 @@ export default {
   position: fixed;
   top: 50px; /* required */
   z-index: 1;
-  width:100%;
-  height:50px;
+  width: 100%;
+  height: 50px;
   border-radius: 0px;
-  background-color:  rgb(255, 162, 0);
+  background-color: rgb(255, 162, 0);
   color: white;
-  font-weight:bold;
+  font-weight: bold;
   text-transform: none;
 }
 .sticky-after {
