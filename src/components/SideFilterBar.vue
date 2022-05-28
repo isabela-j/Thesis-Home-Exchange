@@ -340,7 +340,7 @@
         </v-expansion-panels>
       </v-container>
     </div>
-    <MiniCardsList v-else :cardsData="othercv" />
+    <MiniCardsList v-else :cardsData="myOffers" />
     <template v-slot:append>
       <div class="pa-2">
         <v-btn block class="search-btn" @click="startFilter"> Search </v-btn>
@@ -350,9 +350,11 @@
 </template>
 
 <script>
-import { ref, computed, onMounted, onUnmounted } from "vue";
+import { ref, computed, onMounted, onUnmounted, reactive } from "vue";
 import Filters from "@/components/Filters.vue";
 import MiniCardsList from "@/components/MiniCardsList.vue";
+import AnnounceMainDetailsAPI from "@/api/resources/AnnounceMainDetails.js";
+import LoginAPI from "@/api/resources/Login.js";
 export default {
   name: "SideFilterBar",
   components: {
@@ -361,6 +363,8 @@ export default {
   },
 
   setup(props, { emit }) {
+    let currentOwnerId = ref(1);
+
     let showPreferences = ref(true);
     let showYourAnnounces = ref(false);
     let drawer = ref(true);
@@ -370,47 +374,40 @@ export default {
       if (!showPreferences.value) {
         showPreferences.value = !showPreferences.value;
         showYourAnnounces.value = !showPreferences.value;
-        console.log("celalalt aici");
       }
     };
-    let setShowYourAnnounces = () => {
+    let parsePosts = async (posts) => {
+      posts.forEach((post) => {
+        let listing = {};
+        listing.announceMainDetailsId = post.id_announceMainDetails;
+        listing.title = post.title;
+        listing.beds = post.bedroomsNo;
+        listing.baths = post.bathroomsNo;
+        listing.parkingLot = post.parkingLotsNo;
+        listing.price = post.price;
+        listing.offerRequested = false;
+        post.announceCharacteristic.forEach((characteristic) => {
+          if (
+            characteristic.announceMainDetailId == post.id_announceMainDetails
+          ) {
+            listing.type = characteristic.realEstateTypeId;
+          }
+        });
+        listing.mainPicture =
+          "https://static01.nyt.com/images/2019/06/25/realestate/25domestic-zeff/a1c1a1a36c9e4ff8adcb958c4276f28d-jumbo.jpg?quality=75&auto=webp"; //SCHIMBA
+        myOffers.push(listing);
+      });
+    };
+    let myOffers = reactive([]);
+    let setShowYourAnnounces = async () => {
       if (!showYourAnnounces.value) {
         showPreferences.value = !showPreferences.value;
         showYourAnnounces.value = !showPreferences.value;
-        console.log("aici");
-        othercv.value = [
-          {
-            title: "Marasti Street Nr 3",
-            type: 1,
-            details: "5 bed- 2 baths- 2 parking lot",
-            price: "280 000",
-          },
-          {
-            title: "Manastur Street Nr 14",
-            type: 0,
-            details: "2 bed- 2 baths- 1 parking lot",
-            price: "150 000",
-          },
-          {
-            title: "Gheorgheni Street Nr 256A",
-            type: 0,
-            details: "3 bed- 2 baths- 2 parking lot",
-            price: "105 000",
-          },
-          {
-            title: "Alexandru Vaida Voievod ",
-            type: 1,
-            details: "4 bed- 2 baths",
-            price: "230 000",
-          },
-        ];
-        //data from announcemaindetails with user id
-        /* axios.post("", filters)
-           .then((response) => {
-             console.log(response.data);
-             posts.value = response.data;
-          })
-          .catch(error => console.log(error))*/
+        let posts  =
+          await AnnounceMainDetailsAPI.getAllAnnounceMainDetailsFromOwner(
+            currentOwnerId.value
+          );
+        parsePosts(posts);
       }
     };
 
@@ -547,7 +544,6 @@ export default {
       emit("filterPosts", el);
     };
 
-    let othercv = ref();
     return {
       drawer,
       showPreferences,
@@ -567,7 +563,9 @@ export default {
       bathrooms,
       parkingLots,
       floors,
-      othercv,
+      myOffers, 
+      parsePosts,
+      currentOwnerId
     };
   },
 };

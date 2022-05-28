@@ -23,66 +23,85 @@
 </template>
 
 <script>
-import { ref, computed } from "vue";
+import { ref, computed, reactive } from "vue";
 import OfferCard from "@/components/OfferCard.vue";
+import AnnounceMainDetailsAPI from "@/api/resources/AnnounceMainDetails.js";
+import LoginAPI from "@/api/resources/Login.js";
+import SavedAPI from "@/api/resources/OfferSaved.js"; 
 export default {
     name: "SavedOfferView",
     components: {
      OfferCard, 
   },
+  created() {
+    this.getSavedPosts();
+  },
   setup() {
-    const savedOffersData = ref([
-      {
-        title: "Marasti Street Nr 3",
-        type: 1,
-        beds: 4,
-        baths: 2,
-        parkingLot: 1,
-        price: "230 000",
-        offerRequested: true,
-        offerSaved: true,
-        mainPicture: "https://images.adsttc.com/media/images/5e68/48ed/b357/658e/fb00/0441/large_jpg/AM1506.jpg?1583892706",
-      },
-      {
-        title: "Iris Street Nr 1",
-        type: 0,
-        beds: 4,
-        baths: 2,
-        parkingLot: 1,
-        price: "150 000",
-        offerRequested: false,
-        offerSaved: true,
-        mainPicture: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSjZoqOcp2UUh7Y2bXVpo46koYw29UamuHWiQ&usqp=CAU",
-      },
-       {
-        title: "Manastur Street Nr 14",
-        type: 0,
-        beds: 4,
-        baths: 2,
-        parkingLot: 1,
-        price: "180 000",
-        offerRequested: false,
-        offerSaved: true,
-        mainPicture: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSh4O9GCySQw_9C24XfInhq-lYgfnHlRSMB5g&usqp=CAU",
-      },
-       {
-        title: "Venus Street Nr 20",
-        type: 0,
-        beds: 4,
-        baths: 2,
-        parkingLot: 1,
-        price: "250 000",
-        offerRequested: false,
-        offerSaved: true,
-        mainPicture: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQoLSG2pHU9KTA7tHA62H0jXspw4tzlr1UYBg&usqp=CAU",
-      },
-    ]);
+    let currentOwnerId = ref();
+    const savedOffersData = reactive([]);
+     let getSavedPosts = async () => {
+      try {
+        currentOwnerId.value = 1; //SCHIMBA cu ce ownerID ai tu
+        let savedPosts  =
+          await SavedAPI.getAllOffersSavedByOwner(
+            currentOwnerId.value
+          );
+        let sentDetails =
+          await AnnounceMainDetailsAPI.getAllAnnounceMainDetailsFromOwner(
+            currentOwnerId.value
+          );
+        savedPosts.forEach(async (post) => {
+          let details = await AnnounceMainDetailsAPI.getAnnounceMainDetail(post.announceMainDetailId);
+          //console.log(details);
+          parsePost(details,sentDetails);
+        })
+       // parsePost(post,sentDetails);
+        console.log(savedPosts);
+      } catch (error) {}
+    };
+      let parsePost = async (post, sentDetails) => {
+        let listing = {};
+        listing.announceMainDetailsId = post.id_announceMainDetails;
+        listing.title = post.title;
+        listing.beds = post.bedroomsNo;
+        listing.baths = post.bathroomsNo;
+        listing.parkingLot = post.parkingLotsNo;
+        listing.price = post.price;
+        listing.offerRequested = false;
+        post.offerReceived.forEach((received) => {
+          if (received.id_received == post.id_announceMainDetails) {
+            sentDetails.forEach((userOffers) => {
+              if (received.id_sender == userOffers.id_announceMainDetails) {
+                listing.offerRequested = true;
+              }
+            });
+          }
+        });
+        post.announceCharacteristic.forEach((characteristic) => {
+          if (
+            characteristic.announceMainDetailId == post.id_announceMainDetails
+          ) {
+            listing.type = characteristic.realEstateTypeId;
+          }
+        });
+        post.offerSaved.forEach((saved) => {
+          if (saved.ownerId == currentOwnerId.value) {
+            listing.offerSaved = true;
+          }
+        });
+        listing.mainPicture =
+          "https://static01.nyt.com/images/2019/06/25/realestate/25domestic-zeff/a1c1a1a36c9e4ff8adcb958c4276f28d-jumbo.jpg?quality=75&auto=webp"; //SCHIMBA
+        savedOffersData.push(listing);
+    };
     const savedOffersCount = computed(() => {
-      return savedOffersData.value.length;
+      return savedOffersData.length;
     });
     return {
       savedOffersData,
       savedOffersCount,
+      currentOwnerId,
+      getSavedPosts,
+      parsePost
     };
   },
 }

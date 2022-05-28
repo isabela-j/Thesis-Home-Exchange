@@ -7,8 +7,10 @@
             :title="miniCard.title"
             :type="miniCard.type"
             :details="miniCard.details"
-            :price="miniCard.price"
-            :mainPicture="miniCard.mainPicture"
+            :price="miniCard.price"  
+            :baths="miniCard.baths"
+            :beds="miniCard.beds"
+            :parkingLot="miniCard.parkingLot"      
             />
             <v-divider></v-divider>
         </v-col>

@@ -15,7 +15,7 @@
                 </v-row>
                 <v-row dense>
                   <v-col :key="6" class="cardOfferDetails text"
-                    >{{ details }}
+                    >{{ ShortDetails }}
                   </v-col>
                 </v-row>
                 <v-row dense>
@@ -32,20 +32,34 @@
 </template>
 
 <script>
-import { computed } from "vue";
+import { computed, ref } from "vue";
 
 export default {
   name: "MiniCard",
   setup(props) {
     const offerType = computed(() => {
-      return props.type > 0 ? "House" : "Apartment";
+      return props.type === 1 ? "House" : "Apartment";
+    });
+    let baths = ref(props.baths);
+    let beds = ref(props.beds);
+    let parkingLot= ref (props.parkingLot);
+    let ShortDetails = computed((props) => {
+      return (
+        beds.value +
+        " beds - " +
+        baths.value +
+        " baths - " +
+        parkingLot.value +
+        " parking lot"
+      );
     });
     return {
       offerType,
+      ShortDetails
     };
   },
 
-  props: ["title", "details", "type", "price", "mainPicture"],
+  props: ["title", "type", "price", "mainPicture", "baths", "beds", "parkingLot"],
 };
 </script>
 

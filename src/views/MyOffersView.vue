@@ -2,14 +2,16 @@
 <v-main>
       <v-container class="container-custom" fluid>
       <label class="bold pa-3">You have  {{ postedOffers }} offers</label>
-      <v-row v-for="(item, index) in postedOffersData" :key="index" dense>
+      <v-row v-for="(item, index) in offerCards" :key="index" dense>
         <v-col :key="index">
           <OfferCard
             :title="item.title"
             :type="item.type"
-            :details="item.details"
+            :beds="item.beds"
+            :baths="item.baths"
+            :parkingLot="item.parkingLot"
             :price="item.price"
-            :offerRequested="item.offerRequested"
+            offerRequested= false
             :offerSaved="item.offerSaved"
             :mainPicture="item.mainPicture"
             showSaveBtn="false"
@@ -21,49 +23,64 @@
 </template>
 
 <script>
-import { ref, computed } from "vue";
+import { ref, computed, reactive } from "vue";
 import OfferCard from "@/components/OfferCard.vue";
+import AnnounceMainDetailsAPI from "@/api/resources/AnnounceMainDetails.js";
+import LoginAPI from "@/api/resources/Login.js";
 export default {       
     name: "MyOffersView",
     components: {
      OfferCard, 
   },
+  created() {
+    this.getMyPosts();
+  },
   setup() {
-    const postedOffersData = ref([
-      {
-        title: "My",
-        type: 1,
-        details: "5 bed- 2 baths- 2 parking lot",
-        price: "230 000",
-        offerRequested: true,
-        offerSaved: true,
-        mainPicture: "https://images.adsttc.com/media/images/5e68/48ed/b357/658e/fb00/0441/large_jpg/AM1506.jpg?1583892706",
-      },
-      {
-        title: "My 2",
-        type: 0,
-        details: "2 bed- 2 baths- 1 parking lot",
-        price: "150 000",
-        offerRequested: false,
-        offerSaved: true,
-        mainPicture: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSjZoqOcp2UUh7Y2bXVpo46koYw29UamuHWiQ&usqp=CAU",
-      },
-       {
-        title: "My 3",
-        type: 0,
-        details: "2 bed- 2 baths- 1 parking lot",
-        price: "180 000",
-        offerRequested: false,
-        offerSaved: true,
-        mainPicture: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSh4O9GCySQw_9C24XfInhq-lYgfnHlRSMB5g&usqp=CAU",
-      }
-    ]);
+    let currentOwnerId = ref();
+    let posts = reactive([]);
+    let offerCards = reactive([]);
+     let parsePosts = async (posts) => {
+      posts.forEach((post) => {
+        let listing = {};
+        listing.announceMainDetailsId = post.id_announceMainDetails;
+        listing.title = post.title;
+        listing.beds = post.bedroomsNo;
+        listing.baths = post.bathroomsNo;
+        listing.parkingLot = post.parkingLotsNo;
+        listing.price = post.price;
+        post.announceCharacteristic.forEach((characteristic) => {
+          if (
+            characteristic.announceMainDetailId == post.id_announceMainDetails
+          ) {
+            listing.type = characteristic.realEstateTypeId;
+          }
+        });
+        listing.mainPicture =
+          "https://static01.nyt.com/images/2019/06/25/realestate/25domestic-zeff/a1c1a1a36c9e4ff8adcb958c4276f28d-jumbo.jpg?quality=75&auto=webp"; //SCHIMBA
+        offerCards.push(listing);
+      });
+    };
+     let getMyPosts = async () => {
+      try {
+        currentOwnerId.value = 1; //SCHIMBA cu ce ownerID ai tu
+        let posts  =
+          await AnnounceMainDetailsAPI.getAllAnnounceMainDetailsFromOwner(
+            currentOwnerId.value
+          );
+        parsePosts(posts);
+        console.log(offerCards);
+      } catch (error) {}
+    };
     const postedOffers = computed(() => {
-      return postedOffersData.value.length;
+      return offerCards.length;
     });
     return {
-      postedOffersData,
       postedOffers,
+      currentOwnerId,
+      offerCards,
+      posts,
+      getMyPosts,
+      parsePosts
     };
   },
 }
