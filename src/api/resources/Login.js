@@ -69,3 +69,5 @@ export default {
       });
   }
 };
+
+export let idLogin = -1;

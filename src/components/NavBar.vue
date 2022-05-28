@@ -75,8 +75,8 @@ export default {
     let showMenuBar = () => {
       isMenuBarVisible.value = !isMenuBarVisible.value;
     }
-    let userTitle=ref("ileana");
-    let userDescription=ref("cioban la oi");
+    let userTitle=ref("Irina Pop");
+    let userDescription=ref("Broker");
     let GoToLocation = (location) => {
       //data from announcemaindetails with user id
         /* axios.post("", filters)

@@ -1,153 +1,165 @@
 <template>
-  <span class="container-custom center-content">
-    <v-card class="container overflow-y-auto">
-      <v-container
-        style="width: 80%"
-        fluid
-        class="overflow-y-auto"
-        v-scroll.self="onScroll"
-      >
-        <div class="center-content pa-6">
-          <font-awesome-icon icon="fingerprint" class="fa-w fa-3x" />
+  <div style="position: relative">
+    <span class="container-custom center-content backg">
+      <v-card class="container overflow-y-auto">
+        <v-container
+          style="width: 80%"
+          fluid
+          class="overflow-y-auto"
+          v-scroll.self="onScroll"
+        >
+          <v-form ref="form" v-model="valid" lazy-validation>
+            <div class="center-content pa-6">
+              <font-awesome-icon icon="fingerprint" class="fa-w fa-3x" />
+            </div>
+            <div class="center-content rev-pa">
+              <v-radio-group
+                v-model="radios"
+                inline
+                hide-details="auto"
+                mandatory
+              >
+                <v-radio
+                  label="Householder"
+                  value="householder"
+                  color="rgb(139, 177, 176)"
+                ></v-radio>
+                <v-radio
+                  label="Broker"
+                  value="broker"
+                  color="rgb(139, 177, 176)"
+                ></v-radio>
+              </v-radio-group>
+            </div>
+            <v-text-field
+              label="First name"
+              v-model="ownerDetails.firstName"
+              variant="underlined"
+              height="4em"
+            >
+              <template v-slot:append>
+                <v-icon icon="mdi-account" color="rgb(139, 177, 176)" />
+              </template>
+            </v-text-field>
+            <v-text-field
+              label="Last name"
+              v-model="ownerDetails.lastName"
+              variant="underlined"
+              height="4em"
+            >
+              <template v-slot:append>
+                <v-icon icon="mdi-account" color="rgb(139, 177, 176)" />
+              </template>
+            </v-text-field>
+            <v-text-field
+              label="Phone number"
+              v-model="ownerDetails.phoneNumber"
+              variant="underlined"
+              height="4em"
+            >
+              <template v-slot:append>
+                <v-icon icon="mdi-phone" color="rgb(139, 177, 176)" />
+              </template>
+            </v-text-field>
+            <v-text-field
+              label="E-mail"
+              v-model="ownerMainData.emailAdress"
+              required
+              variant="underlined"
+              height="4em"
+            >
+              <template v-slot:append>
+                <v-icon icon="mdi-email" color="rgb(139, 177, 176)" />
+              </template>
+            </v-text-field>
+            <v-text-field
+              :type="showPass ? 'text' : 'password'"
+              name="input-10-2"
+              v-model="ownerMainData.passwordHash"
+              label="Password"
+              class="input-group--focused"
+              variant="underlined"
+              height="4em"
+            >
+              <template v-slot:append>
+                <v-icon
+                  v-if="showPass"
+                  @click="showPass = !showPass"
+                  icon="mdi-eye"
+                  color="rgb(139, 177, 176)"
+                />
+                <v-icon
+                  v-else
+                  icon="mdi-eye-off"
+                  @click="showPass = !showPass"
+                  color="rgb(139, 177, 176)"
+                />
+              </template>
+            </v-text-field>
+            <v-text-field
+              label="Password confirmation"
+              :type="showPass ? 'text' : 'password'"
+              name="input-10-2"
+              v-model="passwordConfirmation"
+              hide-details="auto"
+              class="input-group--focused"
+              variant="underlined"
+              height="4em"
+            >
+              <template v-slot:append>
+                <v-icon
+                  v-if="showPassConf"
+                  @click="showPassConf = !showPassConf"
+                  icon="mdi-eye"
+                  color="rgb(139, 177, 176)"
+                />
+                <v-icon
+                  v-else
+                  icon="mdi-eye-off"
+                  @click="showPassConf = !showPassConf"
+                  color="rgb(139, 177, 176)"
+                />
+              </template>
+            </v-text-field>
+            <div class="center-content pa-2 ma-2">
+              <v-btn class="btn-login" @click="SignUp"> Sign up </v-btn>
+            </div>
+          </v-form>
+        </v-container>
+        <div style="text-align: center">
+          <label class="main-label">Already have an account?</label>
+          <a class="btn-redirect" href="/login"> Login </a>
         </div>
-        <div class="center-content rev-pa">
-          <v-radio-group v-model="radios" inline hide-details="auto" mandatory>
-            <v-radio
-              label="Householder"
-              value="householder"
-              color="rgb(139, 177, 176)"
-            ></v-radio>
-            <v-radio
-              label="Broker"
-              value="broker"
-              color="rgb(139, 177, 176)"
-            ></v-radio>
-          </v-radio-group>
-        </div>
-        <v-text-field
-          label="First name"
-          v-model="ownerDetails.firstName"
-          variant="underlined"
-          height="4em"
-        >
-          <template v-slot:append>
-            <v-icon icon="mdi-account" color="rgb(139, 177, 176)" />
-          </template>
-        </v-text-field>
-        <v-text-field
-          label="Last name"
-          v-model="ownerDetails.lastName"
-          variant="underlined"
-          height="4em"
-        >
-          <template v-slot:append>
-            <v-icon icon="mdi-account" color="rgb(139, 177, 176)" />
-          </template>
-        </v-text-field>
-        <v-text-field
-          label="Phone number"
-          v-model="ownerDetails.phoneNumber"
-          variant="underlined"
-          height="4em"
-        >
-          <template v-slot:append>
-            <v-icon icon="mdi-phone" color="rgb(139, 177, 176)" />
-          </template>
-        </v-text-field>
-        <v-text-field
-          label="E-mail"
-          v-model="ownerMainData.emailAdress"
-          required
-          variant="underlined"
-          height="4em"
-        >
-          <template v-slot:append>
-            <v-icon icon="mdi-email" color="rgb(139, 177, 176)" />
-          </template>
-        </v-text-field>
-        <v-text-field
-          :type="showPass ? 'text' : 'password'"
-          name="input-10-2"
-          v-model="ownerMainData.passwordHash"
-          label="Password"
-          class="input-group--focused"
-          variant="underlined"
-          height="4em"
-        >
-          <template v-slot:append>
-            <v-icon
-              v-if="showPass"
-              @click="showPass = !showPass"
-              icon="mdi-eye"
-              color="rgb(139, 177, 176)"
-            />
-            <v-icon
-              v-else
-              icon="mdi-eye-off"
-              @click="showPass = !showPass"
-              color="rgb(139, 177, 176)"
-            />
-          </template>
-        </v-text-field>
-        <v-text-field
-          label="Password confirmation"
-          :type="showPass ? 'text' : 'password'"
-          name="input-10-2"
-          v-model="passwordConfirmation"
-          hide-details="auto"
-          class="input-group--focused"
-          variant="underlined"
-          height="4em"
-        >
-          <template v-slot:append>
-            <v-icon
-              v-if="showPassConf"
-              @click="showPassConf = !showPassConf"
-              icon="mdi-eye"
-              color="rgb(139, 177, 176)"
-            />
-            <v-icon
-              v-else
-              icon="mdi-eye-off"
-              @click="showPassConf = !showPassConf"
-              color="rgb(139, 177, 176)"
-            />
-          </template>
-        </v-text-field>
-        <div class="center-content pa-2 ma-2">
-          <v-btn class="btn-login" @click="SignUp"> Sign up </v-btn>
-        </div>
-      </v-container>
-      <div style="text-align: center">
-        <label class="main-label">Already have an account?</label>
-        <a class="btn-redirect" href="/login"> Login </a>
-      </div>
-    </v-card>
-  </span>
+      </v-card>
+    </span>
+  </div>
+  <div id="alert" style="position: absolute; display: none; align-self: center">
+    <v-alert density="default" :type="alertType" closable>
+      {{ alertMessage }}
+    </v-alert>
+  </div>
 </template>
 
 <script>
 import { ref, reactive } from "vue";
 import LoginAPI from "@/api/resources/Login.js";
 import OwnerAPI from "@/api/resources/Owner.js";
+
 export default {
   name: "SignupView",
   setup() {
-    let ownerMainData = ref(
-      {
-        emailAdress: '',
-        passwordHash: '',
-      },
-    );
-    let ownerDetails = reactive(
-      {
-        firstName: "",
-        lastName: "",
-        phoneNumber: "",
-        ownerTypeId: 1,
-        loginId: 1,
-      },
-    );
+    let ownerMainData = reactive({
+      emailAdress: "",
+      passwordHash: "",
+    });
+    let ownerDetails = reactive({
+      firstName: "",
+      lastName: "",
+      phoneNumber: "",
+      ownerTypeId: 1,
+      loginId: 1,
+    });
+    let valid = ref(true);
     let showPass = ref(false);
     let showPassConf = ref(false);
     let passwordConfirmation = ref("");
@@ -157,22 +169,88 @@ export default {
       scrollInvoked.value++;
       console.log(scrollInvoked);
     };
+    let alertType = ref("warning");
+    let alertMessage = ref("");
+    let displayAlert = (message,type) => {
+      alertType.value = type;
+      alertMessage.value = message;
+      document.getElementById("alert").style.display = "block";
+      setTimeout(function () {
+        document.getElementById("alert").style.display = "none";
+      }, 5000);
+    };
+    let validateInput = () => {
+      if (ownerDetails.firstName.length == 0) {
+        displayAlert(
+          "The first name input is mandatory. Please fill this field.",
+          "warning"
+        );
+        return false;
+      } else if (ownerDetails.lastName.length == 0) {
+        displayAlert(
+          "The last name input is mandatory. Please fill this field.",
+          "warning"
+        );
+        return false;
+      } else if (ownerDetails.phoneNumber.length == 0) {
+        displayAlert(
+          "The phone number input is mandatory. Please fill this field.",
+          "warning"
+        );
+        return false;
+      } else if (ownerMainData.emailAdress.length == 0) {
+        displayAlert(
+          "The email address input is mandatory. Please fill this field.",
+          "warning"
+        );
+        return false;
+      } else if (ownerMainData.passwordHash.length == 0) {
+        displayAlert(
+          "The password input is mandatory. Please fill this field.",
+          "warning"
+        );
+        return false;
+      } else if (passwordConfirmation.value.length == 0) {
+        displayAlert(
+          "The password confirmation input is mandatory. Please fill this field.",
+          "warning"
+        );
+        return false;
+      } else if (ownerMainData.passwordHash != passwordConfirmation.value) {
+        displayAlert("The passwords don't match. Please rewrite.",
+          "error");
+        return false;
+      }
+      return true;
+    };
     let SignUp = async () => {
-      try {
-        let res = await LoginAPI.store(ownerMainData.value);
-        ownerDetails.loginId = JSON.parse(res.id);
-        SignUpDetails();
-      } catch (error) {
-        console.log(error.value);
+      if (validateInput()) {
+        ownerDetails.ownerTypeId = radios.value == "householder" ? 1 : 2;
+        try {
+          let res = await LoginAPI.store(ownerMainData);
+          ownerDetails.loginId = JSON.parse(res.id);
+          SignUpDetails();
+        } catch (error) {
+          displayAlert("The couldn't be created. Please try again later.",
+          "error");
+        }
       }
     };
     let SignUpDetails = async () => {
       try {
         let resDetails = await OwnerAPI.storeOwner(ownerDetails);
-        console.log(resDetails);
+        LoginAPI.loginId = resDetails.id;
+        console.log(LoginAPI.loginId);
+        GoToLocation("/");
       } catch (error) {
         console.log(error.value);
       }
+    };
+    let GoToLocation = (location) => {
+      window.location = location;
+    };
+    let validate = () => {
+      this.$refs.form.validate();
     };
     return {
       showPass,
@@ -184,13 +262,28 @@ export default {
       ownerMainData,
       ownerDetails,
       SignUp,
-      SignUpDetails
+      SignUpDetails,
+      GoToLocation,
+      valid,
+      validate,
+      alertMessage,
+      validateInput,
+      displayAlert,
+      alertType
     };
   },
 };
 </script>
 
 <style scoped>
+.backg {
+  background: url("@/assets/img/image.jpg") no-repeat center center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  height: 100vh;
+}
 .btn-login {
   text-transform: none;
   border-radius: 50px;
@@ -244,6 +337,13 @@ label {
   margin-left: -4%;
 }
 
+.show-on-top {
+  z-index: 9;
+}
+.under {
+  z-index: 0;
+}
+
 .label-type {
   font-weight: normal;
 }
@@ -293,7 +393,7 @@ label {
   }
 }
 /* Small devices (portrait tablets and large phones, 600px and up) */
-@media only screen and (min-width: 600px) {
+@media only screen and (max-width: 600px) {
   ::v-deep(.v-text-field label) {
     font-size: 0.6em;
   }
@@ -313,10 +413,19 @@ label {
   .btn-login {
     font-size: 12px;
   }
+  .backg {
+    background: url("@/assets/img/cover-ph-blur.jpg") no-repeat center center
+      fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    height: 100vh;
+  }
 }
 
 /* Medium devices (landscape tablets, 768px and up) */
-@media only screen and (min-width: 700px, min-height:700px) {
+@media only screen and (max-width: 700px, min-height:700px) {
   ::v-deep(.v-text-field label) {
     font-size: 0.7em;
   }
@@ -335,6 +444,15 @@ label {
   }
   .btn-login {
     font-size: 13px;
+  }
+  .backg {
+    background: url("@/assets/img/cover-ph-blur.jpg") no-repeat center center
+      fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    height: 100vh;
   }
 }
 
