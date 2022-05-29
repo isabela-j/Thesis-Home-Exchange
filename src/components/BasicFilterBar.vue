@@ -19,14 +19,16 @@
         >What you have</v-btn
       >
     <Filters @newFilters="startFilter" v-if="showPreferences" />
-    <MiniCardsList v-else />
+    <MiniCardsList v-else  :cardsData="myOffers"/>
   </v-container>
 </template>
 
 <script>
-import { ref, computed, onMounted, onUnmounted } from "vue";
+import { ref, computed, onMounted, onUnmounted, reactive } from "vue";
 import Filters from "@/components/Filters.vue";
 import MiniCardsList from "@/components/MiniCardsList.vue";
+import AnnounceMainDetailsAPI from "@/api/resources/AnnounceMainDetails.js";
+import LoginAPI from "@/api/resources/Login.js";
 export default {
   name: "BasicFilterBar",
   components: {
@@ -35,6 +37,7 @@ export default {
   },
   emits: ["filterPosts"],
   setup(_, { emit }) {
+    let currentOwnerId = ref(1);
     let showPreferences = ref(true);
     let showYourAnnounces = ref(false);
     let drawer = ref(true);
@@ -45,22 +48,53 @@ export default {
         showYourAnnounces.value = !showPreferences.value;
       }
     };
-    let setShowYourAnnounces = () => {
+    let setShowYourAnnounces = async () => {
       if (!showYourAnnounces.value) {
         showPreferences.value = !showPreferences.value;
         showYourAnnounces.value = !showPreferences.value;
+         let posts  =
+          await AnnounceMainDetailsAPI.getAllAnnounceMainDetailsFromOwner(
+            currentOwnerId.value
+          );
+        parsePosts(posts);
       }
     };
     let startFilter = (filters) => {
        emit("filterPosts", filters);
     }
+     let parsePosts = async (posts) => {
+      posts.forEach((post) => {
+        let listing = {};
+        listing.announceMainDetailsId = post.id_announceMainDetails;
+        listing.title = post.title;
+        listing.beds = post.bedroomsNo;
+        listing.baths = post.bathroomsNo;
+        listing.parkingLot = post.parkingLotsNo;
+        listing.price = post.price;
+        listing.offerRequested = false;
+        post.announceCharacteristic.forEach((characteristic) => {
+          if (
+            characteristic.announceMainDetailId == post.id_announceMainDetails
+          ) {
+            listing.type = characteristic.realEstateTypeId;
+          }
+        });
+        listing.mainPicture =
+          "https://static01.nyt.com/images/2019/06/25/realestate/25domestic-zeff/a1c1a1a36c9e4ff8adcb958c4276f28d-jumbo.jpg?quality=75&auto=webp"; //SCHIMBA
+        myOffers.push(listing);
+      });
+    };
+    let myOffers = reactive([]);
     return {
       drawer,
       showPreferences,
       showYourAnnounces,
       setShowPreferences,
       setShowYourAnnounces,
-      startFilter
+      startFilter,
+      parsePosts,
+      myOffers,
+      currentOwnerId
     };
   },
 };

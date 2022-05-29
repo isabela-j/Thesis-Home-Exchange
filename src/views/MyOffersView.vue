@@ -11,10 +11,10 @@
             :baths="item.baths"
             :parkingLot="item.parkingLot"
             :price="item.price"
-            offerRequested= false
+            :offerRequested= "false"
             :offerSaved="item.offerSaved"
             :mainPicture="item.mainPicture"
-            showSaveBtn="false"
+            :showSaveBtn="false"
           />
         </v-col>
       </v-row>

@@ -231,7 +231,7 @@ export default {
           ownerDetails.loginId = JSON.parse(res.id);
           SignUpDetails();
         } catch (error) {
-          displayAlert("The couldn't be created. Please try again later.",
+          displayAlert("The account couldn't be created. Please try again later.",
           "error");
         }
       }

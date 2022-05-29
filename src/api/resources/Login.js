@@ -43,23 +43,23 @@ export default {
   },
   update(data, id) {
     Service.headers.set("Content-Type", "multipart/form-data"); //for sending files to the server
-    Service.headers.set("Authorization", "Bearer " + Service.token);
+  //  Service.headers.set("Authorization", "Bearer " + Service.token);
     return fetch(Service.baseURL + "/Logins/" + id, {
       method: "PATCH",
-      headers: Service.headers,
-      body: data,
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
     }).then(function (response) {
       if (response.status != 200) {
         throw response.status;
       } else {
-        return response.json();
+        return response;
       }
     });
   },
   delete(id) {
     return fetch(Service.baseURL + "/Logins/" + id, {
         method: "DELETE",
-        headers: Service.headers,
+        headers: { "Content-Type": "application/json" },
       }).then(function (response) {
         if (response.status != 200) {
           throw response.status;
