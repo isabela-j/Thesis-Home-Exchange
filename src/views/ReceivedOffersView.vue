@@ -9,15 +9,23 @@
           <SentReceivedCard
             :title="item.title"
             :type="item.type"
-            :beds= "item.beds"
-            :baths = "item.baths"
-            :parkingLot = "item.parkingLot"
+            :beds= "item.bedroomsNo"
+            :baths = "item.bathroomsNo"
+            :parkingLot = "item.parkingLotsNo"
             :price="item.price"
-            :offerRequested="item.offerRequested"
-            :offerSaved="item.offerSaved"
             :mainPicture="item.mainPicture"
-            :message="item.message"
-            :offerStatus="item.offerStatus"
+            :message="item.senderMessage"
+            :offerStatus="item.offerAccepted"
+            :senderPhoneNo = "item.senderPhoneNumber"
+            :senderEmail = "item.senderEmail"
+            :titleY="item.titleY"
+            :typeY="item.typeY"
+            :bedsY= "item.bedroomsNoY"
+            :bathsY = "item.bathroomsNoY"
+            :parkingLotY = "item.parkingLotsNoY"
+            :priceY="item.priceY"
+            :mainPictureY="item.mainPictureY"
+            :descY="item.descY"
           />
         </v-col>
       </v-row>
@@ -26,80 +34,67 @@
 </template>
 
 <script>
-import { ref, computed } from "vue";
+import { ref, computed, reactive } from "vue";
 import SentReceivedCard from "@/components/SentReceivedCard.vue";
+import AnnounceMainDetailsAPI from "@/api/resources/AnnounceMainDetails.js";
+import OfferSentAndReceivedAPI from "@/api/resources/OfferSentAndReceived.js";
 export default {
   name: "ReceivedOfferView",
   components: {
     SentReceivedCard,
   },
+  created() {
+    this.populateReceived();
+  },
   setup() {
-    const receivedOffersData = ref([
-      {
-        title: "Marasti Street Nr 3",
-        type: 1,
-        beds: 4,
-        baths: 2,
-        parkingLot: 1,
-        price: "230 000",
-        offerRequested: true,
-        offerSaved: true,
-        mainPicture:
-          "https://images.adsttc.com/media/images/5e68/48ed/b357/658e/fb00/0441/large_jpg/AM1506.jpg?1583892706",
-        message: "this is a message sent",
-        offerStatus: 0,
-      },
-      {
-        title: "Iris Street Nr 1",
-        type: 0,
-        beds: 4,
-        baths: 2,
-        parkingLot: 1,
-        price: "150 000",
-        offerRequested: false,
-        offerSaved: true,
-        mainPicture:
-          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSjZoqOcp2UUh7Y2bXVpo46koYw29UamuHWiQ&usqp=CAU",
-        message: "this is a another message",
-        offerStatus: 0,
-      },
-      {
-        title: "Manastur Street Nr 14",
-        type: 0,
-        beds: 4,
-        baths: 2,
-        parkingLot: 1,
-        price: "180 000",
-        offerRequested: false,
-        offerSaved: true,
-        mainPicture:
-          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSh4O9GCySQw_9C24XfInhq-lYgfnHlRSMB5g&usqp=CAU",
-        message:
-          "f type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of L",
-        offerStatus: 1,
-      },
-      {
-        title: "Venus Street Nr 20",
-        type: 0,
-        beds: 4,
-        baths: 2,
-        parkingLot: 1,
-        price: "250 000",
-        offerRequested: false,
-        offerSaved: true,
-        mainPicture:
-          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQoLSG2pHU9KTA7tHA62H0jXspw4tzlr1UYBg&usqp=CAU",
-        message:
-          "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors",
-        offerStatus: 2,
-      },
-    ]);
+    let receivedOffersData = reactive([]);
+    let yourOffersData = reactive([]);
+    let currentOwnerId = ref();
+    //"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQoLSG2pHU9KTA7tHA62H0jXspw4tzlr1UYBg&usqp=CAU"
     const receivedOffersCount = computed(() => {
-      return receivedOffersData.value.length;
+      return receivedOffersData.length > 0 ? receivedOffersData.length : 0;
     });
+    let parseData = (data) => {
+      data.forEach((post) => {
+        post.offerReceived.forEach(async (sent) => {
+          let listing = sent;
+          let announceData = await AnnounceMainDetailsAPI.getAnnounceMainDetail(
+            sent.id_sender
+          );
+          listing.title = announceData.title;
+          listing.bedroomsNo = announceData.bedroomsNo;
+          listing.bathroomsNo = announceData.bathroomsNo;
+          listing.parkingLotsNo = announceData.parkingLotsNo;
+          listing.price = announceData.price;
+          listing.type = announceData.announceCharacteristic[0].realEstateTypeId;
+          listing.mainPicture = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQoLSG2pHU9KTA7tHA62H0jXspw4tzlr1UYBg&usqp=CAU";
+          
+          
+          listing.titleY = post.title;
+          listing.bedroomsNoY = post.bedroomsNo;
+          listing.bathroomsNoY = post.bathroomsNo;
+          listing.parkingLotsNoY = post.parkingLotsNo;
+          listing.priceY = post.price;
+          listing.typeY = post.announceCharacteristic[0].realEstateTypeId;
+          listing.mainPictureY = "https://static01.nyt.com/images/2019/06/25/realestate/25domestic-zeff/a1c1a1a36c9e4ff8adcb958c4276f28d-jumbo.jpg?quality=75&auto=webp";
+          listing.descY = "punedescriere";
+          receivedOffersData.push(listing);
+        });
+      });
+    };
+    let populateReceived = async () => {
+      currentOwnerId.value = 1;
+      let data = await AnnounceMainDetailsAPI.getAllAnnounceMainDetailsFromOwner(
+        currentOwnerId.value
+      );
+       parseData(data);
+    };
     return {
       receivedOffersData,
       receivedOffersCount,
+      populateReceived,
+      currentOwnerId,
+      yourOffersData
     };
   },
 };

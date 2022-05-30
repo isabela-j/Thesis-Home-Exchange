@@ -14,19 +14,7 @@ export default {
     });
   },
   getAllOffersSentByOwner(ownerId) {
-    return fetch(Service.baseURL + "/OffersSentAndReceived/offersSentByOwner" + ownerId, {
-      method: "GET",
-      headers: Service.headers,
-    }).then(function (response) {
-      if (response.status != 200) {
-        throw response.status;
-      } else {
-        return response.json();
-      }
-    });
-  },
-  getAllOffersSentByOwner(offerSentAndReceivedId) {
-    return fetch(Service.baseURL + "/OffersSentAndReceived/offersSentByOwner/" + offerSentAndReceivedId ,{
+    return fetch(Service.baseURL + "/OffersSentAndReceived/offersSentByOwner/" + ownerId, {
       method: "GET",
       headers: Service.headers,
     }).then(function (response) {
