@@ -6,16 +6,19 @@
         <v-col key="1">
           <v-text-field
             label="your name"
+            v-model="name"
             class="v-text-field"
             hide-details="auto"
           />
           <v-text-field
             label="email"
+            v-model="email"
             class="v-text-field"
             hide-details="auto"
           />
           <v-text-field
             label="phone number"
+             v-model="phoneNo"
             class="v-text-field"
             hide-details="auto"
           />
@@ -58,9 +61,12 @@ export default {
       a.label = "message";
     };
     let defaultText = ref(
-      "Hello! I saw your announce with the link... and I would highly appreciate if you could give me some extra details."
+      "Hello! I saw your announce and I would highly appreciate if you could give me some extra details."
     );
     let isRequested = ref(props.offerRequested);
+    let name = ref(props.name);
+    let phoneNo = ref(props.phoneNo);
+    let email = ref(props.email);
     let requestOffer = () => {
       if(!isRequested.value)
          isRequested.value = !isRequested.value;
@@ -70,9 +76,12 @@ export default {
       defaultText,
       isRequested,
       requestOffer,
+      name, 
+      phoneNo,
+      email
     };
   },
-   props: ["offerRequested"],
+   props: ["offerRequested", "name", "phoneNo", "email"],
 };
 </script>
 

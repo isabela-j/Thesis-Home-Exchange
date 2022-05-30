@@ -59,7 +59,7 @@ export default {
     let dishwasher = ref(props.dishwasher);
     let garage = ref(props.garage);
     let GetAnswer = (param) => {
-      return param == "true" ? "Yes" : "No";
+      return param == true ? "Yes" : "No";
     };
     return {
       furniture,

@@ -10,7 +10,7 @@
             <v-label class="person-decoration">{{ ownerTypeString }}</v-label>
           </v-row>
           <v-row dense>
-            <v-label class="person-decoration">{{ hasBrokerageName }}</v-label>
+            <v-label class="person-decoration"> </v-label>
           </v-row>
         </v-col>
 
@@ -42,7 +42,7 @@ export default {
   name: "OwnerSmallDetails",
   setup(props) {
     const ownerTypeString = computed(() => {
-      return props.ownerType > 0 ? "Broker" : "Individual";
+      return props.ownerType == 1 ? "Householder" : "Broker" ;
     });
     const hasBrokerageName = computed(() => {
       return props.brokerageName.length > 0

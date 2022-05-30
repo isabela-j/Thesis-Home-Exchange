@@ -6,85 +6,83 @@
           <PicturesSlideShow />
         </v-col>
       </v-row>
-      <v-row class="fill-height" dense>
-        <v-col key="11" class="ma-2">
+      <v-row class="fill-height" style="margin: 0.1em;" dense>
+        <v-col key="11" >
           <ProfileDetails
-            title="Marasti Street nr 3"
-            type="1"
-            details="5 bed - 2 baths - 2 parking lot - 130 sqft"
-            description="Lorem Ipsum is simply dummy text of
-                           the printing and typesetting industry. Lorem Ipsum has been the industry's
-                            standard dummy text ever since the 1500s, when an unknown printer took a
-                            galley of type and scrambled it to make a type specimen book. It has survived
-                            not only five centuries but also the leap into electronic typesetting,
-                            remaining essentially unchanged. It was popularised in the 1960s with the
-                            release of Letraset sheets containing Lorem Ipsum passages, and more recently
-                            with desktop publishing software like Aldus PageMaker including versions of
-                            Lorem Ipsum."
-            price="130 000"
-            offerSaved="false"
+            :title="profileDetails.title"
+            :type="profileDetails.type"
+            :description="profileDetails.description"
+            :price="profileDetails.price"
+            :offerSaved="profileDetails.saved"
+            :details="profileDetails.details"
+            :key="profileDetails.key"
+          />
+           <OwnerSmallDetails
+            :name="ownerDetails.fullName"
+            :ownerType="ownerDetails.type"
+            :phoneNo="ownerDetails.phoneNo"
+            :email="ownerDetails.email"
+            style="margin-top: 1em;"
           />
         </v-col>
-        <v-col key="12" class="show-right ma-2">
-          <OwnerSmallDetails
-            name="Viorel Barbos"
-            ownerType="0"
-            brokerageName=""
-            phoneNo="0745628364"
-            email="virelbar@gmail.com"
+        <v-col key="12" class="show-right">
+          <SuggestOffer
+            :offerRequested="profileDetails.offerRequested"
+            :name="currentOwnerData.fullName"
+            :phoneNo= "currentOwnerData.phoneNo"
+            :email= "currentOwnerData.email"
+            :key="profileDetails.key"
+            
           />
-          <SuggestOffer offerRequested="true" style="margin-top: 0.5em;" />
         </v-col>
       </v-row>
       <v-row class="show-bottom" dense>
         <v-col>
-          <OwnerSmallDetails
-            name="Viorel Barbos"
-            ownerType="0"
-            brokerageName=""
-            phoneNo="0745628364"
-            email="virelbar@gmail.com"
-            class="ma-2"
-          />
-          <SuggestOffer />
+          <SuggestOffer 
+            :offerRequested="profileDetails.offerRequested"
+            :name="currentOwnerData.fullName"
+            :phoneNo= "currentOwnerData.phoneNo"
+            :email= "currentOwnerData.email"/>
         </v-col>
       </v-row>
       <v-row dense>
         <v-card width="100%" class="ma-2">
-          <MainCharacteristics 
-          type = "house"
-          street = "fdbghfg strada"
-          bedrooms = "2"
-          bathrooms="1"
-
-          partition="detached"
-          floor="3"
-          parkingNo="1"
-          sqft="150"
-          balconyNo="1"
-          construction="2010"/>
+          <MainCharacteristics
+            :type="profileDetails.typestr"
+            :street="profileDetails.street"
+            :bedrooms="profileDetails.beds"
+            :bathrooms="profileDetails.baths"
+            :partition="mainCharacteristics.partition"
+            :floor="mainCharacteristics.floorNo"
+            :parkingNo="profileDetails.parkingLot"
+            :sqft="profileDetails.sqft"
+            :balconyNo="mainCharacteristics.balconyNo"
+            :construction="mainCharacteristics.constructionYear"
+          />
         </v-card>
       </v-row>
       <v-row dense>
         <v-card width="100%" class="ma-2">
           <Utilities
-            electrical="true"
-            waterPipe="false"
-            sewerage="true"
-            gasPipe="true"
-            thermalPS="true"
-            underfloorHeating="false" />
+            :electrical="uitilites.electricalCurrent"
+            :waterPipe="uitilites.waterPipe"
+            :sewerage="uitilites.sewerage"
+            :gasPipe="uitilites.gasPipe"
+            :thermalPS="uitilites.thermalPowerStationOwn"
+            :key="uitilites.key"
+          />
         </v-card>
       </v-row>
-        <v-row dense>
+      <v-row dense>
         <v-card width="100%" class="ma-2">
           <Features
-          furniture ="true"
-          electricStove ="false"
-          washingMachine ="true"
-          dishwasher ="true"
-          garage = "true"
-           />
+            :furniture="features.modernFurniture"
+            :electricStove="features.electricStove"
+            :washingMachine="features.washingMachine"
+            :dishwasher="features.dishWasher"
+            :garage="features.garage"
+            :key="features.key"
+          />
         </v-card>
       </v-row>
     </v-container>
@@ -99,6 +97,10 @@ import SuggestOffer from "@/components/SuggestOffer.vue";
 import MainCharacteristics from "@/components/MainCharacteristics.vue";
 import Utilities from "@/components/Utilities.vue";
 import Features from "@/components/Features.vue";
+import { ref, computed, reactive } from "vue";
+import AnnounceMainDetailsAPI from "@/api/resources/AnnounceMainDetails.js";
+import OwnerAPI from "@/api/resources/Owner.js";
+import LoginAPI from "@/api/resources/Login.js";
 export default {
   name: "AnnounceView",
   components: {
@@ -108,9 +110,208 @@ export default {
     SuggestOffer,
     MainCharacteristics,
     Utilities,
-    Features
+    Features,
   },
-  setup() {},
+  created() {
+    this.populateAnnounce();
+  },
+  setup() {
+    let announceId = ref();
+    let currentOwnerId = ref();
+    let currentOwnerData = reactive({
+      firstName: "",
+      lastName: "",
+      fullName: "",
+      phoneNo: "",
+      email: "",
+      ownerId: "",
+      ownerType: 2,
+    });
+    let profileDetails = reactive({
+      title: "",
+      street: "",
+      beds: 0,
+      baths: 0,
+      parkingLot: 0,
+      sqft: 0,
+      description: "",
+      price: "",
+      saved: false,
+      type: 2,
+      details: "",
+      offerRequested: false,
+      key: 0,
+      typestr: "",
+    });
+    let ownerDetails = reactive({
+      firstName: "",
+      lastName: "",
+      fullName: "",
+      phoneNo: "",
+      email: "",
+      ownerId: "",
+      ownerType: 2,
+    });
+    let mainCharacteristics = reactive({
+      balconyNo: 0,
+      constructionYear: 0,
+      floorNo: 0,
+      distribution: 10,
+      type: 2,
+      totalBuildingFloors: 0,
+      partition: ""
+    });
+    let features = reactive({
+      dishWasher: false,
+      electricStove: false,
+      garage: false,
+      modernFurniture: false,
+      washingMachine: false,
+      key:0
+    });
+    let uitilites = reactive({
+      electricalCurrent: false,
+      gasPipe: false,
+      newRadiators: false,
+      sewerage: false,
+      thermalPowerStationOwn: false,
+      waterPipe: false,
+      key:0
+    });
+
+    let parseMainDetails = (details, sentDetails) => {
+      profileDetails.title = details.title;
+      profileDetails.street = details.fullAddress;
+      profileDetails.beds = details.bedroomsNo;
+      profileDetails.baths = details.bathroomsNo;
+      profileDetails.parkingLot = details.parkingLotsNo;
+      profileDetails.sqft = details.squareMeters;
+      profileDetails.description = details.fullDescription;
+      profileDetails.price = details.price;
+      profileDetails.details =
+        profileDetails.beds +
+        " beds - " +
+        profileDetails.baths +
+        " baths - " +
+        profileDetails.parkingLot +
+        " parking lot - " +
+        profileDetails.sqft +
+        " sqft";
+      profileDetails.saved = false;
+      details.offerSaved.forEach((saved) => {
+        if (saved.ownerId == currentOwnerId.value) {
+          profileDetails.saved = true;
+        }
+      });
+      details.announceCharacteristic.forEach((characteristic) => {
+        if (
+          characteristic.announceMainDetailId == details.id_announceMainDetails
+        ) {
+          profileDetails.type = characteristic.realEstateTypeId;
+          profileDetails.type === 1 ? profileDetails.typestr="House" : profileDetails.typestr="Apartment"
+        }
+      });
+      details.offerReceived.forEach((received) => {
+        if (received.id_received == details.id_announceMainDetails) {
+          sentDetails.forEach((userOffers) => {
+            if (received.id_sender == userOffers.id_announceMainDetails) {
+              profileDetails.offerRequested = true;
+            }
+          });
+        }
+      });
+      console.log(profileDetails, sentDetails);
+      profileDetails.key = 1;
+    };
+    let parseOwnerDetails = (owner, ownerResult) => {
+      ownerResult.firstName = owner.firstName;
+      ownerResult.lastName = owner.lastName;
+      ownerResult.fullName = owner.firstName + " " + owner.lastName;
+      ownerResult.phoneNo = owner.phoneNumber;
+      ownerResult.type = owner.ownerTypeId;
+    };
+    let parseCharacteristics = (characteristics) => {
+      mainCharacteristics.balconyNo = characteristics.balconyNo;
+      mainCharacteristics.constructionYear = characteristics.constructionYear;
+      mainCharacteristics.floorNo = characteristics.floorNo;
+      mainCharacteristics.distribution =
+        characteristics.realEstateDistributionId;
+      mainCharacteristics.type = characteristics.realEstateTypeId;
+      mainCharacteristics.totalBuildingFloors =
+        characteristics.totalBuildingFloors;
+      if(mainCharacteristics.distribution == "1") {
+        mainCharacteristics.partition = "detached";
+      }
+      else if(mainCharacteristics.distribution == "2"){
+        mainCharacteristics.partition = "semi-detached";
+      }
+      else{
+        mainCharacteristics.partition = "uncompartmented";
+      }
+    };
+    let parsefeatures = (announceFeatures) => {
+      features.dishWasher = announceFeatures.dishWasher;
+      features.electricStove = announceFeatures.electricStove;
+      features.garage = announceFeatures.garage;
+      features.modernFurniture = announceFeatures.modernFurniture;
+      features.washingMachine = announceFeatures.washingMachine;
+      features.key = 1;
+    };
+    let parseUtilities = (announceUtilities) => {
+      uitilites.electricalCurrent = announceUtilities.electricalCurrent;
+      uitilites.gasPipe = announceUtilities.gasPipe;
+      uitilites.newRadiators = announceUtilities.newRadiators;
+      uitilites.sewerage = announceUtilities.sewerage;
+      uitilites.thermalPowerStationOwn = announceUtilities.thermalPowerStationOwn;
+      uitilites.waterPipe = announceUtilities.waterPipe;
+      uitilites.key = 1;
+    };
+    let populateAnnounce = async () => {
+      currentOwnerId.value = 2;
+      announceId.value = 1;
+
+    try{
+      let announceMainDetails =
+        await AnnounceMainDetailsAPI.getAnnounceMainDetail(announceId.value);
+      let sentDetails =
+        await AnnounceMainDetailsAPI.getAllAnnounceMainDetailsFromOwner(
+          currentOwnerId.value
+        );
+      let currentUserData = await OwnerAPI.getOwner(currentOwnerId.value); //the user that is currently logged in
+      parseOwnerDetails(currentUserData,currentOwnerData);
+      let currentUserLogin = await LoginAPI.getLogin(currentOwnerId.value);
+      currentOwnerData.email = currentUserLogin.emailAdress;
+
+      parseMainDetails(announceMainDetails, sentDetails);
+      let ownerDetailsJS = await OwnerAPI.getOwner(announceMainDetails.ownerId);
+
+      ownerDetails.ownerId = announceMainDetails.ownerId; //the owner of the announce
+      parseOwnerDetails(ownerDetailsJS,ownerDetails);
+      let ownerLogin = await LoginAPI.getLogin(announceMainDetails.ownerId);
+      ownerDetails.email = ownerLogin.emailAdress;
+
+      parseCharacteristics(announceMainDetails.announceCharacteristic[0]);
+      parsefeatures(announceMainDetails.announceFeature[0]);
+      parseUtilities(announceMainDetails.announceUtilities[0]);
+    }
+    catch(error) {
+      console.log(error);
+    }
+    };
+    return {
+      populateAnnounce,
+      announceId,
+      profileDetails,
+      currentOwnerId,
+      currentOwnerData,
+      ownerDetails,
+      mainCharacteristics,
+      features,
+      parsefeatures,
+      parseUtilities,
+      uitilites
+    };
+  },
 };
 </script>
 

@@ -45,15 +45,6 @@
         <label class="text-label"> {{ GetAnswer(thermalPS) }} </label>
       </v-col>
     </v-row>
-    <v-divider horizontal class="divider-custom mx-1" />
-    <v-row class="ma-1">
-      <v-col :key="1">
-        <label class="title-label"> Underfloor heating </label>
-      </v-col>
-      <v-col :key="2">
-        <label class="text-label"> {{ GetAnswer(underfloorHeating) }} </label>
-      </v-col>
-    </v-row>
   </v-container>
 </template>
 
@@ -67,9 +58,8 @@ export default {
     let sewerage = ref(props.sewerage);
     let gasPipe = ref(props.gasPipe);
     let thermalPS = ref(props.thermalPS);
-    let underfloorHeating = ref(props.underfloorHeating);
     let GetAnswer = (param) => {
-      return param == "true" ? "Yes" : "No";
+      return param == true ? "Yes" : "No";
     };
     return {
       electrical,
@@ -77,11 +67,10 @@ export default {
       sewerage,
       gasPipe,
       thermalPS,
-      underfloorHeating,
       GetAnswer,
     };
   },
-  props: ["electrical","waterPipe", "sewerage", "gasPipe", "thermalPS", "underfloorHeating"],
+  props: ["electrical","waterPipe", "sewerage", "gasPipe", "thermalPS"],
 };
 </script>
 
