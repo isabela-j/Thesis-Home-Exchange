@@ -79,7 +79,7 @@ export default {
           listing.priceY = post.price;
           listing.typeY = post.announceCharacteristic[0].realEstateTypeId;
           listing.mainPictureY = "https://images.adsttc.com/media/images/5e68/48ed/b357/658e/fb00/0441/large_jpg/AM1506.jpg?1583892706";
-          listing.descY = "punedescriere";
+          listing.descY = post.fullDescription;
           sentOffersData.push(listing);
           
         });

@@ -77,7 +77,7 @@ export default {
           listing.priceY = post.price;
           listing.typeY = post.announceCharacteristic[0].realEstateTypeId;
           listing.mainPictureY = "https://static01.nyt.com/images/2019/06/25/realestate/25domestic-zeff/a1c1a1a36c9e4ff8adcb958c4276f28d-jumbo.jpg?quality=75&auto=webp";
-          listing.descY = "punedescriere";
+          listing.descY = post.fullDescription;
           receivedOffersData.push(listing);
         });
       });

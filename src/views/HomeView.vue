@@ -101,38 +101,46 @@ export default {
     let sentDetails = reactive([]);
     let parsePosts = async (posts, sentDetails) => {
       posts.forEach((post) => {
-        let listing = {};
-        listing.announceMainDetailsId = post.id_announceMainDetails;
-        listing.title = post.title;
-        listing.beds = post.bedroomsNo;
-        listing.baths = post.bathroomsNo;
-        listing.parkingLot = post.parkingLotsNo;
-        listing.price = post.price;
-        listing.offerRequested = false;
-        post.offerReceived.forEach((received) => {
-          if (received.id_received == post.id_announceMainDetails) {
-            sentDetails.forEach((userOffers) => {
-              if (received.id_sender == userOffers.id_announceMainDetails) {
-                listing.offerRequested = true;
-              }
-            });
+        let isOwnerOffer = false;
+        sentDetails.forEach((ownerPost) => {
+          if (ownerPost.id_announceMainDetails == post.id_announceMainDetails) { //do not show the Owner's posts in home view feed
+            isOwnerOffer = true;
           }
         });
-        post.announceCharacteristic.forEach((characteristic) => {
-          if (
-            characteristic.announceMainDetailId == post.id_announceMainDetails
-          ) {
-            listing.type = characteristic.realEstateTypeId;
-          }
-        });
-        post.offerSaved.forEach((saved) => {
-          if (saved.ownerId == currentOwnerId.value) {
-            listing.offerSaved = true;
-          }
-        });
-        listing.mainPicture =
-          "https://static01.nyt.com/images/2019/06/25/realestate/25domestic-zeff/a1c1a1a36c9e4ff8adcb958c4276f28d-jumbo.jpg?quality=75&auto=webp"; //SCHIMBA
-        offerCards.push(listing);
+        if (!isOwnerOffer) {
+          let listing = {};
+          listing.announceMainDetailsId = post.id_announceMainDetails;
+          listing.title = post.title;
+          listing.beds = post.bedroomsNo;
+          listing.baths = post.bathroomsNo;
+          listing.parkingLot = post.parkingLotsNo;
+          listing.price = post.price;
+          listing.offerRequested = false;
+          post.offerReceived.forEach((received) => {
+            if (received.id_received == post.id_announceMainDetails) {
+              sentDetails.forEach((userOffers) => {
+                if (received.id_sender == userOffers.id_announceMainDetails) {
+                  listing.offerRequested = true;
+                }
+              });
+            }
+          });
+          post.announceCharacteristic.forEach((characteristic) => {
+            if (
+              characteristic.announceMainDetailId == post.id_announceMainDetails
+            ) {
+              listing.type = characteristic.realEstateTypeId;
+            }
+          });
+          post.offerSaved.forEach((saved) => {
+            if (saved.ownerId == currentOwnerId.value) {
+              listing.offerSaved = true;
+            }
+          });
+          listing.mainPicture =
+            "https://static01.nyt.com/images/2019/06/25/realestate/25domestic-zeff/a1c1a1a36c9e4ff8adcb958c4276f28d-jumbo.jpg?quality=75&auto=webp"; //SCHIMBA
+          offerCards.push(listing);
+        }
       });
     };
     let getAllPosts = async () => {
