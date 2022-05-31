@@ -55,21 +55,18 @@
 
 <script>
 import { ref, computed } from "vue";
-
+import OfferSavedAPI from "@/api/resources/OfferSaved.js";
 export default {
   name: "OfferCard",
   setup(props) {
     const offerType = computed(() => {
       return props.type === 1 ? "House" : "Apartment";
     });
-
+    let currentOwnerId = ref();
     let isRequested = ref(props.offerRequested);
     let requestOffer = () => {
+      currentOwnerId.value = 1; 
       isRequested.value = !isRequested.value;
-      var savedData = {
-        userId: 1,
-        announceId: 2,
-      };
       /* axios.post("deleteRequest", savedData)
        */
     };
@@ -77,16 +74,24 @@ export default {
     let isSaved = ref(props.offerSaved);
     let showSave = ref(props.showSaveBtn);
 
-    let addToFavourites = () => {
-      isSaved.value = !isSaved.value;
-      var savedData = {
-        userId: 1,
-        announceId: 2,
-      };
-      if (isSaved.value) {
-        /* axios.post("saveAnnounce", savedData)
-         */
+    let addToFavourites = async () => {
+       currentOwnerId.value = 1; 
+      if (!isSaved.value) {
+        try
+        {
+            let saveObj = {
+              ownerId: currentOwnerId.value,
+              announceMainDetailId: idAnnounce.value 
+            };
+            await OfferSavedAPI.store(saveObj);
+            isSaved.value = !isSaved.value;
+        }
+        catch(error)
+        {
+          console.log(error);
+        }
       } else {
+        isSaved.value = !isSaved.value;
         /* axios.post("unsaveAnnounce", savedData)
          */
       }
@@ -98,6 +103,7 @@ export default {
     let beds = ref(props.beds);
     let baths = ref(props.baths);
     let parkingLot = ref(props.parkingLot);
+    let idAnnounce = ref(props.idAnnounce);
 
     let ShortDetails = computed(() => {
       return (
@@ -109,6 +115,7 @@ export default {
         " parking lot"
       );
     });
+
     return {
       offerType,
       isRequested,
@@ -118,6 +125,8 @@ export default {
       showSave,
       GoToLocation,
       ShortDetails,
+      idAnnounce,
+      currentOwnerId
     };
   },
 
@@ -132,6 +141,7 @@ export default {
     "beds",
     "baths",
     "parkingLot",
+    "idAnnounce"
   ],
 };
 </script>

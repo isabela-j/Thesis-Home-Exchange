@@ -1,92 +1,149 @@
 <template>
-  <v-main class="background">
-    <v-container class="container-custom" fluid>
+  <div style="position: relative">
+    <v-main class="background">
+      <v-container class="container-custom" fluid>
+        <v-row dense>
+          <v-col key="1">
+            <PicturesSlideShow />
+          </v-col>
+        </v-row>
+        <v-row class="fill-height" style="margin: 0.1em" dense>
+          <v-col key="11">
+            <ProfileDetails
+              :idAnnounce="announceId"
+              :title="profileDetails.title"
+              :type="profileDetails.type"
+              :description="profileDetails.description"
+              :price="profileDetails.price"
+              :offerSaved="profileDetails.saved"
+              :details="profileDetails.details"
+              :key="profileDetails.key"
+            />
+            <OwnerSmallDetails
+              :name="ownerDetails.fullName"
+              :ownerType="ownerDetails.type"
+              :phoneNo="ownerDetails.phoneNo"
+              :email="ownerDetails.email"
+              style="margin-top: 1em"
+            />
+          </v-col>
+          <v-col key="12" class="show-right">
+            <SuggestOffer
+              :offerRequested="profileDetails.offerRequested"
+              :name="currentOwnerData.fullName"
+              :phoneNo="currentOwnerData.phoneNo"
+              :email="currentOwnerData.email"
+              :key="profileDetails.key"
+              @showOverlay="suggestAnOffer"
+            />
+          </v-col>
+        </v-row>
+        <v-row class="show-bottom" dense>
+          <v-col>
+            <SuggestOffer
+              :offerRequested="profileDetails.offerRequested"
+              :name="currentOwnerData.fullName"
+              :phoneNo="currentOwnerData.phoneNo"
+              :email="currentOwnerData.email"
+              :key="profileDetails.key"
+              @showOverlay="suggestAnOffer"
+            />
+          </v-col>
+        </v-row>
+        <v-row dense>
+          <v-card width="100%" class="ma-2">
+            <MainCharacteristics
+              :type="profileDetails.typestr"
+              :street="profileDetails.street"
+              :bedrooms="profileDetails.beds"
+              :bathrooms="profileDetails.baths"
+              :partition="mainCharacteristics.partition"
+              :floor="mainCharacteristics.floorNo"
+              :parkingNo="profileDetails.parkingLot"
+              :sqft="profileDetails.sqft"
+              :balconyNo="mainCharacteristics.balconyNo"
+              :construction="mainCharacteristics.constructionYear"
+            />
+          </v-card>
+        </v-row>
+        <v-row dense>
+          <v-card width="100%" class="ma-2">
+            <Utilities
+              :electrical="uitilites.electricalCurrent"
+              :waterPipe="uitilites.waterPipe"
+              :sewerage="uitilites.sewerage"
+              :gasPipe="uitilites.gasPipe"
+              :thermalPS="uitilites.thermalPowerStationOwn"
+              :key="uitilites.key"
+            />
+          </v-card>
+        </v-row>
+        <v-row dense>
+          <v-card width="100%" class="ma-2">
+            <Features
+              :furniture="features.modernFurniture"
+              :electricStove="features.electricStove"
+              :washingMachine="features.washingMachine"
+              :dishwasher="features.dishWasher"
+              :garage="features.garage"
+              :key="features.key"
+            />
+          </v-card>
+        </v-row>
+      </v-container>
+    </v-main>
+  </div>
+  <div
+  >
+    <v-overlay v-model="overlay"    style="
+      position: absolute;
+      align-self: center;
+      position: fixed;
+      top:0%;
+      left: 20%;
+    ">
       <v-row dense>
-        <v-col key="1">
-          <PicturesSlideShow />
-        </v-col>
+        <v-alert
+          density="default"
+          type="warning"
+          style="width: 100%"
+          class="ma-2"
+        >
+          Please choose an offer you would like to exchange.
+        </v-alert>
       </v-row>
-      <v-row class="fill-height" style="margin: 0.1em;" dense>
-        <v-col key="11" >
-          <ProfileDetails
-            :title="profileDetails.title"
-            :type="profileDetails.type"
-            :description="profileDetails.description"
-            :price="profileDetails.price"
-            :offerSaved="profileDetails.saved"
-            :details="profileDetails.details"
-            :key="profileDetails.key"
-          />
-           <OwnerSmallDetails
-            :name="ownerDetails.fullName"
-            :ownerType="ownerDetails.type"
-            :phoneNo="ownerDetails.phoneNo"
-            :email="ownerDetails.email"
-            style="margin-top: 1em;"
-          />
-        </v-col>
-        <v-col key="12" class="show-right">
-          <SuggestOffer
-            :offerRequested="profileDetails.offerRequested"
-            :name="currentOwnerData.fullName"
-            :phoneNo= "currentOwnerData.phoneNo"
-            :email= "currentOwnerData.email"
-            :key="profileDetails.key"
-            
-          />
-        </v-col>
+      <v-row v-for="(item, index) in ownerAvailablePosts" :key="index" dense>
+        <SendOfferCard
+          :title="item.title"
+          :type="item.type"
+          :beds="item.beds"
+          :baths="item.baths"
+          :parkingLot="item.parkingLot"
+          :price="item.price"
+          :mainPicture="item.mainPicture"
+          :announceId="item.announceMainDetailsId"
+          style="width: 100%"
+          @sendRequest="sendOfferRequest"
+        />
       </v-row>
-      <v-row class="show-bottom" dense>
-        <v-col>
-          <SuggestOffer 
-            :offerRequested="profileDetails.offerRequested"
-            :name="currentOwnerData.fullName"
-            :phoneNo= "currentOwnerData.phoneNo"
-            :email= "currentOwnerData.email"/>
-        </v-col>
-      </v-row>
-      <v-row dense>
-        <v-card width="100%" class="ma-2">
-          <MainCharacteristics
-            :type="profileDetails.typestr"
-            :street="profileDetails.street"
-            :bedrooms="profileDetails.beds"
-            :bathrooms="profileDetails.baths"
-            :partition="mainCharacteristics.partition"
-            :floor="mainCharacteristics.floorNo"
-            :parkingNo="profileDetails.parkingLot"
-            :sqft="profileDetails.sqft"
-            :balconyNo="mainCharacteristics.balconyNo"
-            :construction="mainCharacteristics.constructionYear"
-          />
-        </v-card>
-      </v-row>
-      <v-row dense>
-        <v-card width="100%" class="ma-2">
-          <Utilities
-            :electrical="uitilites.electricalCurrent"
-            :waterPipe="uitilites.waterPipe"
-            :sewerage="uitilites.sewerage"
-            :gasPipe="uitilites.gasPipe"
-            :thermalPS="uitilites.thermalPowerStationOwn"
-            :key="uitilites.key"
-          />
-        </v-card>
-      </v-row>
-      <v-row dense>
-        <v-card width="100%" class="ma-2">
-          <Features
-            :furniture="features.modernFurniture"
-            :electricStove="features.electricStove"
-            :washingMachine="features.washingMachine"
-            :dishwasher="features.dishWasher"
-            :garage="features.garage"
-            :key="features.key"
-          />
-        </v-card>
-      </v-row>
-    </v-container>
-  </v-main>
+    </v-overlay>
+  </div>
+  <div
+    id="alert"
+    style="
+      position: absolute;
+      align-self: center;
+      position: fixed;
+      display: none;
+      bottom: 0%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    "
+  >
+    <v-alert density="default" :type="alertType" closable>
+      {{ alertMessage }}
+    </v-alert>
+  </div>
 </template>
 
 <script>
@@ -101,6 +158,8 @@ import { ref, computed, reactive } from "vue";
 import AnnounceMainDetailsAPI from "@/api/resources/AnnounceMainDetails.js";
 import OwnerAPI from "@/api/resources/Owner.js";
 import LoginAPI from "@/api/resources/Login.js";
+import SendOfferCard from "@/components/SendOfferCard.vue";
+import OfferSentAndReceivedAPI from "@/api/resources/OfferSentAndReceived.js";
 export default {
   name: "AnnounceView",
   components: {
@@ -111,6 +170,7 @@ export default {
     MainCharacteristics,
     Utilities,
     Features,
+    SendOfferCard,
   },
   created() {
     this.populateAnnounce();
@@ -118,6 +178,8 @@ export default {
   setup() {
     let announceId = ref();
     let currentOwnerId = ref();
+    let ownerAvailablePosts = reactive([]);
+    let sendOfferData = reactive();
     let currentOwnerData = reactive({
       firstName: "",
       lastName: "",
@@ -159,7 +221,7 @@ export default {
       distribution: 10,
       type: 2,
       totalBuildingFloors: 0,
-      partition: ""
+      partition: "",
     });
     let features = reactive({
       dishWasher: false,
@@ -167,7 +229,7 @@ export default {
       garage: false,
       modernFurniture: false,
       washingMachine: false,
-      key:0
+      key: 0,
     });
     let uitilites = reactive({
       electricalCurrent: false,
@@ -176,7 +238,7 @@ export default {
       sewerage: false,
       thermalPowerStationOwn: false,
       waterPipe: false,
-      key:0
+      key: 0,
     });
 
     let parseMainDetails = (details, sentDetails) => {
@@ -208,7 +270,9 @@ export default {
           characteristic.announceMainDetailId == details.id_announceMainDetails
         ) {
           profileDetails.type = characteristic.realEstateTypeId;
-          profileDetails.type === 1 ? profileDetails.typestr="House" : profileDetails.typestr="Apartment"
+          profileDetails.type === 1
+            ? (profileDetails.typestr = "House")
+            : (profileDetails.typestr = "Apartment");
         }
       });
       details.offerReceived.forEach((received) => {
@@ -220,7 +284,6 @@ export default {
           });
         }
       });
-      console.log(profileDetails, sentDetails);
       profileDetails.key = 1;
     };
     let parseOwnerDetails = (owner, ownerResult) => {
@@ -239,13 +302,11 @@ export default {
       mainCharacteristics.type = characteristics.realEstateTypeId;
       mainCharacteristics.totalBuildingFloors =
         characteristics.totalBuildingFloors;
-      if(mainCharacteristics.distribution == "1") {
+      if (mainCharacteristics.distribution == "1") {
         mainCharacteristics.partition = "detached";
-      }
-      else if(mainCharacteristics.distribution == "2"){
+      } else if (mainCharacteristics.distribution == "2") {
         mainCharacteristics.partition = "semi-detached";
-      }
-      else{
+      } else {
         mainCharacteristics.partition = "uncompartmented";
       }
     };
@@ -262,42 +323,100 @@ export default {
       uitilites.gasPipe = announceUtilities.gasPipe;
       uitilites.newRadiators = announceUtilities.newRadiators;
       uitilites.sewerage = announceUtilities.sewerage;
-      uitilites.thermalPowerStationOwn = announceUtilities.thermalPowerStationOwn;
+      uitilites.thermalPowerStationOwn =
+        announceUtilities.thermalPowerStationOwn;
       uitilites.waterPipe = announceUtilities.waterPipe;
       uitilites.key = 1;
     };
-    let populateAnnounce = async () => {
-      currentOwnerId.value = 2;
-      announceId.value = 1;
-
-    try{
-      let announceMainDetails =
-        await AnnounceMainDetailsAPI.getAnnounceMainDetail(announceId.value);
-      let sentDetails =
-        await AnnounceMainDetailsAPI.getAllAnnounceMainDetailsFromOwner(
-          currentOwnerId.value
-        );
-      let currentUserData = await OwnerAPI.getOwner(currentOwnerId.value); //the user that is currently logged in
-      parseOwnerDetails(currentUserData,currentOwnerData);
-      let currentUserLogin = await LoginAPI.getLogin(currentOwnerId.value);
-      currentOwnerData.email = currentUserLogin.emailAdress;
-
-      parseMainDetails(announceMainDetails, sentDetails);
-      let ownerDetailsJS = await OwnerAPI.getOwner(announceMainDetails.ownerId);
-
-      ownerDetails.ownerId = announceMainDetails.ownerId; //the owner of the announce
-      parseOwnerDetails(ownerDetailsJS,ownerDetails);
-      let ownerLogin = await LoginAPI.getLogin(announceMainDetails.ownerId);
-      ownerDetails.email = ownerLogin.emailAdress;
-
-      parseCharacteristics(announceMainDetails.announceCharacteristic[0]);
-      parsefeatures(announceMainDetails.announceFeature[0]);
-      parseUtilities(announceMainDetails.announceUtilities[0]);
-    }
-    catch(error) {
-      console.log(error);
-    }
+    let parseOwnerListings = (ownerListings) => {
+      ownerListings.forEach((post) => {
+        if (post.status === 0) {
+          let listing = {};
+          listing.announceMainDetailsId = post.id_announceMainDetails;
+          listing.title = post.title;
+          listing.beds = post.bedroomsNo;
+          listing.baths = post.bathroomsNo;
+          listing.parkingLot = post.parkingLotsNo;
+          listing.price = post.price;
+          post.announceCharacteristic.forEach((characteristic) => {
+            if (
+              characteristic.announceMainDetailId == post.id_announceMainDetails
+            ) {
+              listing.type = characteristic.realEstateTypeId;
+            }
+          });
+          listing.mainPicture =
+            "https://static01.nyt.com/images/2019/06/25/realestate/25domestic-zeff/a1c1a1a36c9e4ff8adcb958c4276f28d-jumbo.jpg?quality=75&auto=webp"; //SCHIMBA
+          ownerAvailablePosts.push(listing);
+        }
+      });
     };
+    let populateAnnounce = async () => {
+      currentOwnerId.value = 1;
+      announceId.value = 4;
+
+      try {
+        let announceMainDetails =
+          await AnnounceMainDetailsAPI.getAnnounceMainDetail(announceId.value);
+        let ownerListings =
+          await AnnounceMainDetailsAPI.getAllAnnounceMainDetailsFromOwner(
+            currentOwnerId.value
+          );
+        let currentUserData = await OwnerAPI.getOwner(currentOwnerId.value); //the user that is currently logged in
+        parseOwnerDetails(currentUserData, currentOwnerData);
+        let currentUserLogin = await LoginAPI.getLogin(currentOwnerId.value);
+        currentOwnerData.email = currentUserLogin.emailAdress;
+
+        parseMainDetails(announceMainDetails, ownerListings);
+        let ownerDetailsJS = await OwnerAPI.getOwner(
+          announceMainDetails.ownerId
+        );
+
+        ownerDetails.ownerId = announceMainDetails.ownerId; //the owner of the announce
+        parseOwnerDetails(ownerDetailsJS, ownerDetails);
+        let ownerLogin = await LoginAPI.getLogin(announceMainDetails.ownerId);
+        ownerDetails.email = ownerLogin.emailAdress;
+
+        parseCharacteristics(announceMainDetails.announceCharacteristic[0]);
+        parsefeatures(announceMainDetails.announceFeature[0]);
+        parseUtilities(announceMainDetails.announceUtilities[0]);
+
+        parseOwnerListings(ownerListings);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    let overlay = ref(false);
+    let sendOfferRequest = async (chosenAnnounceId) => {
+      overlay.value = false;
+      try{
+        sendOfferData.announceReceivedId = announceId.value;
+        sendOfferData.announceSentId = chosenAnnounceId;
+        await OfferSentAndReceivedAPI.store(sendOfferData);
+        displayAlert("Your offer has been sent successfully! You can check for it in Offers Sent section.", "success");
+        profileDetails.offerRequested = true;
+        profileDetails.key=22;
+      }
+      catch(error)
+      {
+         displayAlert("Your offer couldn't be sent. Please try again later.", "error");
+      }
+      
+    };
+    let alertType = ref("warning");
+    let alertMessage = ref("");
+    let displayAlert = (message, type) => {
+      alertType.value = type;
+      alertMessage.value = message;
+      document.getElementById("alert").style.display = "block";
+      setTimeout(function () {
+        document.getElementById("alert").style.display = "none";
+      }, 5000);
+    };
+    let suggestAnOffer = (offerData) => {
+      overlay.value = true;
+      sendOfferData = offerData;
+    }
     return {
       populateAnnounce,
       announceId,
@@ -309,7 +428,15 @@ export default {
       features,
       parsefeatures,
       parseUtilities,
-      uitilites
+      uitilites,
+      overlay,
+      ownerAvailablePosts,
+      sendOfferRequest,
+      alertType,
+      alertMessage,
+      displayAlert,
+      suggestAnOffer,
+      sendOfferData
     };
   },
 };
@@ -317,7 +444,14 @@ export default {
 
 <style scoped>
 .container-custom {
-  background-color: rgb(229, 229, 229);
+  background-color: transparent;
+}
+::v-deep(.v-overlay .v-overlay__content) {
+  width: 100%;
+  height: 100%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .background {

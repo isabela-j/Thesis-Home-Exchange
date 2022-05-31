@@ -5,6 +5,7 @@
       <v-row v-for="(item, index) in savedOffersData" :key="index" dense>
         <v-col :key="index">
           <OfferCard
+            :idAnnounce = "item.announceMainDetailsId"
             :title="item.title"
             :type="item.type"
             :beds= "item.beds"
@@ -52,11 +53,8 @@ export default {
           );
         savedPosts.forEach(async (post) => {
           let details = await AnnounceMainDetailsAPI.getAnnounceMainDetail(post.announceMainDetailId);
-          //console.log(details);
           parsePost(details,sentDetails);
         })
-       // parsePost(post,sentDetails);
-        console.log(savedPosts);
       } catch (error) {}
     };
       let parsePost = async (post, sentDetails) => {
@@ -94,7 +92,7 @@ export default {
         savedOffersData.push(listing);
     };
     const savedOffersCount = computed(() => {
-      return savedOffersData.length;
+      return savedOffersData.length > 0 ? savedOffersData.length : 0 ;
     });
     return {
       savedOffersData,

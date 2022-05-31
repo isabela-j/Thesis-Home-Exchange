@@ -52,14 +52,21 @@
 </template>
 
 <script>
-import { ref, computed } from "vue";
+import { ref, computed,reactive } from "vue";
 export default {
   name: "SuggestOffer",
-  setup(props) {
+   emits: ["showOverlay"],
+  setup(props, { emit }) {
     let changeLabel = () => {
       var a = document.getElementsById("suggestMessage").label;
       a.label = "message";
     };
+    let suggestData = reactive({
+      senderMessage: "",
+      senderEmail: "",
+      senderPhoneNumber: "",
+      offerAccepted: 0
+    })
     let defaultText = ref(
       "Hello! I saw your announce and I would highly appreciate if you could give me some extra details."
     );
@@ -69,7 +76,12 @@ export default {
     let email = ref(props.email);
     let requestOffer = () => {
       if(!isRequested.value)
-         isRequested.value = !isRequested.value;
+         { 
+           suggestData.senderMessage = defaultText.value;
+           suggestData.senderEmail = email.value;
+           suggestData.senderPhoneNumber = phoneNo.value;
+           emit("showOverlay", suggestData); 
+         }
     };
     return {
       changeLabel,
@@ -78,7 +90,8 @@ export default {
       requestOffer,
       name, 
       phoneNo,
-      email
+      email,
+      suggestData
     };
   },
    props: ["offerRequested", "name", "phoneNo", "email"],

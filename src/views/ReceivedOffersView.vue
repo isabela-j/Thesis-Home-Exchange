@@ -7,6 +7,7 @@
       <v-row v-for="(item, index) in receivedOffersData" :key="index" dense>
         <v-col :key="index">
           <SentReceivedCard
+            :announceId="item.id_offerSendAndReceived"
             :title="item.title"
             :type="item.type"
             :beds= "item.bedroomsNo"
@@ -26,6 +27,7 @@
             :priceY="item.priceY"
             :mainPictureY="item.mainPictureY"
             :descY="item.descY"
+            :currentOwnerId="currentOwnerId"
           />
         </v-col>
       </v-row>
@@ -61,6 +63,7 @@ export default {
           let announceData = await AnnounceMainDetailsAPI.getAnnounceMainDetail(
             sent.id_sender
           );
+          listing.announceId= announceData.id_announceMainDetails;
           listing.title = announceData.title;
           listing.bedroomsNo = announceData.bedroomsNo;
           listing.bathroomsNo = announceData.bathroomsNo;

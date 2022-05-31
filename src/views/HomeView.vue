@@ -21,6 +21,7 @@
       <v-row v-for="(item, index) in offerCards" :key="index" dense>
         <v-col :key="index">
           <OfferCard
+           :idAnnounce = "item.announceMainDetailsId"
             :title="item.title"
             :type="item.type"
             :beds="item.beds"
@@ -44,6 +45,7 @@
       <v-row v-for="(item, index) in offerCards" :key="index" dense>
         <v-col :key="index">
           <OfferCard
+            :idAnnounce = "item.announceMainDetailsId"
             :title="item.title"
             :type="item.type"
             :beds="item.beds"
@@ -62,7 +64,6 @@
 </template>
 
 <script>
-import axios from "axios";
 import { ref, onMounted, onUnmounted, reactive, toRef } from "vue";
 import OfferCard from "@/components/OfferCard.vue";
 import NavBar from "@/components/NavBar.vue";
@@ -157,12 +158,7 @@ export default {
     const getFilteredPosts = (filters) => {
       offerCards.splice(0);
       console.log(filters);
-      /* axios.post("", filters)
-      .then((response) => {
-        console.log(response.data);
-        posts.value = response.data;
-      })
-      .catch(error => console.log(error))*/
+      
     };
     onMounted(() => {
       window.addEventListener("resize", () => {

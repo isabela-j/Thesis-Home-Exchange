@@ -1,29 +1,35 @@
 <template>
-  <v-card>
+  <v-card class="ma-2">
     <v-container fluid>
       <v-row dense>
-        <v-col :key="1" class="cardTitle" md="auto">{{ title }}</v-col>
-        <v-col :key="2" class="cardOfferType">• {{ offerType }}</v-col>
-        <v-col :key="3" align="right">
-          <v-btn
-            v-if="isSaved"
-            @click="addToFavourites"
-            class="btnFav btnClicked"
-            ><font-awesome-icon icon="bookmark" class="fa-cow"
-          /></v-btn>
-          <v-btn v-else @click="addToFavourites" class="btnFav">
-            <font-awesome-icon icon="bookmark" class="fa-cog" />
-          </v-btn>
+        <v-col :key="1" md="auto" class="center-content">
+          <v-img :src="mainPicture" height="156px" width="234px" />
         </v-col>
-      </v-row>
-      <v-row dense>
-        <v-col :key="4" class="cardOfferDetails">{{ details }} </v-col>
-      </v-row>
-      <v-row dense>
-        <v-col :key="5" class="">{{ description }} </v-col>
-      </v-row>
-      <v-row class="pab" dense>
-        <v-col :key="6" class="priceFont align-self-end">{{ price }}€</v-col>
+        <v-col :key="2" class="pad-0">
+          <v-container fluid>
+            <v-row dense>
+              <v-col :key="3" class="cardTitle" md="auto">{{ title }}</v-col>
+              <v-col :key="4" class="cardOfferType">• {{ offerType }}</v-col>
+            </v-row>
+            <v-row dense>
+              <v-col :key="6" class="cardOfferDetails"
+                >{{ ShortDetails }}
+              </v-col>
+            </v-row>
+            <v-row class="pab" dense>
+              <v-col :key="7" class="priceFont align-self-end"
+                >{{ price }}€</v-col
+              >
+              <v-col :key="8" align="right">
+                <v-btn
+                  class="btn btnNormal"
+                  @click="sendOffer()"
+                  >Send offer</v-btn
+                >
+              </v-col>
+            </v-row>
+          </v-container>
+        </v-col>
       </v-row>
     </v-container>
   </v-card>
@@ -31,62 +37,53 @@
 
 <script>
 import { ref, computed } from "vue";
-import OfferSavedAPI from "@/api/resources/OfferSaved.js";
-export default {
-  name: "ProfileDetails",
 
-  setup(props) {
-    let currentOwnerId = ref();
+export default {
+  name: "SendOfferCard",
+  emits: ["sendRequest"],
+  setup(props, { emit }) {
     const offerType = computed(() => {
-      return props.type > 0 ? "House" : "Apartment";
+      return props.type === 1 ? "House" : "Apartment";
     });
 
-    let isRequested = ref(props.offerRequested);
-    let requestOffer = () => {
-      isRequested.value = !isRequested.value;
-    };
+    let beds = ref(props.beds);
+    let baths = ref(props.baths);
+    let parkingLot = ref(props.parkingLot);
 
-    let idAnnounce = ref(props.idAnnounce);
-
-    let isSaved = ref(props.offerSaved);
-    let addToFavourites = async () => {
-      currentOwnerId.value = 1;
-      if (!isSaved.value) {
-        try {
-          let saveObj = {
-            ownerId: currentOwnerId.value,
-            announceMainDetailId: idAnnounce.value,
-          };
-          await OfferSavedAPI.store(saveObj);
-          isSaved.value = !isSaved.value;
-        } catch (error) {
-          console.log(error);
-        }
-      } else {
-        isSaved.value = !isSaved.value;
-        
-      }
+    let ShortDetails = computed(() => {
+      return (
+        beds.value +
+        " beds - " +
+        baths.value +
+        " baths - " +
+        parkingLot.value +
+        " parking lot"
+      );
+    });
+    let chosenAnnounceId= ref(props.announceId);
+    let sendOffer= () => {
+        emit("sendRequest", chosenAnnounceId.value);
     };
     return {
       offerType,
-      isRequested,
-      requestOffer,
-      isSaved,
-      addToFavourites,
-      idAnnounce,
-      currentOwnerId,
+      ShortDetails,
+      sendOffer,
+      beds,
+      baths,
+      parkingLot,
+      chosenAnnounceId
     };
   },
 
   props: [
     "title",
-    "details",
-    "description",
     "type",
     "price",
-    "offerRequested",
-    "offerSaved",
-    "idAnnounce",
+    "mainPicture",
+    "beds",
+    "baths",
+    "parkingLot",
+    "announceId"
   ],
 };
 </script>
@@ -111,13 +108,13 @@ export default {
 }
 .cardTitle {
   font-weight: bold;
-  font-size: 17px;
+  font-size: 15px;
 }
 
 .cardOfferType {
   font-weight: bold;
   color: rgba(200, 200, 200, 1);
-  font-size: 17px;
+  font-size: 15px;
 }
 
 .cardOfferDetails {
@@ -142,14 +139,20 @@ export default {
   border: 2.6px solid rgb(0, 80, 78);
 }
 .pab {
-  padding-top: 2rem;
+  padding-top: 2%;
 }
 .align-bot {
   align-content: bottom;
 }
 
+.center-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 /* Extra small devices (phones, 600px and down) */
-@media only screen and (min-width: 500px) {
+@media only screen and (max-width: 500px) {
   div {
     font-size: 8px;
   }
@@ -165,9 +168,7 @@ export default {
     border-radius: 30px;
     border: 1.3px solid rgb(1, 83, 81);
   }
-  .cardTitle {
-    font-size: 11px;
-  }
+  .cardTitle,
   .cardOfferDetails,
   .cardOfferType {
     font-size: 9px;
@@ -189,9 +190,7 @@ export default {
     border-radius: 30px;
     border: 1.3px solid rgb(1, 83, 81);
   }
-  .cardTitle {
-    font-size: 13px;
-  }
+  .cardTitle,
   .cardOfferDetails,
   .cardOfferType {
     font-size: 11px;
@@ -214,9 +213,7 @@ export default {
     border-radius: 40px;
     border: 1.7px solid rgb(1, 83, 81);
   }
-  .cardTitle {
-    font-size: 15px;
-  }
+  .cardTitle,
   .cardOfferDetails,
   .cardOfferType {
     font-size: 13px;
@@ -233,13 +230,16 @@ export default {
     border-radius: 50px;
     border: 2.5px solid rgb(1, 83, 81);
   }
-
-  .cardTitle {
-    font-size: 17px;
+  .btnFav {
+    height: 35px;
+    border-radius: 40px;
+    border: 2.5px solid rgb(1, 83, 81);
   }
+
+  .cardTitle,
   .cardOfferDetails,
   .cardOfferType {
-    font-size: 14px;
+    font-size: 15px;
   }
 }
 </style>

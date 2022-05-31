@@ -90,10 +90,12 @@
 
 <script>
 import { ref, computed } from "vue";
-
+import OfferSentReceivedAPI from "@/api/resources/OfferSentAndReceived.js";
 export default {
   name: "SentReceivedCard",
   setup(props) {
+    let currentOwnerId= ref(props.currentOwnerId);
+    let announceId = ref(props.announceId);
     const offerType = computed(() => {
       return props.type === 1 ? "House" : "Apartment";
     });
@@ -117,13 +119,35 @@ export default {
     let msg = ref(props.message);
     let isSentOffer = ref(props.sentOffer);
     let offerStatus = ref(props.offerStatus);
-    let AcceptOffer = () => {
-      offerStatus.value = 1;
-    };
     let senderPhoneNo = ref(props.senderPhoneNo);
     let senderEmail = ref(props.senderEmail);
-     let RefuseOffer = () => {
-      offerStatus.value = 2;
+
+    let AcceptOffer = async() => {
+      try{
+        let refuse={
+          offerAccepted: 1
+        }
+        await OfferSentReceivedAPI.update(refuse, announceId.value);
+        offerStatus.value = 1;
+      }
+      catch(error)
+      {
+        console.log(error);
+      }
+    };
+    
+    let RefuseOffer = async() => {
+      try{
+        let refuse={
+          offerAccepted: 2
+        }
+        await OfferSentReceivedAPI.update(refuse, announceId.value);
+        offerStatus.value = 2;
+      }
+      catch(error)
+      {
+        console.log(error);
+      }
     };
     let UnsendOffer = () => {
       //delete offer from list
@@ -188,8 +212,9 @@ export default {
       parkingLotY,
       bathsY,
       ShortDetailsY,
-      offerTypeY
-
+      offerTypeY,
+      currentOwnerId,
+      announceId
     };
   },
 
@@ -214,7 +239,9 @@ export default {
     "typeY",
     "priceY",
     "mainPictureY",
-    "descY"
+    "descY",
+    "announceId",
+    "currentOwnerId"
   ],
 };
 </script>
