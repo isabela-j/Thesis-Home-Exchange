@@ -229,7 +229,6 @@ export default {
            displayAlert("Your changes have been saved successfully!",
           "success");
         } catch (error) {
-          console.log(error, "try again");
           displayAlert("Your changes couldn't be saved . Please try again later.",
           "error");
         }

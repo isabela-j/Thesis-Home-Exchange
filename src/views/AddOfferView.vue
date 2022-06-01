@@ -1,4 +1,5 @@
 <template>
+ <div style="position: relative">
   <v-main>
     <v-container class="container-custom" fluid>
       <v-row dense>
@@ -83,6 +84,23 @@
                   return-object
                   single-line
                 ></v-select>
+              </div>
+            </div>
+          </v-card>
+        </v-col>
+      </v-row>
+      <v-row dense>
+        <v-col key="1">
+          <v-card>
+            <div style="display: flex; flex-direction: column">
+              <label>Price</label>
+              <div style="margin: 0.4em">
+                <v-text-field
+                  label="insert price"
+                  hide-details="auto"
+                  variant="underlined"
+                  v-model="price"
+                />
               </div>
             </div>
           </v-card>
@@ -192,6 +210,23 @@
         <v-col key="1">
           <v-card>
             <div style="display: flex; flex-direction: column">
+              <label>Total building floors</label>
+              <div style="margin: 0.4em">
+                <v-text-field
+                  label="insert number of floors"
+                  hide-details="auto"
+                  variant="underlined"
+                  v-model="buildFloors"
+                />
+              </div>
+            </div>
+          </v-card>
+        </v-col>
+      </v-row>
+      <v-row dense>
+        <v-col key="1">
+          <v-card>
+            <div style="display: flex; flex-direction: column">
               <label>Parking lots</label>
               <div style="margin: 0.4em">
                 <v-text-field
@@ -262,7 +297,11 @@
             <div style="display: flex; flex-direction: column">
               <label>Utilities</label>
               <div style="margin: 0.4em">
-                <v-checkbox label="electrical curent" hide-details>
+                <v-checkbox
+                  label="electrical curent"
+                  v-model="electricalCurent"
+                  hide-details
+                >
                 </v-checkbox>
                 <v-checkbox label="water pipe" v-model="waterPipe" hide-details>
                 </v-checkbox>
@@ -279,12 +318,6 @@
                 <v-checkbox
                   label="new radiators"
                   v-model="newRadiators"
-                  hide-details
-                >
-                </v-checkbox>
-                <v-checkbox
-                  label="underfloor heating"
-                  v-model="underfloorHeating"
                   hide-details
                 >
                 </v-checkbox>
@@ -336,40 +369,11 @@
             <div style="display: flex; flex-direction: column">
               <label>Pics</label>
               <div style="margin: 0.5em">
-                <v-file-input 
-                multiple 
-                v-model="pictures" 
-                prepend-icon="mdi-camera"
-                accept="image/*"
-                />
-              </div>
-            </div>
-          </v-card>
-        </v-col>
-      </v-row>
-      <v-row dense>
-        <v-col key="1">
-          <v-card>
-            <div style="display: flex; flex-direction: column">
-              <label>Contact details</label>
-              <div style="margin: 0.4em">
-                <v-text-field
-                  label="your name"
-                  class="v-text-field"
-                  hide-details="auto"
-                  v-model="yourName"
-                />
-                <v-text-field
-                  label="email"
-                  class="v-text-field"
-                  hide-details="auto"
-                  v-model="email"
-                />
-                <v-text-field
-                  label="phone number"
-                  class="v-text-field"
-                  hide-details="auto"
-                  v-model="phoneNo"
+                <v-file-input
+                  multiple
+                  v-model="pictures"
+                  prepend-icon="mdi-camera"
+                  accept="image/*"
                 />
               </div>
             </div>
@@ -379,33 +383,69 @@
       <v-row dense>
         <v-col key="1">
           <div class="right">
-            <v-btn class="btn-next" @click="GoToLocation('/choosePreferences')"
-              >Next</v-btn
-            >
+            <v-btn class="btn-next" @click="postOffer">Post offer</v-btn>
           </div>
         </v-col>
       </v-row>
     </v-container>
   </v-main>
+  </div>
+   <div
+    id="alert"
+    style="
+      position: absolute;
+      align-self: center;
+      position: fixed;
+      display: none;
+      bottom: 0%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    "
+  >
+    <v-alert density="default" :type="alertType" closable>
+      {{ alertMessage }}
+    </v-alert>
+  </div>
 </template>
 
 <script>
-import { ref } from "vue";
+import { ref, reactive } from "vue";
+import AnnounceMainDetailsAPI from "@/api/resources/AnnounceMainDetails.js";
+import AnnounceCharacteristicsAPI from "@/api/resources/AnnounceCharacteristics.js";
+import AnnounceUtilityAPI from "@/api/resources/AnnounceUtility.js";
+import AnnounceFeatureAPI from "@/api/resources/AnnounceFeature.js";
 export default {
   name: "AddOfferView",
   setup() {
     let defaultText = ref(
       "Please write here a short description about the house/apartment you want to exchange. In this way we will cover some features we may didn't included and will help the potential buyer to make a better idea about your announce :)"
     );
+    let mainDetails = reactive({
+      ownerId: 0,
+      bedroomsNo: 0,
+      bathroomsNo: 0,
+      title: "",
+      price: 0,
+      squareMeters: 0,
+      parkingLotsNo: 0,
+      announceStatus: "liber",
+      fullDescription: "",
+      fullAddress: "",
+    });
+    let announceCharacteristic = reactive({});
+    let announceUtilities = reactive({});
+    let announceFeatures = reactive({});
     let title = ref();
     let btnHouse = ref(false);
     let btnApartment = ref(false);
+    let price = ref();
     let bedsNo = ref();
     let bathsNo = ref();
     let btnDetached = ref(false);
     let btnSemi = ref(false);
     let btnUncompartmented = ref(false);
     let floorNo = ref();
+    let buildFloors = ref();
     let parkingNo = ref();
     let sqft = ref();
     let electricalCurent = ref(false);
@@ -425,7 +465,7 @@ export default {
     let yourName = ref();
     let phoneNo = ref();
     let email = ref();
-    let pictures= ref([]);
+    let pictures = ref([]);
     let offerLocation = ref("Centru");
     let location = ref([
       "Andrei Muresanu",
@@ -473,6 +513,100 @@ export default {
         btnDetached.value = !btnUncompartmented.value;
       }
     };
+    let setMainDetails = () => {
+      mainDetails.ownerId = 4;
+      mainDetails.bedroomsNo = isNaN(parseInt(bedsNo.value))
+        ? 0
+        : parseInt(bedsNo.value);
+      mainDetails.bathroomsNo = isNaN(parseInt(bathsNo.value))
+        ? 0
+        : parseInt(bathsNo.value);
+      mainDetails.title = title.value;
+      mainDetails.price = isNaN(parseInt(price.value))
+        ? 0
+        : parseInt(price.value);
+      mainDetails.squareMeters = isNaN(parseInt(sqft.value))
+        ? 0
+        : parseInt(sqft.value);
+      mainDetails.fullDescription = defaultText.value;
+      mainDetails.parkingLotsNo = isNaN(parseInt(parkingNo.value))
+        ? 0
+        : parseInt(parkingNo.value);
+      mainDetails.fullAddress = offerLocation.value;
+    };
+    let setCharacteristics = () => {
+      announceCharacteristic.floorNo = isNaN(parseInt(floorNo.value))
+        ? 0
+        : parseInt(floorNo.value);
+      announceCharacteristic.totalBuildingFloors = isNaN(
+        parseInt(buildFloors.value)
+      )
+        ? 0
+        : parseInt(buildFloors.value);
+      announceCharacteristic.constructionYear = isNaN(
+        parseInt(constructionYear.value)
+      )
+        ? 0
+        : parseInt(constructionYear.value);
+      announceCharacteristic.balconyNo = isNaN(parseInt(balconies.value))
+        ? 0
+        : parseInt(balconies.value);
+      if (btnDetached.value === true) {
+        announceCharacteristic.realEstateDistributionId = 1;
+      } else if (btnSemi.value === true) {
+        announceCharacteristic.realEstateDistributionId = 2;
+      } else {
+        announceCharacteristic.realEstateDistributionId = 3;
+      }
+      btnHouse.value === true
+        ? (announceCharacteristic.realEstateTypeId = 1)
+        : (announceCharacteristic.realEstateTypeId = 2);
+    };
+    let setUtilities = () => {
+      announceUtilities.electricalCurrent = electricalCurent.value;
+      announceUtilities.waterPipe = waterPipe.value;
+      announceUtilities.sewerage = sewerage.value;
+      announceUtilities.gasPipe = gasPipe.value;
+      announceUtilities.thermalPowerStationOwn = thermalStation.value;
+      announceUtilities.newRadiators = newRadiators.value;
+    };
+    let setFeatures = () => {
+      announceFeatures.modernFurniture = modernFurniture.value;
+      announceFeatures.electricStove = electricStove.value;
+      announceFeatures.washingMachine = washingMachine.value;
+      announceFeatures.dishWasher = dishwasher.value;
+      announceFeatures.garage = garage.value;
+    };
+    let postOffer = async () => {
+      try {
+        setMainDetails();
+        let res = await AnnounceMainDetailsAPI.store(mainDetails);
+        announceCharacteristic.announceMainDetailId = JSON.parse(res.id);
+        setCharacteristics();
+        let res2 = await AnnounceCharacteristicsAPI.store(announceCharacteristic);
+        setUtilities();
+        announceUtilities.announceMainDetailId = JSON.parse(res.id);
+        let res3 = await AnnounceUtilityAPI.store(announceUtilities);
+        setFeatures();
+        announceFeatures.announceMainDetailId = JSON.parse(res.id);
+        let res4 = await AnnounceFeatureAPI.store(announceFeatures);
+         displayAlert("Your announce has been posted successfully!",
+          "success");
+      } catch (error) {
+        displayAlert("Your announce couldn't be posted . Please try again later.",
+          "error");
+      }
+    };
+     let alertType = ref("warning");
+    let alertMessage = ref("");
+     let displayAlert = (message, type) => {
+      alertType.value = type;
+      alertMessage.value = message;
+      document.getElementById("alert").style.display = "block";
+      setTimeout(function () {
+        document.getElementById("alert").style.display = "none";
+      }, 5000);
+    };
     return {
       defaultText,
       title,
@@ -507,7 +641,14 @@ export default {
       phoneNo,
       email,
       offerLocation,
-      pictures
+      pictures,
+      postOffer,
+      price,
+      setMainDetails,
+      buildFloors,
+      alertType,
+      alertMessage,
+      displayAlert
     };
   },
 };
