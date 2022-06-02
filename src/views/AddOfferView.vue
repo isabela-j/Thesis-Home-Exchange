@@ -1,396 +1,409 @@
 <template>
- <div style="position: relative">
-  <v-main>
-    <v-container class="container-custom" fluid>
-      <v-row dense>
-        <v-col key="1">
-          <v-card>
-            <div>
-              <v-label> Add your offer here: </v-label>
-            </div>
-          </v-card>
-        </v-col>
-      </v-row>
-      <v-row dense>
-        <v-col key="1">
-          <v-card>
-            <div style="display: flex; flex-direction: column">
-              <label>Title and description</label>
-              <div style="margin: 0.4em">
-                <v-text-field
-                  label="insert title"
-                  hide-details="auto"
-                  variant="underlined"
-                  v-model="title"
-                />
-                <v-textarea
-                  id="suggestMessage"
-                  label="Description"
-                  hide-details="auto"
-                  v-model="defaultText"
-                  class="v-textarea"
-                ></v-textarea>
+  <div style="position: relative">
+    <v-main>
+      <v-container class="container-custom" fluid>
+        <v-row dense>
+          <v-col key="1">
+            <v-card>
+              <div>
+                <v-label> Add your offer here: </v-label>
               </div>
-            </div>
-          </v-card>
-        </v-col>
-      </v-row>
-      <v-row dense>
-        <v-col key="1">
-          <v-card>
-            <div style="display: flex; flex-direction: column">
-              <label>Type</label>
-              <div style="margin: 0.4em">
-                <v-btn
-                  v-if="!btnHouse"
-                  class="btn btnNormal"
-                  @click="CheckBtn('house')"
-                >
-                  house</v-btn
-                >
-                <v-btn v-else class="btn btnClicked" @click="CheckBtn('house')"
-                  >house
-                </v-btn>
-                <v-btn
-                  v-if="!btnApartment"
-                  class="btn btnNormal"
-                  @click="CheckBtn('apartment')"
-                >
-                  apartment</v-btn
-                >
-                <v-btn
-                  v-else
-                  class="btn btnClicked"
-                  @click="CheckBtn('apartment')"
-                >
-                  apartment</v-btn
-                >
+            </v-card>
+          </v-col>
+        </v-row>
+        <v-row dense>
+          <v-col key="1">
+            <v-card>
+              <div style="display: flex; flex-direction: column">
+                <label>Title and description</label>
+                <div style="margin: 0.4em">
+                  <v-text-field
+                    label="insert title"
+                    hide-details="auto"
+                    variant="underlined"
+                    v-model="title"
+                  />
+                  <v-textarea
+                    id="suggestMessage"
+                    label="Description"
+                    hide-details="auto"
+                    v-model="defaultText"
+                    class="v-textarea"
+                  ></v-textarea>
+                </div>
               </div>
-            </div>
-          </v-card>
-        </v-col>
-      </v-row>
-      <v-row dense>
-        <v-col key="1">
-          <v-card>
-            <div style="display: flex; flex-direction: column">
-              <label>Street</label>
-              <div style="margin: 0.4em">
-                <v-select
-                  :items="location"
-                  label="choose offer location"
-                  v-model="offerLocation"
-                  persistent-hint
-                  return-object
-                  single-line
-                ></v-select>
+            </v-card>
+          </v-col>
+        </v-row>
+        <v-row dense>
+          <v-col key="1">
+            <v-card>
+              <div style="display: flex; flex-direction: column">
+                <label>Type</label>
+                <div style="margin: 0.4em">
+                  <v-btn
+                    v-if="!btnHouse"
+                    class="btn btnNormal"
+                    @click="CheckBtn('house')"
+                  >
+                    house</v-btn
+                  >
+                  <v-btn
+                    v-else
+                    class="btn btnClicked"
+                    @click="CheckBtn('house')"
+                    >house
+                  </v-btn>
+                  <v-btn
+                    v-if="!btnApartment"
+                    class="btn btnNormal"
+                    @click="CheckBtn('apartment')"
+                  >
+                    apartment</v-btn
+                  >
+                  <v-btn
+                    v-else
+                    class="btn btnClicked"
+                    @click="CheckBtn('apartment')"
+                  >
+                    apartment</v-btn
+                  >
+                </div>
               </div>
-            </div>
-          </v-card>
-        </v-col>
-      </v-row>
-      <v-row dense>
-        <v-col key="1">
-          <v-card>
-            <div style="display: flex; flex-direction: column">
-              <label>Price</label>
-              <div style="margin: 0.4em">
-                <v-text-field
-                  label="insert price"
-                  hide-details="auto"
-                  variant="underlined"
-                  v-model="price"
-                />
+            </v-card>
+          </v-col>
+        </v-row>
+        <v-row dense>
+          <v-col key="1">
+            <v-card>
+              <div style="display: flex; flex-direction: column">
+                <label>Street</label>
+                <div style="margin: 0.4em">
+                  <v-select
+                    :items="location"
+                    label="choose offer location"
+                    v-model="offerLocation"
+                    persistent-hint
+                    return-object
+                    single-line
+                  ></v-select>
+                </div>
               </div>
-            </div>
-          </v-card>
-        </v-col>
-      </v-row>
-      <v-row dense>
-        <v-col key="1">
-          <v-card>
-            <div style="display: flex; flex-direction: column">
-              <label>Bedrooms</label>
-              <div style="margin: 0.4em">
-                <v-text-field
-                  label="insert number of bedrooms"
-                  hide-details="auto"
-                  variant="underlined"
-                  v-model="bedsNo"
-                />
+            </v-card>
+          </v-col>
+        </v-row>
+        <v-row dense>
+          <v-col key="1">
+            <v-card>
+              <div style="display: flex; flex-direction: column">
+                <label>Price</label>
+                <div style="margin: 0.4em">
+                  <v-text-field
+                    label="insert price"
+                    hide-details="auto"
+                    variant="underlined"
+                    v-model="price"
+                  />
+                </div>
               </div>
-            </div>
-          </v-card>
-        </v-col>
-      </v-row>
-      <v-row dense>
-        <v-col key="1">
-          <v-card>
-            <div style="display: flex; flex-direction: column">
-              <label>Bathrooms</label>
-              <div style="margin: 0.4em">
-                <v-text-field
-                  label="insert number of bathrooms"
-                  hide-details="auto"
-                  variant="underlined"
-                  v-model="bathsNo"
-                />
+            </v-card>
+          </v-col>
+        </v-row>
+        <v-row dense>
+          <v-col key="1">
+            <v-card>
+              <div style="display: flex; flex-direction: column">
+                <label>Bedrooms</label>
+                <div style="margin: 0.4em">
+                  <v-text-field
+                    label="insert number of bedrooms"
+                    hide-details="auto"
+                    variant="underlined"
+                    v-model="bedsNo"
+                  />
+                </div>
               </div>
-            </div>
-          </v-card>
-        </v-col>
-      </v-row>
-      <v-row dense>
-        <v-col key="1">
-          <v-card>
-            <div style="display: flex; flex-direction: column">
-              <label>Partition</label>
-              <div style="margin: 0.4em">
-                <v-btn
-                  v-if="!btnDetached"
-                  class="btn btnNormal"
-                  @click="CheckBtn('detached')"
-                >
-                  detached
-                </v-btn>
-                <v-btn
-                  v-else
-                  class="btn btnClicked"
-                  @click="CheckBtn('detached')"
-                >
-                  detached</v-btn
-                >
-                <v-btn
-                  v-if="!btnSemi"
-                  class="btn btnNormal"
-                  @click="CheckBtn('semi')"
-                >
-                  semi-detached
-                </v-btn>
-                <v-btn v-else class="btn btnClicked" @click="CheckBtn('semi')">
-                  semi-detached</v-btn
-                >
-                <v-btn
-                  v-if="!btnUncompartmented"
-                  class="btn btnNormal"
-                  @click="CheckBtn('uncompartmented')"
-                >
-                  uncompartmented</v-btn
-                >
-                <v-btn
-                  v-else
-                  class="btn btnClicked"
-                  @click="CheckBtn('uncompartmented')"
-                >
-                  uncompartmented</v-btn
-                >
+            </v-card>
+          </v-col>
+        </v-row>
+        <v-row dense>
+          <v-col key="1">
+            <v-card>
+              <div style="display: flex; flex-direction: column">
+                <label>Bathrooms</label>
+                <div style="margin: 0.4em">
+                  <v-text-field
+                    label="insert number of bathrooms"
+                    hide-details="auto"
+                    variant="underlined"
+                    v-model="bathsNo"
+                  />
+                </div>
               </div>
-            </div>
-          </v-card>
-        </v-col>
-      </v-row>
-      <v-row dense>
-        <v-col key="1">
-          <v-card>
-            <div style="display: flex; flex-direction: column">
-              <label>Floor</label>
-              <div style="margin: 0.4em">
-                <v-text-field
-                  label="insert number of floor"
-                  hide-details="auto"
-                  variant="underlined"
-                  v-model="floorNo"
-                />
+            </v-card>
+          </v-col>
+        </v-row>
+        <v-row dense>
+          <v-col key="1">
+            <v-card>
+              <div style="display: flex; flex-direction: column">
+                <label>Partition</label>
+                <div style="margin: 0.4em">
+                  <v-btn
+                    v-if="!btnDetached"
+                    class="btn btnNormal"
+                    @click="CheckBtn('detached')"
+                  >
+                    detached
+                  </v-btn>
+                  <v-btn
+                    v-else
+                    class="btn btnClicked"
+                    @click="CheckBtn('detached')"
+                  >
+                    detached</v-btn
+                  >
+                  <v-btn
+                    v-if="!btnSemi"
+                    class="btn btnNormal"
+                    @click="CheckBtn('semi')"
+                  >
+                    semi-detached
+                  </v-btn>
+                  <v-btn
+                    v-else
+                    class="btn btnClicked"
+                    @click="CheckBtn('semi')"
+                  >
+                    semi-detached</v-btn
+                  >
+                  <v-btn
+                    v-if="!btnUncompartmented"
+                    class="btn btnNormal"
+                    @click="CheckBtn('uncompartmented')"
+                  >
+                    uncompartmented</v-btn
+                  >
+                  <v-btn
+                    v-else
+                    class="btn btnClicked"
+                    @click="CheckBtn('uncompartmented')"
+                  >
+                    uncompartmented</v-btn
+                  >
+                </div>
               </div>
-            </div>
-          </v-card>
-        </v-col>
-      </v-row>
-      <v-row dense>
-        <v-col key="1">
-          <v-card>
-            <div style="display: flex; flex-direction: column">
-              <label>Total building floors</label>
-              <div style="margin: 0.4em">
-                <v-text-field
-                  label="insert number of floors"
-                  hide-details="auto"
-                  variant="underlined"
-                  v-model="buildFloors"
-                />
+            </v-card>
+          </v-col>
+        </v-row>
+        <v-row dense>
+          <v-col key="1">
+            <v-card>
+              <div style="display: flex; flex-direction: column">
+                <label>Floor</label>
+                <div style="margin: 0.4em">
+                  <v-text-field
+                    label="insert number of floor"
+                    hide-details="auto"
+                    variant="underlined"
+                    v-model="floorNo"
+                  />
+                </div>
               </div>
-            </div>
-          </v-card>
-        </v-col>
-      </v-row>
-      <v-row dense>
-        <v-col key="1">
-          <v-card>
-            <div style="display: flex; flex-direction: column">
-              <label>Parking lots</label>
-              <div style="margin: 0.4em">
-                <v-text-field
-                  label="insert number of parking lots if they exist"
-                  hide-details="auto"
-                  variant="underlined"
-                  v-model="parkingNo"
-                />
+            </v-card>
+          </v-col>
+        </v-row>
+        <v-row dense>
+          <v-col key="1">
+            <v-card>
+              <div style="display: flex; flex-direction: column">
+                <label>Total building floors</label>
+                <div style="margin: 0.4em">
+                  <v-text-field
+                    label="insert number of floors"
+                    hide-details="auto"
+                    variant="underlined"
+                    v-model="buildFloors"
+                  />
+                </div>
               </div>
-            </div>
-          </v-card>
-        </v-col>
-      </v-row>
-      <v-row dense>
-        <v-col key="1">
-          <v-card>
-            <div style="display: flex; flex-direction: column">
-              <label>Sqft</label>
-              <div style="margin: 0.4em">
-                <v-text-field
-                  label="insert the sqft"
-                  hide-details="auto"
-                  variant="underlined"
-                  v-model="sqft"
-                />
+            </v-card>
+          </v-col>
+        </v-row>
+        <v-row dense>
+          <v-col key="1">
+            <v-card>
+              <div style="display: flex; flex-direction: column">
+                <label>Parking lots</label>
+                <div style="margin: 0.4em">
+                  <v-text-field
+                    label="insert number of parking lots if they exist"
+                    hide-details="auto"
+                    variant="underlined"
+                    v-model="parkingNo"
+                  />
+                </div>
               </div>
-            </div>
-          </v-card>
-        </v-col>
-      </v-row>
-      <v-row dense>
-        <v-col key="1">
-          <v-card>
-            <div style="display: flex; flex-direction: column">
-              <label>Balcony</label>
-              <div style="margin: 0.4em">
-                <v-text-field
-                  label="insert number of balconies if they exist"
-                  hide-details="auto"
-                  variant="underlined"
-                  v-model="balconies"
-                />
+            </v-card>
+          </v-col>
+        </v-row>
+        <v-row dense>
+          <v-col key="1">
+            <v-card>
+              <div style="display: flex; flex-direction: column">
+                <label>Sqft</label>
+                <div style="margin: 0.4em">
+                  <v-text-field
+                    label="insert the sqft"
+                    hide-details="auto"
+                    variant="underlined"
+                    v-model="sqft"
+                  />
+                </div>
               </div>
-            </div>
-          </v-card>
-        </v-col>
-      </v-row>
-      <v-row dense>
-        <v-col key="1">
-          <v-card>
-            <div style="display: flex; flex-direction: column">
-              <label>Construction year</label>
-              <div style="margin: 0.4em">
-                <v-text-field
-                  label="insert an approximate year"
-                  hide-details="auto"
-                  variant="underlined"
-                  v-model="constructionYear"
-                />
+            </v-card>
+          </v-col>
+        </v-row>
+        <v-row dense>
+          <v-col key="1">
+            <v-card>
+              <div style="display: flex; flex-direction: column">
+                <label>Balcony</label>
+                <div style="margin: 0.4em">
+                  <v-text-field
+                    label="insert number of balconies if they exist"
+                    hide-details="auto"
+                    variant="underlined"
+                    v-model="balconies"
+                  />
+                </div>
               </div>
-            </div>
-          </v-card>
-        </v-col>
-      </v-row>
-      <v-row dense>
-        <v-col key="1">
-          <v-card>
-            <div style="display: flex; flex-direction: column">
-              <label>Utilities</label>
-              <div style="margin: 0.4em">
-                <v-checkbox
-                  label="electrical curent"
-                  v-model="electricalCurent"
-                  hide-details
-                >
-                </v-checkbox>
-                <v-checkbox label="water pipe" v-model="waterPipe" hide-details>
-                </v-checkbox>
-                <v-checkbox label="sewerage" v-model="sewerage" hide-details>
-                </v-checkbox>
-                <v-checkbox label="gas pipe" v-model="gasPipe" hide-details>
-                </v-checkbox>
-                <v-checkbox
-                  label="thermal power station"
-                  v-model="thermalStation"
-                  hide-details
-                >
-                </v-checkbox>
-                <v-checkbox
-                  label="new radiators"
-                  v-model="newRadiators"
-                  hide-details
-                >
-                </v-checkbox>
+            </v-card>
+          </v-col>
+        </v-row>
+        <v-row dense>
+          <v-col key="1">
+            <v-card>
+              <div style="display: flex; flex-direction: column">
+                <label>Construction year</label>
+                <div style="margin: 0.4em">
+                  <v-text-field
+                    label="insert an approximate year"
+                    hide-details="auto"
+                    variant="underlined"
+                    v-model="constructionYear"
+                  />
+                </div>
               </div>
-            </div>
-          </v-card>
-        </v-col>
-      </v-row>
-      <v-row dense>
-        <v-col key="1">
-          <v-card>
-            <div style="display: flex; flex-direction: column">
-              <label>Features</label>
-              <div style="margin: 0.4em">
-                <v-checkbox
-                  label="modern furniture"
-                  v-model="modernFurniture"
-                  hide-details
-                >
-                </v-checkbox>
-                <v-checkbox
-                  label="electric stove"
-                  v-model="electricStove"
-                  hide-details
-                >
-                </v-checkbox>
-                <v-checkbox
-                  label="washing machine"
-                  v-model="washingMachine"
-                  hide-details
-                >
-                </v-checkbox>
-                <v-checkbox
-                  label="dishwasher"
-                  v-model="dishwasher"
-                  hide-details
-                >
-                </v-checkbox>
-                <v-checkbox label="garage" v-model="garage" hide-details>
-                </v-checkbox>
+            </v-card>
+          </v-col>
+        </v-row>
+        <v-row dense>
+          <v-col key="1">
+            <v-card>
+              <div style="display: flex; flex-direction: column">
+                <label>Utilities</label>
+                <div style="margin: 0.4em">
+                  <v-checkbox
+                    label="electrical curent"
+                    v-model="electricalCurent"
+                    hide-details
+                  >
+                  </v-checkbox>
+                  <v-checkbox
+                    label="water pipe"
+                    v-model="waterPipe"
+                    hide-details
+                  >
+                  </v-checkbox>
+                  <v-checkbox label="sewerage" v-model="sewerage" hide-details>
+                  </v-checkbox>
+                  <v-checkbox label="gas pipe" v-model="gasPipe" hide-details>
+                  </v-checkbox>
+                  <v-checkbox
+                    label="thermal power station"
+                    v-model="thermalStation"
+                    hide-details
+                  >
+                  </v-checkbox>
+                  <v-checkbox
+                    label="new radiators"
+                    v-model="newRadiators"
+                    hide-details
+                  >
+                  </v-checkbox>
+                </div>
               </div>
-            </div>
-          </v-card>
-        </v-col>
-      </v-row>
-      <v-row dense>
-        <v-col key="1">
-          <v-card>
-            <div style="display: flex; flex-direction: column">
-              <label>Pics</label>
-              <div style="margin: 0.5em">
-                <v-file-input
-                  multiple
-                  v-model="pictures"
-                  prepend-icon="mdi-camera"
-                  accept="image/*"
-                />
+            </v-card>
+          </v-col>
+        </v-row>
+        <v-row dense>
+          <v-col key="1">
+            <v-card>
+              <div style="display: flex; flex-direction: column">
+                <label>Features</label>
+                <div style="margin: 0.4em">
+                  <v-checkbox
+                    label="modern furniture"
+                    v-model="modernFurniture"
+                    hide-details
+                  >
+                  </v-checkbox>
+                  <v-checkbox
+                    label="electric stove"
+                    v-model="electricStove"
+                    hide-details
+                  >
+                  </v-checkbox>
+                  <v-checkbox
+                    label="washing machine"
+                    v-model="washingMachine"
+                    hide-details
+                  >
+                  </v-checkbox>
+                  <v-checkbox
+                    label="dishwasher"
+                    v-model="dishwasher"
+                    hide-details
+                  >
+                  </v-checkbox>
+                  <v-checkbox label="garage" v-model="garage" hide-details>
+                  </v-checkbox>
+                </div>
               </div>
+            </v-card>
+          </v-col>
+        </v-row>
+        <v-row dense>
+          <v-col key="1">
+            <v-card>
+              <div style="display: flex; flex-direction: column">
+                <label>Pics</label>
+                <div style="margin: 0.5em">
+                  <v-file-input
+                    multiple
+                    v-model="pictures"
+                    label="Upload files"
+                    prepend-icon="mdi-camera"
+                    accept="image/*"
+                    @change="handleFileUpload($event)"
+                  />
+                </div>
+              </div>
+            </v-card>
+          </v-col>
+        </v-row>
+        <v-row dense>
+          <v-col key="1">
+            <div class="right">
+              <v-btn class="btn-next" @click="postOffer">Post offer</v-btn>
             </div>
-          </v-card>
-        </v-col>
-      </v-row>
-      <v-row dense>
-        <v-col key="1">
-          <div class="right">
-            <v-btn class="btn-next" @click="postOffer">Post offer</v-btn>
-          </div>
-        </v-col>
-      </v-row>
-    </v-container>
-  </v-main>
+          </v-col>
+        </v-row>
+      </v-container>
+    </v-main>
   </div>
-   <div
+  <div
     id="alert"
     style="
       position: absolute;
@@ -414,6 +427,7 @@ import AnnounceMainDetailsAPI from "@/api/resources/AnnounceMainDetails.js";
 import AnnounceCharacteristicsAPI from "@/api/resources/AnnounceCharacteristics.js";
 import AnnounceUtilityAPI from "@/api/resources/AnnounceUtility.js";
 import AnnounceFeatureAPI from "@/api/resources/AnnounceFeature.js";
+import ImageAPI from "@/api/resources/Image.js";
 export default {
   name: "AddOfferView",
   setup() {
@@ -467,6 +481,7 @@ export default {
     let email = ref();
     let pictures = ref([]);
     let offerLocation = ref("Centru");
+    let pics = reactive([]);
     let location = ref([
       "Andrei Muresanu",
       "Becas",
@@ -583,29 +598,60 @@ export default {
         let res = await AnnounceMainDetailsAPI.store(mainDetails);
         announceCharacteristic.announceMainDetailId = JSON.parse(res.id);
         setCharacteristics();
-        let res2 = await AnnounceCharacteristicsAPI.store(announceCharacteristic);
+        let res2 = await AnnounceCharacteristicsAPI.store(
+          announceCharacteristic
+        );
         setUtilities();
         announceUtilities.announceMainDetailId = JSON.parse(res.id);
         let res3 = await AnnounceUtilityAPI.store(announceUtilities);
         setFeatures();
         announceFeatures.announceMainDetailId = JSON.parse(res.id);
         let res4 = await AnnounceFeatureAPI.store(announceFeatures);
-         displayAlert("Your announce has been posted successfully!",
-          "success");
+        displayAlert("Your announce has been posted successfully!", "success");
+
+        pics.forEach(async (pic) => {
+          let picObj = {
+            announceMainDetailId: JSON.parse(res.id),
+            imageData: pic
+          };
+           console.log(picObj);
+          let resImg = await ImageAPI.store(picObj);
+         
+        })
+        /*files.forEach(file => {
+            let formData =  = new FormData();
+            formData.append(JSON.parse(res.id));
+            formData.append("imageData", file);
+            await ImageAPI.store(formData);
+        });*/
       } catch (error) {
-        displayAlert("Your announce couldn't be posted . Please try again later.",
-          "error");
+        displayAlert(
+          "Your announce couldn't be posted . Please try again later.",
+          "error"
+        );
       }
     };
-     let alertType = ref("warning");
+    let alertType = ref("warning");
     let alertMessage = ref("");
-     let displayAlert = (message, type) => {
+    let displayAlert = (message, type) => {
       alertType.value = type;
       alertMessage.value = message;
       document.getElementById("alert").style.display = "block";
       setTimeout(function () {
         document.getElementById("alert").style.display = "none";
       }, 5000);
+    };
+    let handleFileUpload = (e) => {
+      pics.splice(0);
+      let files = Array.from(e.target.files);
+      files.forEach(file => {
+         var reader = new FileReader();
+         reader.onloadend = function () {
+        pics.push(reader.result);
+      };
+      reader.readAsDataURL(file);
+      })
+      console.log(pics);
     };
     return {
       defaultText,
@@ -648,7 +694,9 @@ export default {
       buildFloors,
       alertType,
       alertMessage,
-      displayAlert
+      displayAlert,
+      handleFileUpload,
+      pics
     };
   },
 };

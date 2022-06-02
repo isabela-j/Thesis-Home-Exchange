@@ -298,12 +298,6 @@
                 hide-details
               >
               </v-checkbox>
-              <v-checkbox
-                v-model="filters.underfloorHeating"
-                label="underfloor heating"
-                hide-details
-              >
-              </v-checkbox>
             </v-expansion-panel-text>
           </v-expansion-panel>
           <v-expansion-panel>
@@ -403,7 +397,7 @@ export default {
       if (!showYourAnnounces.value) {
         showPreferences.value = !showPreferences.value;
         showYourAnnounces.value = !showPreferences.value;
-        let posts  =
+        let posts =
           await AnnounceMainDetailsAPI.getAllAnnounceMainDetailsFromOwner(
             currentOwnerId.value
           );
@@ -422,21 +416,10 @@ export default {
         windowSize.value = window.innerWidth * 0.25;
       });
     });
-    let bedrooms = ref(["1", "2", "3", "4", "4+"]);
-    let bathrooms = ref(["1", "2", "3", "3+"]);
-    let parkingLots = ref(["1", "2", "3", "3+"]);
-    let floors = ref([
-      "semi-basement",
-      "ground floor",
-      "1",
-      "2",
-      "3",
-      "4",
-      "5",
-      "6",
-      "6+",
-      "mansard",
-    ]);
+    let bedrooms = ref([1, 2, 3, 4, 5, 6, 7]);
+    let bathrooms = ref([1, 2, 3, 4, 5]);
+    let parkingLots = ref([1, 2, 3, 4, 5]);
+    let floors = ref([0,1,2,3,4,5,6,7,8]);
     let partitionModel = ref(["detached", "semi-detached", "uncompartmented"]);
     let features = ref([
       "modern furniture",
@@ -475,7 +458,7 @@ export default {
       "Sopor",
       "Zorilor",
     ]);
-    let filters = ref({
+    let filters = reactive({
       roomsNo: [],
       offerLocation: [],
       bathsNo: [],
@@ -496,7 +479,6 @@ export default {
       gasPipe: false,
       thermalStation: false,
       newRadiators: false,
-      underfloorHeating: false,
       modernFurniture: false,
       electricStove: false,
       washingMachine: false,
@@ -505,42 +487,110 @@ export default {
     });
 
     let CheckBtn = (type) => {
-      if (type == "house") filters.value.house = !filters.value.house;
-      else if (type == "apartment")
-        filters.value.apartment = !filters.value.apartment;
+      if (type == "house") filters.house = !filters.house;
+      else if (type == "apartment") filters.apartment = !filters.apartment;
     };
 
     let ResetAllOptions = () => {
-      filters.value.offerLocation = [];
-      filters.value.house = false;
-      filters.value.apartment = false;
-      filters.value.minPrice = "";
-      filters.value.maxPrice = "";
-      filters.value.minSqft = "";
-      filters.value.maxSqft = "";
-      filters.value.minYear = "";
-      filters.value.maxYear = "";
-      filters.value.electricalCurent = false;
-      filters.value.waterPipe = false;
-      filters.value.sewerage = false;
-      filters.value.gasPipe = false;
-      filters.value.thermalStation = false;
-      filters.value.newRadiators = false;
-      filters.value.underfloorHeating = false;
-      filters.value.modernFurniture = false;
-      filters.value.electricStove = false;
-      filters.value.washingMachine = false;
-      filters.value.dishwasher = false;
-      filters.value.garage = false;
-      filters.value.roomsNo = [];
-      filters.value.bathsNo = [];
-      filters.value.parkingNo = [];
-      filters.value.floorNo = [];
-      filters.value.partition = [];
+      filters.offerLocation = [];
+      filters.house = false;
+      filters.apartment = false;
+      filters.minPrice = "";
+      filters.maxPrice = "";
+      filters.minSqft = "";
+      filters.maxSqft = "";
+      filters.minYear = "";
+      filters.maxYear = "";
+      filters.electricalCurent = false;
+      filters.waterPipe = false;
+      filters.sewerage = false;
+      filters.gasPipe = false;
+      filters.thermalStation = false;
+      filters.newRadiators = false;
+      filters.modernFurniture = false;
+      filters.electricStove = false;
+      filters.washingMachine = false;
+      filters.dishwasher = false;
+      filters.garage = false;
+      filters.roomsNo = [];
+      filters.bathsNo = [];
+      filters.parkingNo = [];
+      filters.floorNo = [];
+      filters.partition = [];
     };
     let startFilter = () => {
-      var el = JSON.parse(JSON.stringify(filters.value));
-      console.log(el);
+      let announceMainDetails = {
+        fullAddress: [],
+        bedroomsNo: [],
+        bathroomsNo: [],
+        price: {
+          min: parseInt(filters.minPrice),
+          max: parseInt(filters.maxPrice),
+        },
+        squareMeters: {
+          min: parseInt(filters.minSqft),
+          max: parseInt(filters.maxSqft),
+        },
+        parkingLotsNo: [],
+      };
+      filters.offerLocation.forEach((loc) => announceMainDetails.fullAddress.push(loc));
+      filters.roomsNo.forEach((nr) => announceMainDetails.bedroomsNo.push(nr));
+      filters.bathsNo.forEach((nr) => announceMainDetails.bathroomsNo.push(nr));
+      filters.parkingNo.forEach((nr) =>
+        announceMainDetails.parkingLotsNo.push(nr)
+      );
+
+      let type = [];
+      if (filters.house) type.push(1);
+      if (filters.apartment) type.push(2);
+
+      let distrib = [];
+      filters.partition.forEach((partition) => {
+        if (partition === "detached") {
+          distrib.push(1);
+        } else if (partition === "semi-detached") {
+          distrib.push(2);
+        } else if (partition === "uncompartmented") {
+          distrib.push(3);
+        }
+      });
+
+      let announceCharacteristics = {
+        floorNo: [],
+        constructiionYear: {
+          min: parseInt(filters.minYear),
+          max: parseInt(filters.maxYear),
+        },
+        realEstateTypeId: type,
+        realEstateDistributionId: distrib,
+      };
+      filters.floorNo.forEach((nr) => announceCharacteristics.floorNo.push(nr));
+
+      let announceUtilities = {
+        electricalCurrent: filters.electricalCurent,
+        waterPipe: filters.waterPipe,
+        sewerage: filters.sewerage,
+        gasPipe: filters.gasPipe,
+        thermalPowerStationOwn: filters.thermalStation,
+        newRadiators: filters.newRadiators
+      }
+
+      let announceFeatures = {
+        modernFurniture: filters.modernFurniture,
+        electricStove: filters.electricStove,
+        washingMachine: filters.washingMachine,
+        dishWasher: filters.dishwasher,
+        garage: filters.garage
+      }
+
+      let finalFilters = {
+        announceMainDetails: announceMainDetails,
+        announceCharacteristics: announceCharacteristics,
+        announceUtilities: announceUtilities,
+        announceFeatures: announceFeatures
+      }
+      console.log(JSON.stringify(finalFilters));
+      var el = JSON.parse(JSON.stringify(finalFilters));
       emit("filterPosts", el);
     };
 
@@ -563,9 +613,9 @@ export default {
       bathrooms,
       parkingLots,
       floors,
-      myOffers, 
+      myOffers,
       parsePosts,
-      currentOwnerId
+      currentOwnerId,
     };
   },
 };

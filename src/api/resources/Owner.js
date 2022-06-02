@@ -26,7 +26,7 @@ export default {
     });
   },
   storeOwner(data) {
-    Service.headers.set("Content-Type", "multipart/form-data"); //for sending files to the server
+    //Service.headers.set("Content-Type", "multipart/form-data"); //for sending files to the server
     //Service.headers.set("Authorization", "Bearer " + Service.token);
     return fetch(Service.baseURL + "/Owners", {
       method: "POST",

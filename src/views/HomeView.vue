@@ -158,7 +158,6 @@ export default {
     const getFilteredPosts = (filters) => {
       offerCards.splice(0);
       console.log(filters);
-      
     };
     onMounted(() => {
       window.addEventListener("resize", () => {
