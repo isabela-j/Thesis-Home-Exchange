@@ -4,38 +4,6 @@
       <v-card class="ma-8">
         <v-container fluid>
           <v-row dense>
-            <v-col :key="1" cols="2" class="ma-2">
-              <div
-                style="
-                  height: 100%;
-                  display: flex;
-                  justify-content: center;
-                  align-items: center;
-                "
-              >
-                <img src="https://randomuser.me/api/portraits/women/81.jpg" />
-              </div>
-            </v-col>
-            <v-col :key="2">
-              <div
-                style="
-                  height: 100%;
-                  display: flex;
-                  justify-content: center;
-                  align-items: center;
-                "
-              >
-                <v-file-input
-                  v-model="pictures"
-                  prepend-icon="mdi-camera"
-                  accept="image/*"
-                  hide-details="auto"
-                />
-              </div>
-            </v-col>
-          </v-row>
-          <v-divider horizontal class="divider-custom mx-1" />
-          <v-row dense>
             <v-col :key="1" cols="2">
               <div
                 style="
@@ -160,7 +128,7 @@
           <v-divider horizontal class="divider-custom mx-1" />
           <v-row dense class="ma-2">
             <v-col :key="1" cols="2">
-              <v-btn class="btn logout-btn" width="100%"> Logout </v-btn>
+              <v-btn class="btn logout-btn" width="100%" @click="GoToLocation('/login')"> Logout </v-btn>
             </v-col>
             <v-col :key="2"> </v-col>
             <v-col :key="3" cols="2" align="right">
@@ -194,7 +162,7 @@
 import { ref, computed, reactive } from "vue";
 import LoginAPI from "@/api/resources/Login.js";
 import OwnerAPI from "@/api/resources/Owner.js";
-
+import { useStore } from 'vuex';
 export default {
   name: "EditProfileView",
   created() {
@@ -218,6 +186,8 @@ export default {
       phoneNumber: "",
       ownerTypeId: 2,
     });
+    const store = useStore();
+    
     let SaveChanges = async () => {
       if (validateInput()) {
         try {
@@ -256,11 +226,14 @@ export default {
       userDetails.ownerTypeId = details.ownerTypeId;
     };
     let populateUserData = async () => {
-      currentOwnerId.value = 1; //SCHIMBA cu ce ownerID ai tu
+      currentOwnerId.value = store.state.ownerId;
       let details = await OwnerAPI.getOwner(currentOwnerId.value);
       parseDetails(details);
       let mainDetails = await LoginAPI.getLogin(currentOwnerId.value);
       userMainData.emailAdress = mainDetails.emailAdress;
+    };
+    let GoToLocation = (location) => {
+      window.location = location;
     };
     return {
       pictures,
@@ -277,6 +250,7 @@ export default {
       alertMessage,
       validateInput,
       displayAlert,
+      GoToLocation
     };
   },
 };

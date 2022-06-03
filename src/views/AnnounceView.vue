@@ -160,6 +160,7 @@ import OwnerAPI from "@/api/resources/Owner.js";
 import LoginAPI from "@/api/resources/Login.js";
 import SendOfferCard from "@/components/SendOfferCard.vue";
 import OfferSentAndReceivedAPI from "@/api/resources/OfferSentAndReceived.js";
+import { useStore } from "vuex";
 export default {
   name: "AnnounceView",
   components: {
@@ -351,9 +352,11 @@ export default {
         }
       });
     };
+
+    const store = useStore();
     let populateAnnounce = async () => {
-      currentOwnerId.value = 1;
-      announceId.value = 4;
+      currentOwnerId.value = store.state.ownerId;
+      announceId.value = store.state.announceId;
 
       try {
         let announceMainDetails =

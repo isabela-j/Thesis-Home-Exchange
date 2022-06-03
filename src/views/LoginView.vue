@@ -56,10 +56,15 @@
 </template>
 
 <script>
-import { ref, reactive } from "vue";
+import { ref, reactive, computed } from "vue";
 import LoginAPI from "@/api/resources/Login.js";
+import { useStore } from "vuex";
+
 export default {
   name: "LoginView",
+  created() {
+    this.loadPage();
+  },
   setup() {
     let showPass = ref(false);
     let loadLogins = ref([]);
@@ -67,17 +72,21 @@ export default {
       emailAddress: "",
       password: "",
     });
+    let loadPage = () => {
+      store.commit("updateId", 0);
+    };
     let login = async () => {
       if (validateInput()) {
         try {
-          loadLogins.value = await LoginAPI.getAllLogins();
-          console.log(loadLogins.value);
-           GoToLocation("/");
+          /* loadLogins.value = await LoginAPI.getAllLogins();
+          console.log(loadLogins.value);*/
+          console.log(store.state.ownerId);
+          store.commit("updateId", 4);
+          console.log(store.state.ownerId);
+          GoToLocation("/");
         } catch (error) {
-           displayAlert(
-          "Couldn't login. Please try again later",
-          "error"
-        );
+          console.log(error);
+          displayAlert("Couldn't login. Please try again later", "error");
         }
       }
     };
@@ -107,17 +116,20 @@ export default {
         document.getElementById("alert").style.display = "none";
       }, 5000);
     };
-     let GoToLocation = (location) => {
+    let GoToLocation = (location) => {
       window.location = location;
     };
+    const store = useStore();
     return {
+      updateId: (newId) => store.commit("updateId", newId),
       showPass,
       login,
       loginData,
       alertMessage,
       alertType,
       displayAlert,
-      GoToLocation
+      GoToLocation,
+      loadPage,
     };
   },
 };

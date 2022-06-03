@@ -56,6 +56,7 @@
 <script>
 import { ref, computed } from "vue";
 import OfferSavedAPI from "@/api/resources/OfferSaved.js";
+import { useStore } from "vuex";
 export default {
   name: "OfferCard",
   setup(props) {
@@ -74,8 +75,10 @@ export default {
     let isSaved = ref(props.offerSaved);
     let showSave = ref(props.showSaveBtn);
 
+    const store = useStore();
     let addToFavourites = async () => {
-       currentOwnerId.value = 1; 
+      currentOwnerId.value = store.state.ownerId;
+      console.log(currentOwnerId.value);
       if (!isSaved.value) {
         try
         {
@@ -97,6 +100,7 @@ export default {
       }
     };
     let GoToLocation = (location) => {
+      store.commit("updateAnnounceId", idAnnounce.value);
       window.location = location;
     };
 

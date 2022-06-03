@@ -7,7 +7,7 @@
       <v-row v-for="(item, index) in receivedOffersData" :key="index" dense>
         <v-col :key="index">
           <SentReceivedCard
-            :announceId="item.id_offerSendAndReceived"
+            :announceId="item.id_sender"
             :title="item.title"
             :type="item.type"
             :beds= "item.bedroomsNo"
@@ -28,6 +28,7 @@
             :mainPictureY="item.mainPictureY"
             :descY="item.descY"
             :currentOwnerId="currentOwnerId"
+            :idSentReceived="item.id_offerSendAndReceived"
           />
         </v-col>
       </v-row>
@@ -40,6 +41,7 @@ import { ref, computed, reactive } from "vue";
 import SentReceivedCard from "@/components/SentReceivedCard.vue";
 import AnnounceMainDetailsAPI from "@/api/resources/AnnounceMainDetails.js";
 import OfferSentAndReceivedAPI from "@/api/resources/OfferSentAndReceived.js";
+import { useStore } from 'vuex';
 export default {
   name: "ReceivedOfferView",
   components: {
@@ -85,8 +87,9 @@ export default {
         });
       });
     };
+    const store = useStore();
     let populateReceived = async () => {
-      currentOwnerId.value = 1;
+      currentOwnerId.value = store.state.ownerId;
       let data = await AnnounceMainDetailsAPI.getAllAnnounceMainDetailsFromOwner(
         currentOwnerId.value
       );

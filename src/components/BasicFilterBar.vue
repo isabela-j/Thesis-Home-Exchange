@@ -1,25 +1,25 @@
 <template>
   <v-container class="container-custom">
     <v-btn
-        v-if="showPreferences"
-        class="btnPressed w-50 "
-        @click="setShowPreferences"
-        >What you want</v-btn
-      >
-      <v-btn v-else class="btnNotPressed w-50 " @click="setShowPreferences"
-        >What you want</v-btn
-      >
-      <v-btn
-        v-if="showYourAnnounces"
-        class="btnPressed w-50 "
-        @click="setShowYourAnnounces"
-        >What you have</v-btn
-      >
-      <v-btn v-else class="btnNotPressed w-50 " @click="setShowYourAnnounces"
-        >What you have</v-btn
-      >
+      v-if="showPreferences"
+      class="btnPressed w-50"
+      @click="setShowPreferences"
+      >What you want</v-btn
+    >
+    <v-btn v-else class="btnNotPressed w-50" @click="setShowPreferences"
+      >What you want</v-btn
+    >
+    <v-btn
+      v-if="showYourAnnounces"
+      class="btnPressed w-50"
+      @click="setShowYourAnnounces"
+      >What you have</v-btn
+    >
+    <v-btn v-else class="btnNotPressed w-50" @click="setShowYourAnnounces"
+      >What you have</v-btn
+    >
     <Filters @newFilters="startFilter" v-if="showPreferences" />
-    <MiniCardsList v-else  :cardsData="myOffers"/>
+    <MiniCardsList v-else :cardsData="myOffers" />
   </v-container>
 </template>
 
@@ -29,6 +29,7 @@ import Filters from "@/components/Filters.vue";
 import MiniCardsList from "@/components/MiniCardsList.vue";
 import AnnounceMainDetailsAPI from "@/api/resources/AnnounceMainDetails.js";
 import LoginAPI from "@/api/resources/Login.js";
+import { useStore } from "vuex";
 export default {
   name: "BasicFilterBar",
   components: {
@@ -41,7 +42,7 @@ export default {
     let showPreferences = ref(true);
     let showYourAnnounces = ref(false);
     let drawer = ref(true);
-
+    const store = useStore();
     let setShowPreferences = () => {
       if (!showPreferences.value) {
         showPreferences.value = !showPreferences.value;
@@ -52,7 +53,8 @@ export default {
       if (!showYourAnnounces.value) {
         showPreferences.value = !showPreferences.value;
         showYourAnnounces.value = !showPreferences.value;
-         let posts  =
+        currentOwnerId.value = store.state.ownerId;
+        let posts =
           await AnnounceMainDetailsAPI.getAllAnnounceMainDetailsFromOwner(
             currentOwnerId.value
           );
@@ -60,9 +62,9 @@ export default {
       }
     };
     let startFilter = (filters) => {
-       emit("filterPosts", filters);
-    }
-     let parsePosts = async (posts) => {
+      emit("filterPosts", filters);
+    };
+    let parsePosts = async (posts) => {
       posts.forEach((post) => {
         let listing = {};
         listing.announceMainDetailsId = post.id_announceMainDetails;
@@ -94,7 +96,7 @@ export default {
       startFilter,
       parsePosts,
       myOffers,
-      currentOwnerId
+      currentOwnerId,
     };
   },
 };
@@ -102,7 +104,7 @@ export default {
 
 <style scoped>
 .container-custom {
-    background-color: rgb(229, 229, 229);;
+  background-color: rgb(229, 229, 229);
 }
 .btnPressed {
   border-radius: 0px;
@@ -113,10 +115,10 @@ export default {
 }
 .btnNotPressed {
   border-radius: 0px;
-  border-color:  rgb(1, 83, 81);
-  background-color:  rgb(1, 83, 81);
+  border-color: rgb(1, 83, 81);
+  background-color: rgb(1, 83, 81);
   color: white;
-  border: 2.5px solid  rgb(1, 83, 81);
+  border: 2.5px solid rgb(1, 83, 81);
   -webkit-box-shadow: none;
   -moz-box-shadow: none;
   box-shadow: none;

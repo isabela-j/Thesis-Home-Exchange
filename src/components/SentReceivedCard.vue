@@ -91,11 +91,13 @@
 <script>
 import { ref, computed } from "vue";
 import OfferSentReceivedAPI from "@/api/resources/OfferSentAndReceived.js";
+import { useStore } from 'vuex';
 export default {
   name: "SentReceivedCard",
   setup(props) {
     let currentOwnerId= ref(props.currentOwnerId);
     let announceId = ref(props.announceId);
+    let idSentReceived = ref(props.idSentReceived);
     const offerType = computed(() => {
       return props.type === 1 ? "House" : "Apartment";
     });
@@ -107,6 +109,8 @@ export default {
       isRequested.value = !isRequested.value;
     };
 
+    const store = useStore();
+
     let isSaved = ref(props.offerSaved);
     let showSave = ref(props.showSaveBtn);
 
@@ -114,7 +118,8 @@ export default {
       isSaved.value = !isSaved.value;
     };
     let GoToLocation = (location) => {
-      window.location = location;
+       store.commit("updateAnnounceId", announceId.value);
+       window.location = location;
     };
     let msg = ref(props.message);
     let isSentOffer = ref(props.sentOffer);
@@ -127,7 +132,7 @@ export default {
         let refuse={
           offerAccepted: 1
         }
-        await OfferSentReceivedAPI.update(refuse, announceId.value);
+        await OfferSentReceivedAPI.update(refuse, idSentReceived.value);
         offerStatus.value = 1;
       }
       catch(error)
@@ -141,7 +146,7 @@ export default {
         let refuse={
           offerAccepted: 2
         }
-        await OfferSentReceivedAPI.update(refuse, announceId.value);
+        await OfferSentReceivedAPI.update(refuse, idSentReceived.value);
         offerStatus.value = 2;
       }
       catch(error)
@@ -214,7 +219,8 @@ export default {
       ShortDetailsY,
       offerTypeY,
       currentOwnerId,
-      announceId
+      announceId,
+      idSentReceived
     };
   },
 
@@ -241,7 +247,8 @@ export default {
     "mainPictureY",
     "descY",
     "announceId",
-    "currentOwnerId"
+    "currentOwnerId",
+    "idSentReceived"
   ],
 };
 </script>

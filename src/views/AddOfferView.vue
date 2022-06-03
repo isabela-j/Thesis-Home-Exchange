@@ -428,9 +428,14 @@ import AnnounceCharacteristicsAPI from "@/api/resources/AnnounceCharacteristics.
 import AnnounceUtilityAPI from "@/api/resources/AnnounceUtility.js";
 import AnnounceFeatureAPI from "@/api/resources/AnnounceFeature.js";
 import ImageAPI from "@/api/resources/Image.js";
+import { useStore } from 'vuex';
 export default {
   name: "AddOfferView",
+  created(){
+    this.loadPage();
+  },
   setup() {
+    let currentOwnerId = ref();
     let defaultText = ref(
       "Please write here a short description about the house/apartment you want to exchange. In this way we will cover some features we may didn't included and will help the potential buyer to make a better idea about your announce :)"
     );
@@ -504,6 +509,9 @@ export default {
       "Sopor",
       "Zorilor",
     ]);
+    let loadPage = () => {
+        currentOwnerId.value = store.state.ownerId;
+    }
     let GoToLocation = (location) => {
       window.location = location;
     };
@@ -529,7 +537,7 @@ export default {
       }
     };
     let setMainDetails = () => {
-      mainDetails.ownerId = 4;
+      mainDetails.ownerId = currentOwnerId.value;
       mainDetails.bedroomsNo = isNaN(parseInt(bedsNo.value))
         ? 0
         : parseInt(bedsNo.value);
@@ -653,7 +661,9 @@ export default {
       })
       console.log(pics);
     };
+    const store = useStore();
     return {
+      currentOwnerId,
       defaultText,
       title,
       GoToLocation,
@@ -696,7 +706,8 @@ export default {
       alertMessage,
       displayAlert,
       handleFileUpload,
-      pics
+      pics,
+      loadPage
     };
   },
 };

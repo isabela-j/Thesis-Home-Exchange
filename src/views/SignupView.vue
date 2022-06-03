@@ -98,7 +98,7 @@
             </v-text-field>
             <v-text-field
               label="Password confirmation"
-              :type="showPass ? 'text' : 'password'"
+              :type="showPassConf ? 'text' : 'password'"
               name="input-10-2"
               v-model="passwordConfirmation"
               hide-details="auto"
@@ -144,9 +144,12 @@
 import { ref, reactive } from "vue";
 import LoginAPI from "@/api/resources/Login.js";
 import OwnerAPI from "@/api/resources/Owner.js";
-
+import { useStore } from "vuex";
 export default {
   name: "SignupView",
+  created(){
+    this.loadPage();
+  },
   setup() {
     let ownerMainData = reactive({
       emailAdress: "",
@@ -171,6 +174,10 @@ export default {
     };
     let alertType = ref("warning");
     let alertMessage = ref("");
+    const store = useStore();
+    let loadPage = () => {
+       store.commit('updateId', 0);
+    }
     let displayAlert = (message,type) => {
       alertType.value = type;
       alertMessage.value = message;
@@ -229,6 +236,7 @@ export default {
         try {
           let res = await LoginAPI.store(ownerMainData);
           ownerDetails.loginId = JSON.parse(res.id);
+          store.commit('updateId', JSON.parse(res.id));
           SignUpDetails();
         } catch (error) {
           displayAlert("The account couldn't be created. Please try again later.",
@@ -269,7 +277,8 @@ export default {
       alertMessage,
       validateInput,
       displayAlert,
-      alertType
+      alertType,
+      loadPage
     };
   },
 };

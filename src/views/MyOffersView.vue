@@ -27,6 +27,7 @@ import { ref, computed, reactive } from "vue";
 import OfferCard from "@/components/OfferCard.vue";
 import AnnounceMainDetailsAPI from "@/api/resources/AnnounceMainDetails.js";
 import LoginAPI from "@/api/resources/Login.js";
+import { useStore } from 'vuex';
 export default {       
     name: "MyOffersView",
     components: {
@@ -60,15 +61,15 @@ export default {
         offerCards.push(listing);
       });
     };
+     const store = useStore();
      let getMyPosts = async () => {
       try {
-        currentOwnerId.value = 1; //SCHIMBA cu ce ownerID ai tu
+        currentOwnerId.value = store.state.ownerId;
         let posts  =
           await AnnounceMainDetailsAPI.getAllAnnounceMainDetailsFromOwner(
             currentOwnerId.value
           );
         parsePosts(posts);
-        console.log(offerCards);
       } catch (error) {}
     };
     const postedOffers = computed(() => {

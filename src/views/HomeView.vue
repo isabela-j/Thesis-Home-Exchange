@@ -73,6 +73,7 @@ import AnnounceMainDetailsAPI from "@/api/resources/AnnounceMainDetails.js";
 import LoginAPI from "@/api/resources/Login.js";
 import { computed } from "vue";
 import offers from "../offers.json";
+import { useStore } from 'vuex'
 export default {
   name: "HomeView",
   components: {
@@ -146,7 +147,8 @@ export default {
     };
     let getAllPosts = async () => {
       try {
-        currentOwnerId.value = 1; //SCHIMBA cu ce ownerID ai tu
+        currentOwnerId.value = store.state.ownerId;
+        console.log(currentOwnerId.value);
         posts = await AnnounceMainDetailsAPI.getAllAnnounceAvailable();
         sentDetails =
           await AnnounceMainDetailsAPI.getAllAnnounceMainDetailsFromOwner(
@@ -169,8 +171,9 @@ export default {
         smallScreen.value = IsMobileWidth();
       });
     });
-
+    const store = useStore();
     return {
+      ownerId: computed(() => store.state.ownerId),
       offerCards,
       offersShown,
       IsMobileWidth,

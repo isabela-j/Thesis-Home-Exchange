@@ -349,6 +349,7 @@ import Filters from "@/components/Filters.vue";
 import MiniCardsList from "@/components/MiniCardsList.vue";
 import AnnounceMainDetailsAPI from "@/api/resources/AnnounceMainDetails.js";
 import LoginAPI from "@/api/resources/Login.js";
+import { useStore } from "vuex";
 export default {
   name: "SideFilterBar",
   components: {
@@ -357,14 +358,13 @@ export default {
   },
 
   setup(props, { emit }) {
-    let currentOwnerId = ref(1);
+    let currentOwnerId = ref();
 
     let showPreferences = ref(true);
     let showYourAnnounces = ref(false);
     let drawer = ref(true);
-
+    const store = useStore();
     let setShowPreferences = () => {
-      console.log("ce");
       if (!showPreferences.value) {
         showPreferences.value = !showPreferences.value;
         showYourAnnounces.value = !showPreferences.value;
@@ -397,6 +397,7 @@ export default {
       if (!showYourAnnounces.value) {
         showPreferences.value = !showPreferences.value;
         showYourAnnounces.value = !showPreferences.value;
+       currentOwnerId.value = store.state.ownerId;
         let posts =
           await AnnounceMainDetailsAPI.getAllAnnounceMainDetailsFromOwner(
             currentOwnerId.value
