@@ -32,8 +32,10 @@
       <v-app-bar-nav-icon class="btnIcon"></v-app-bar-nav-icon>
     </v-btn>
   </v-app-bar>
+  <div>
   <v-navigation-drawer
-    absolute
+  disable-resize-watcher
+    hide-overlay
     temporary
     position="right"
     v-model="isMenuBarVisible"
@@ -93,6 +95,7 @@
       </div>
     </template>
   </v-navigation-drawer>
+  </div>
 </template>
 
 <script>
@@ -187,4 +190,13 @@ export default {
 ::v-deep(.v-toolbar-title):hover {
   cursor: pointer;
 }
+
+</style>
+
+<style scoped lang="scss">
+
+:deep(.v-navigation-drawer__scrim) {
+     opacity:0.2 !important;
+}
+
 </style>

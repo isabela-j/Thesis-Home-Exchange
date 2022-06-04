@@ -18,7 +18,7 @@ export default {
 
 <style>
 body {
-  background-color: rgb(229, 229, 229);
+  background-color: rgb(229, 229, 229) !important;
   font-family: 'Brush Script MT', cursive;
   font-size:14px;
 }
