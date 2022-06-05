@@ -33,9 +33,10 @@
             </v-row>
             <v-row class="pab" dense>
               <v-col v-if="OfferInPending" :key="9" align="right">
-                <v-btn class="btn btnClicked" @click="GoToLocation('/announce')"
+                <v-btn v-if="available" class="btn btnClicked" @click="GoToLocation('/announce')"
                   >See details</v-btn
                 >
+                <label v-else class="refusedLabel" >The offer is not available anymore</label>
               </v-col>
             </v-row>
           </v-container>
@@ -70,12 +71,12 @@
             </v-row>
             <v-row class="pab" dense>
               <v-col v-if="OfferInPending" :key="80" align="right">
-                <v-btn v-if="isSentOffer" class="btn btnSentAccept" @click="UnsendOffer"
+                <v-btn v-if="isSentOffer && available" class="btn btnSentAccept" @click="UnsendOffer"
                   >Unsend offer</v-btn
                 >
-                <v-col v-else-if="!isSentOffer && unsent" :key="103" align="right"  class="acceptedLabel"> <label>The offer was unsent</label></v-col>
-                <v-btn v-else class="btn btnSentAccept" @click="AcceptOffer">Accept offer</v-btn>
-                <v-btn v-if="!isSentOffer && !unsent" class="btn btnRefuse" @click="RefuseOffer">
+                <v-col v-else-if="!isSentOffer && unsent && available" :key="103" align="right"  class="acceptedLabel"> <label>The offer was unsent</label></v-col>
+                <v-btn v-else-if="available" class="btn btnSentAccept" @click="AcceptOffer">Accept offer</v-btn>
+                <v-btn v-if="!isSentOffer && !unsent && available" class="btn btnRefuse" @click="RefuseOffer">
                   Refuse Offer</v-btn
                 >
               </v-col>
@@ -203,6 +204,11 @@ export default {
         " parking lot"
       );
     });
+    let announceStatus = ref(props.announceStatus);
+    let announceStatusY = ref(props.announceStatusY);
+    let available = computed(() => {
+      return announceStatus.value === 0 && announceStatusY.value === 0 ? true : false;
+    });
     return {
       offerType,
       isRequested,
@@ -231,7 +237,9 @@ export default {
       currentOwnerId,
       announceId,
       idSentReceived,
-      unsent
+      unsent,
+      available,
+      announceStatus
     };
   },
 
@@ -259,7 +267,9 @@ export default {
     "descY",
     "announceId",
     "currentOwnerId",
-    "idSentReceived"
+    "idSentReceived",
+    "announceStatus",
+    "announceStatusY"
   ],
 };
 </script>

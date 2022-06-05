@@ -248,7 +248,6 @@ export default {
     });
 
     let parseMainDetails = (details, sentDetails) => {
-      console.log(details);
       profileDetails.title = details.title;
       profileDetails.street = details.fullAddress;
       profileDetails.beds = details.bedroomsNo;
@@ -282,7 +281,8 @@ export default {
             : (profileDetails.typestr = "Apartment");
         }
       });
-      details.offerReceived.forEach((received) => {
+      profileDetails.offerRequested = false;
+      /*details.offerReceived.forEach((received) => {
         if (received.id_received == details.id_announceMainDetails) {
           sentDetails.forEach((userOffers) => {
             if (received.id_sender == userOffers.id_announceMainDetails) {
@@ -290,7 +290,7 @@ export default {
             }
           });
         }
-      });
+      });*/
       details.image.forEach((image)=>{
         profileDetails.images.push(image.imageData)
       });
@@ -454,7 +454,8 @@ export default {
       alertMessage,
       displayAlert,
       suggestAnOffer,
-      sendOfferData
+      sendOfferData,
+      showRequestBtn
     };
   },
 };

@@ -29,6 +29,8 @@
             :descY="item.descY"
             :currentOwnerId="currentOwnerId"
             :idSentReceived="item.id_offerSendAndReceived"
+            :announceStatus = "item.announceStatus"
+             :announceStatusY="item.announceStatusY"
           />
         </v-col>
       </v-row>
@@ -65,6 +67,7 @@ export default {
             sent.id_sender,
             store.state.accessToken
           );
+          listing.announceStatus = announceData.announceStatus;
           listing.announceId = announceData.id_announceMainDetails;
           listing.title = announceData.title;
           listing.bedroomsNo = announceData.bedroomsNo;
@@ -77,6 +80,7 @@ export default {
             listing.mainPicture = announceData.image[0].imageData;
           }
 
+          listing.announceStatusY= post.announceStatus;
           listing.titleY = post.title;
           listing.bedroomsNoY = post.bedroomsNo;
           listing.bathroomsNoY = post.bathroomsNo;

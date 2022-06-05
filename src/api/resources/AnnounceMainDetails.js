@@ -112,4 +112,20 @@ export default {
       }
     });
   },
+  filter(data, token){
+    return fetch(Service.baseURL + "/AnnounceMainDetails/filter", {
+      method: "POST",
+      headers:{ 
+        "Content-Type": "application/json",
+        "Authorization": "Bearer "+ token,
+      },
+      body: JSON.stringify(data),
+    }).then(function (response) {
+      if (response.status != 201) {
+        throw response.status;
+      } else {
+        return response.json();
+      }
+    });
+  }
 };

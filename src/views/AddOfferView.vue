@@ -652,7 +652,6 @@ export default {
       };
       reader.readAsDataURL(file);
       })
-      console.log(pics);
     };
     const store = useStore();
     return {

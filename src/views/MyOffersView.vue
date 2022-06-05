@@ -66,7 +66,6 @@ export default {
           {
             listing.mainPicture = post.image[0].imageData;
           }
-        console.log(listing);
         listing.key = listing.key + 1;
         offerCards.push(listing);
       });

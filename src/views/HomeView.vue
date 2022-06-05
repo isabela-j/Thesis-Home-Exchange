@@ -21,7 +21,7 @@
       <v-row v-for="(item, index) in offerCards" :key="index" dense>
         <v-col :key="index">
           <OfferCard
-           :idAnnounce = "item.announceMainDetailsId"
+            :idAnnounce="item.announceMainDetailsId"
             :title="item.title"
             :type="item.type"
             :beds="item.beds"
@@ -45,7 +45,7 @@
       <v-row v-for="(item, index) in offerCards" :key="index" dense>
         <v-col :key="index">
           <OfferCard
-            :idAnnounce = "item.announceMainDetailsId"
+            :idAnnounce="item.announceMainDetailsId"
             :title="item.title"
             :type="item.type"
             :beds="item.beds"
@@ -56,7 +56,7 @@
             :offerSaved="item.offerSaved"
             :mainPicture="item.mainPicture"
             showSaveBtn="true"
-            :announceStatus = "item.announceStatus"
+            :announceStatus="item.announceStatus"
           />
         </v-col>
       </v-row>
@@ -74,7 +74,7 @@ import AnnounceMainDetailsAPI from "@/api/resources/AnnounceMainDetails.js";
 import LoginAPI from "@/api/resources/Login.js";
 import { computed } from "vue";
 import offers from "../offers.json";
-import { useStore } from 'vuex'
+import { useStore } from "vuex";
 export default {
   name: "HomeView",
   components: {
@@ -106,7 +106,8 @@ export default {
       posts.forEach((post) => {
         let isOwnerOffer = false;
         sentDetails.forEach((ownerPost) => {
-          if (ownerPost.id_announceMainDetails == post.id_announceMainDetails) { //do not show the Owner's posts in home view feed
+          if (ownerPost.id_announceMainDetails == post.id_announceMainDetails) {
+            //do not show the Owner's posts in home view feed
             isOwnerOffer = true;
           }
         });
@@ -120,7 +121,7 @@ export default {
           listing.parkingLot = post.parkingLotsNo;
           listing.price = post.price;
           listing.offerRequested = false;
-          post.offerReceived.forEach((received) => {
+        /*  post.offerReceived.forEach((received) => {
             if (received.id_received == post.id_announceMainDetails) {
               sentDetails.forEach((userOffers) => {
                 if (received.id_sender == userOffers.id_announceMainDetails) {
@@ -128,7 +129,7 @@ export default {
                 }
               });
             }
-          });
+          });*/
           post.announceCharacteristic.forEach((characteristic) => {
             if (
               characteristic.announceMainDetailId == post.id_announceMainDetails
@@ -141,8 +142,7 @@ export default {
               listing.offerSaved = true;
             }
           });
-          if(post.image.length > 0)
-          {
+          if (post.image.length > 0) {
             listing.mainPicture = post.image[0].imageData;
           }
           offerCards.push(listing);
@@ -152,7 +152,9 @@ export default {
     let getAllPosts = async () => {
       try {
         currentOwnerId.value = store.state.ownerId;
-        posts = await AnnounceMainDetailsAPI.getAllAnnounceAvailable(store.state.accessToken);
+        posts = await AnnounceMainDetailsAPI.getAllAnnounceAvailable(
+          store.state.accessToken
+        );
         sentDetails =
           await AnnounceMainDetailsAPI.getAllAnnounceMainDetailsFromOwner(
             currentOwnerId.value,
@@ -161,9 +163,19 @@ export default {
         parsePosts(posts, sentDetails);
       } catch (error) {}
     };
-    const getFilteredPosts = (filters) => {
-      offerCards.splice(0);
-      console.log(filters);
+    const getFilteredPosts = async (filters) => {
+      offerCards.splice(0, offerCards.length);
+      try {
+        posts = await AnnounceMainDetailsAPI.filter(filters, store.state.accessToken);
+        sentDetails =
+          await AnnounceMainDetailsAPI.getAllAnnounceMainDetailsFromOwner(
+            currentOwnerId.value,
+            store.state.accessToken
+          );
+        parsePosts(posts, sentDetails);
+      } catch (error) {
+        console.log(error);
+      }
     };
     onMounted(() => {
       window.addEventListener("resize", () => {

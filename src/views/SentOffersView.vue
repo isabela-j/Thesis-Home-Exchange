@@ -27,6 +27,8 @@
             :descY="item.descY"
             :announceId = "item.id_received"
             :idSentReceived="item.id_offerSendAndReceived"
+            :announceStatus="item.announceStatus"
+            :announceStatusY="item.announceStatusY"
           />
         </v-col>
       </v-row>
@@ -69,6 +71,8 @@ export default {
           listing.ownerEmail = ownerData.login.emailAdress;
           let ownerData2 = await OwnerAPI.getOwner(announceData.ownerId, store.state.accessToken);
           listing.phoneNo = ownerData2.phoneNumber;
+
+          listing.announceStatus = announceData.announceStatus;
           listing.title = announceData.title;
           listing.bedroomsNo = announceData.bedroomsNo;
           listing.bathroomsNo = announceData.bathroomsNo;
@@ -81,6 +85,7 @@ export default {
             listing.mainPicture = announceData.image[0].imageData;
           }
 
+          listing.announceStatusY = post.announceStatus;
           listing.titleY = post.title;
           listing.bedroomsNoY = post.bedroomsNo;
           listing.bathroomsNoY = post.bathroomsNo;

@@ -591,7 +591,6 @@ export default {
         announceUtilities: announceUtilities,
         announceFeatures: announceFeatures
       }
-      console.log(JSON.stringify(finalFilters));
       var el = JSON.parse(JSON.stringify(finalFilters));
       emit("filterPosts", el);
     };
