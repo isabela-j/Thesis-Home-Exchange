@@ -73,8 +73,9 @@
                 <v-btn v-if="isSentOffer" class="btn btnSentAccept" @click="UnsendOffer"
                   >Unsend offer</v-btn
                 >
+                <v-col v-else-if="!isSentOffer && unsent" :key="103" align="right"  class="acceptedLabel"> <label>The offer was unsent</label></v-col>
                 <v-btn v-else class="btn btnSentAccept" @click="AcceptOffer">Accept offer</v-btn>
-                <v-btn v-if="!isSentOffer" class="btn btnRefuse" @click="RefuseOffer">
+                <v-btn v-if="!isSentOffer && !unsent" class="btn btnRefuse" @click="RefuseOffer">
                   Refuse Offer</v-btn
                 >
               </v-col>
@@ -132,7 +133,7 @@ export default {
         let refuse={
           offerAccepted: 1
         }
-        await OfferSentReceivedAPI.update(refuse, idSentReceived.value);
+        await OfferSentReceivedAPI.update(refuse, idSentReceived.value, store.state.accessToken);
         offerStatus.value = 1;
       }
       catch(error)
@@ -146,7 +147,7 @@ export default {
         let refuse={
           offerAccepted: 2
         }
-        await OfferSentReceivedAPI.update(refuse, idSentReceived.value);
+        await OfferSentReceivedAPI.update(refuse, idSentReceived.value, store.state.accessToken);
         offerStatus.value = 2;
       }
       catch(error)
@@ -154,8 +155,16 @@ export default {
         console.log(error);
       }
     };
-    let UnsendOffer = () => {
-      //delete offer from list
+    let UnsendOffer = async() => {
+      try {
+        await OfferSentReceivedAPI.delete(idSentReceived.value, store.state.accessToken);
+        unsent.value = true;
+        isSentOffer.value = false;
+      }
+       catch(error)
+      {
+        console.log(error);
+      }
     }
     const OfferInPending = computed(() => {
       return offerStatus.value === 0 ? true : false;
@@ -169,6 +178,7 @@ export default {
     let beds = ref(props.beds);
     let baths = ref(props.baths);
     let parkingLot = ref(props.parkingLot);
+    let unsent = ref(false);
 
     let ShortDetails = computed(() => {
       return (
@@ -220,7 +230,8 @@ export default {
       offerTypeY,
       currentOwnerId,
       announceId,
-      idSentReceived
+      idSentReceived,
+      unsent
     };
   },
 

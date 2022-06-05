@@ -13,10 +13,12 @@ export default {
       }
     });
   },
-  getAllOffersSavedByOwner(ownerId) {
+  getAllOffersSavedByOwner(ownerId, token) {
     return fetch(Service.baseURL + "/OffersSaved/offersByOwner/" + ownerId, {
       method: "GET",
-      headers: Service.headers,
+      headers: {
+        "Authorization" : "Bearer " + token
+      }
     }).then(function (response) {
       if (response.status != 200) {
         throw response.status;
@@ -37,18 +39,33 @@ export default {
       }
     });
   },
-  store(data) {
-    Service.headers.set("Content-Type", "multipart/form-data"); //for sending files to the server
-  //  Service.headers.set("Authorization", "Bearer " + Service.token);
+  store(data, token) {
     return fetch(Service.baseURL + "/OffersSaved", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + token,
+      },
       body: JSON.stringify(data),
     }).then(function (response) {
       if (response.status != 201) {
         throw response.status;
       } else {
         return response.json();
+      }
+    });
+  },
+  delete(id, token) {
+    return fetch(Service.baseURL + "/OffersSaved/" + id, {
+      method: "DELETE",
+      headers: {
+      "Authorization": "Bearer " + token,
+    },
+    }).then(function (response) {
+      if (response.status != 200) {
+        throw response.status;
+      } else {
+        return response;
       }
     });
   },

@@ -5,6 +5,7 @@
       <v-row v-for="(item, index) in offerCards" :key="index" dense>
         <v-col :key="index">
           <OfferCard
+            :idAnnounce = "item.announceMainDetailsId"
             :title="item.title"
             :type="item.type"
             :beds="item.beds"
@@ -15,6 +16,8 @@
             :offerSaved="item.offerSaved"
             :mainPicture="item.mainPicture"
             :showSaveBtn="false"
+            :announceStatus = "item.announceStatus"
+            :key = "item.key"
           />
         </v-col>
       </v-row>
@@ -42,7 +45,10 @@ export default {
     let offerCards = reactive([]);
      let parsePosts = async (posts) => {
       posts.forEach((post) => {
-        let listing = {};
+        let listing = {
+          key : 0
+        };
+        listing.announceStatus = post.announceStatus;
         listing.announceMainDetailsId = post.id_announceMainDetails;
         listing.title = post.title;
         listing.beds = post.bedroomsNo;
@@ -56,8 +62,12 @@ export default {
             listing.type = characteristic.realEstateTypeId;
           }
         });
-        listing.mainPicture =
-          "https://static01.nyt.com/images/2019/06/25/realestate/25domestic-zeff/a1c1a1a36c9e4ff8adcb958c4276f28d-jumbo.jpg?quality=75&auto=webp"; //SCHIMBA
+        if(post.image.length > 0)
+          {
+            listing.mainPicture = post.image[0].imageData;
+          }
+        console.log(listing);
+        listing.key = listing.key + 1;
         offerCards.push(listing);
       });
     };
@@ -67,7 +77,8 @@ export default {
         currentOwnerId.value = store.state.ownerId;
         let posts  =
           await AnnounceMainDetailsAPI.getAllAnnounceMainDetailsFromOwner(
-            currentOwnerId.value
+            currentOwnerId.value,
+            store.state.accessToken
           );
         parsePosts(posts);
       } catch (error) {}

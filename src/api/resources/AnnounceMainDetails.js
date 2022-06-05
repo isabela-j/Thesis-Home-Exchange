@@ -13,10 +13,12 @@ export default {
       }
     });
   },
-  getAllAnnounceMainDetailsFromOwner(ownerId) {
+  getAllAnnounceMainDetailsFromOwner(ownerId, token) {
     return fetch(Service.baseURL + "/AnnounceMainDetails/fromOwner/" + ownerId, {
       method: "GET",
-      headers: Service.headers,
+      headers: { 
+        "Authorization": "Bearer "+ token,
+      },
     }).then(function (response) {
       if (response.status != 200) {
         throw response.status;
@@ -25,13 +27,14 @@ export default {
       }
     });
   },
-  getAnnounceMainDetail(announceMainDetailId) {
-    console.log(Service.baseURL + "/AnnounceMainDetails/" + announceMainDetailId);
+  getAnnounceMainDetail(announceMainDetailId,token) {
     return fetch(
       Service.baseURL + "/AnnounceMainDetails/" + announceMainDetailId,
       {
         method: "GET",
-        headers: Service.headers,
+        headers: { 
+          "Authorization": "Bearer "+ token,
+        },
       }
     ).then(function (response) {
       if (response.status != 200) {
@@ -41,10 +44,12 @@ export default {
       }
     });
   },
-  getAllAnnounceAvailable() {
+  getAllAnnounceAvailable(token) {
     return fetch(Service.baseURL + "/AnnounceMainDetails/available", {
       method: "GET",
-      headers: Service.headers,
+      headers: { 
+        "Authorization": "Bearer "+ token,
+      },
     }).then(function (response) {
       if (response.status != 200) {
         throw response.status;
@@ -53,12 +58,13 @@ export default {
       }
     });
   },
-  store(data) {
-  //  Service.headers.set("Content-Type", "multipart/form-data"); //for sending files to the server
- //   Service.headers.set("Authorization", "Bearer " + Service.token);
+  store(data,token) {
     return fetch(Service.baseURL + "/AnnounceMainDetails", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers:{ 
+        "Content-Type": "application/json",
+        "Authorization": "Bearer "+ token,
+      },
       body: JSON.stringify(data),
     }).then(function (response) {
       if (response.status != 201) {
@@ -69,8 +75,6 @@ export default {
     });
   },
   update(data, announceId) {
-    Service.headers.set("Content-Type", "multipart/form-data"); //for sending files to the server
-    Service.headers.set("Authorization", "Bearer " + Service.token);
     return fetch(Service.baseURL + "/AnnounceMainDetails/" + announceId, {
       method: "PATCH",
       headers: Service.headers,
@@ -84,8 +88,6 @@ export default {
     });
   },
   deactivateAnnounce(data, announceId) {
-    Service.headers.set("Content-Type", "multipart/form-data"); //for sending files to the server
-    Service.headers.set("Authorization", "Bearer " + Service.token);
     return fetch(Service.baseURL + "/AnnounceMainDetails/deactivate/" + announceId, {
       method: "PATCH",
       headers: Service.headers,

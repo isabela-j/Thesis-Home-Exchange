@@ -10,20 +10,20 @@
             :announceId="item.id_sender"
             :title="item.title"
             :type="item.type"
-            :beds= "item.bedroomsNo"
-            :baths = "item.bathroomsNo"
-            :parkingLot = "item.parkingLotsNo"
+            :beds="item.bedroomsNo"
+            :baths="item.bathroomsNo"
+            :parkingLot="item.parkingLotsNo"
             :price="item.price"
             :mainPicture="item.mainPicture"
             :message="item.senderMessage"
             :offerStatus="item.offerAccepted"
-            :senderPhoneNo = "item.senderPhoneNumber"
-            :senderEmail = "item.senderEmail"
+            :senderPhoneNo="item.senderPhoneNumber"
+            :senderEmail="item.senderEmail"
             :titleY="item.titleY"
             :typeY="item.typeY"
-            :bedsY= "item.bedroomsNoY"
-            :bathsY = "item.bathroomsNoY"
-            :parkingLotY = "item.parkingLotsNoY"
+            :bedsY="item.bedroomsNoY"
+            :bathsY="item.bathroomsNoY"
+            :parkingLotY="item.parkingLotsNoY"
             :priceY="item.priceY"
             :mainPictureY="item.mainPictureY"
             :descY="item.descY"
@@ -41,7 +41,7 @@ import { ref, computed, reactive } from "vue";
 import SentReceivedCard from "@/components/SentReceivedCard.vue";
 import AnnounceMainDetailsAPI from "@/api/resources/AnnounceMainDetails.js";
 import OfferSentAndReceivedAPI from "@/api/resources/OfferSentAndReceived.js";
-import { useStore } from 'vuex';
+import { useStore } from "vuex";
 export default {
   name: "ReceivedOfferView",
   components: {
@@ -54,7 +54,6 @@ export default {
     let receivedOffersData = reactive([]);
     let yourOffersData = reactive([]);
     let currentOwnerId = ref();
-    //"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQoLSG2pHU9KTA7tHA62H0jXspw4tzlr1UYBg&usqp=CAU"
     const receivedOffersCount = computed(() => {
       return receivedOffersData.length > 0 ? receivedOffersData.length : 0;
     });
@@ -63,25 +62,30 @@ export default {
         post.offerReceived.forEach(async (sent) => {
           let listing = sent;
           let announceData = await AnnounceMainDetailsAPI.getAnnounceMainDetail(
-            sent.id_sender
+            sent.id_sender,
+            store.state.accessToken
           );
-          listing.announceId= announceData.id_announceMainDetails;
+          listing.announceId = announceData.id_announceMainDetails;
           listing.title = announceData.title;
           listing.bedroomsNo = announceData.bedroomsNo;
           listing.bathroomsNo = announceData.bathroomsNo;
           listing.parkingLotsNo = announceData.parkingLotsNo;
           listing.price = announceData.price;
-          listing.type = announceData.announceCharacteristic[0].realEstateTypeId;
-          listing.mainPicture = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQoLSG2pHU9KTA7tHA62H0jXspw4tzlr1UYBg&usqp=CAU";
-          
-          
+          listing.type =
+            announceData.announceCharacteristic[0].realEstateTypeId;
+          if (announceData.image.length > 0) {
+            listing.mainPicture = announceData.image[0].imageData;
+          }
+
           listing.titleY = post.title;
           listing.bedroomsNoY = post.bedroomsNo;
           listing.bathroomsNoY = post.bathroomsNo;
           listing.parkingLotsNoY = post.parkingLotsNo;
           listing.priceY = post.price;
           listing.typeY = post.announceCharacteristic[0].realEstateTypeId;
-          listing.mainPictureY = "https://static01.nyt.com/images/2019/06/25/realestate/25domestic-zeff/a1c1a1a36c9e4ff8adcb958c4276f28d-jumbo.jpg?quality=75&auto=webp";
+          if (post.image.length > 0) {
+            listing.mainPictureY = post.image[0].imageData;
+          }
           listing.descY = post.fullDescription;
           receivedOffersData.push(listing);
         });
@@ -90,17 +94,19 @@ export default {
     const store = useStore();
     let populateReceived = async () => {
       currentOwnerId.value = store.state.ownerId;
-      let data = await AnnounceMainDetailsAPI.getAllAnnounceMainDetailsFromOwner(
-        currentOwnerId.value
-      );
-       parseData(data);
+      let data =
+        await AnnounceMainDetailsAPI.getAllAnnounceMainDetailsFromOwner(
+          currentOwnerId.value,
+          store.state.accessToken
+        );
+      parseData(data);
     };
     return {
       receivedOffersData,
       receivedOffersCount,
       populateReceived,
       currentOwnerId,
-      yourOffersData
+      yourOffersData,
     };
   },
 };

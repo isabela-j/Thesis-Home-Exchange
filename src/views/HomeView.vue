@@ -56,6 +56,7 @@
             :offerSaved="item.offerSaved"
             :mainPicture="item.mainPicture"
             showSaveBtn="true"
+            :announceStatus = "item.announceStatus"
           />
         </v-col>
       </v-row>
@@ -112,6 +113,7 @@ export default {
         if (!isOwnerOffer) {
           let listing = {};
           listing.announceMainDetailsId = post.id_announceMainDetails;
+          listing.announceStatus = 0;
           listing.title = post.title;
           listing.beds = post.bedroomsNo;
           listing.baths = post.bathroomsNo;
@@ -139,8 +141,10 @@ export default {
               listing.offerSaved = true;
             }
           });
-          listing.mainPicture =
-            "https://static01.nyt.com/images/2019/06/25/realestate/25domestic-zeff/a1c1a1a36c9e4ff8adcb958c4276f28d-jumbo.jpg?quality=75&auto=webp"; //SCHIMBA
+          if(post.image.length > 0)
+          {
+            listing.mainPicture = post.image[0].imageData;
+          }
           offerCards.push(listing);
         }
       });
@@ -148,11 +152,11 @@ export default {
     let getAllPosts = async () => {
       try {
         currentOwnerId.value = store.state.ownerId;
-        console.log(currentOwnerId.value);
-        posts = await AnnounceMainDetailsAPI.getAllAnnounceAvailable();
+        posts = await AnnounceMainDetailsAPI.getAllAnnounceAvailable(store.state.accessToken);
         sentDetails =
           await AnnounceMainDetailsAPI.getAllAnnounceMainDetailsFromOwner(
-            currentOwnerId.value
+            currentOwnerId.value,
+            store.state.accessToken
           );
         parsePosts(posts, sentDetails);
       } catch (error) {}

@@ -447,7 +447,7 @@ export default {
       price: 0,
       squareMeters: 0,
       parkingLotsNo: 0,
-      announceStatus: "liber",
+      announceStatus: 0,
       fullDescription: "",
       fullAddress: "",
     });
@@ -603,18 +603,19 @@ export default {
     let postOffer = async () => {
       try {
         setMainDetails();
-        let res = await AnnounceMainDetailsAPI.store(mainDetails);
+        let res = await AnnounceMainDetailsAPI.store(mainDetails, store.state.accessToken);
         announceCharacteristic.announceMainDetailId = JSON.parse(res.id);
         setCharacteristics();
         let res2 = await AnnounceCharacteristicsAPI.store(
-          announceCharacteristic
+          announceCharacteristic,
+          store.state.accessToken
         );
         setUtilities();
         announceUtilities.announceMainDetailId = JSON.parse(res.id);
-        let res3 = await AnnounceUtilityAPI.store(announceUtilities);
+        let res3 = await AnnounceUtilityAPI.store(announceUtilities, store.state.accessToken);
         setFeatures();
         announceFeatures.announceMainDetailId = JSON.parse(res.id);
-        let res4 = await AnnounceFeatureAPI.store(announceFeatures);
+        let res4 = await AnnounceFeatureAPI.store(announceFeatures, store.state.accessToken);
         displayAlert("Your announce has been posted successfully!", "success");
 
         pics.forEach(async (pic) => {
@@ -622,16 +623,8 @@ export default {
             announceMainDetailId: JSON.parse(res.id),
             imageData: pic
           };
-           console.log(picObj);
-          let resImg = await ImageAPI.store(picObj);
-         
+          let resImg = await ImageAPI.store(picObj, store.state.accessToken);
         })
-        /*files.forEach(file => {
-            let formData =  = new FormData();
-            formData.append(JSON.parse(res.id));
-            formData.append("imageData", file);
-            await ImageAPI.store(formData);
-        });*/
       } catch (error) {
         displayAlert(
           "Your announce couldn't be posted . Please try again later.",

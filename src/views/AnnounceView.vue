@@ -4,7 +4,8 @@
       <v-container class="container-custom" fluid>
         <v-row dense>
           <v-col key="1">
-            <PicturesSlideShow />
+            <PicturesSlideShow 
+            :pictures = "profileDetails.images" />
           </v-col>
         </v-row>
         <v-row class="fill-height" style="margin: 0.1em" dense>
@@ -17,6 +18,7 @@
               :price="profileDetails.price"
               :offerSaved="profileDetails.saved"
               :details="profileDetails.details"
+              :showRequest = "showRequestBtn"
               :key="profileDetails.key"
             />
             <OwnerSmallDetails
@@ -33,6 +35,7 @@
               :name="currentOwnerData.fullName"
               :phoneNo="currentOwnerData.phoneNo"
               :email="currentOwnerData.email"
+              :showRequest = "showRequestBtn"
               :key="profileDetails.key"
               @showOverlay="suggestAnOffer"
             />
@@ -45,6 +48,7 @@
               :name="currentOwnerData.fullName"
               :phoneNo="currentOwnerData.phoneNo"
               :email="currentOwnerData.email"
+              :showRequest = "showRequestBtn"
               :key="profileDetails.key"
               @showOverlay="suggestAnOffer"
             />
@@ -100,7 +104,6 @@
       align-self: center;
       position: fixed;
       top:0%;
-      left: 20%;
     ">
       <v-row dense>
         <v-alert
@@ -181,6 +184,7 @@ export default {
     let currentOwnerId = ref();
     let ownerAvailablePosts = reactive([]);
     let sendOfferData = reactive();
+    let showRequestBtn = ref(true);
     let currentOwnerData = reactive({
       firstName: "",
       lastName: "",
@@ -205,6 +209,7 @@ export default {
       offerRequested: false,
       key: 0,
       typestr: "",
+      images: [],
     });
     let ownerDetails = reactive({
       firstName: "",
@@ -243,6 +248,7 @@ export default {
     });
 
     let parseMainDetails = (details, sentDetails) => {
+      console.log(details);
       profileDetails.title = details.title;
       profileDetails.street = details.fullAddress;
       profileDetails.beds = details.bedroomsNo;
@@ -285,6 +291,13 @@ export default {
           });
         }
       });
+      details.image.forEach((image)=>{
+        profileDetails.images.push(image.imageData)
+      });
+      if(details.ownerId === store.state.ownerId)
+      {
+          showRequestBtn.value = false;
+      }
       profileDetails.key = 1;
     };
     let parseOwnerDetails = (owner, ownerResult) => {
@@ -331,7 +344,7 @@ export default {
     };
     let parseOwnerListings = (ownerListings) => {
       ownerListings.forEach((post) => {
-        if (post.status === 0) {
+        if (post.announceStatus === 0) {
           let listing = {};
           listing.announceMainDetailsId = post.id_announceMainDetails;
           listing.title = post.title;
@@ -346,8 +359,10 @@ export default {
               listing.type = characteristic.realEstateTypeId;
             }
           });
-          listing.mainPicture =
-            "https://static01.nyt.com/images/2019/06/25/realestate/25domestic-zeff/a1c1a1a36c9e4ff8adcb958c4276f28d-jumbo.jpg?quality=75&auto=webp"; //SCHIMBA
+          if(post.image.length > 0)
+          {
+            listing.mainPicture = post.image[0].imageData;
+          }
           ownerAvailablePosts.push(listing);
         }
       });
@@ -360,25 +375,25 @@ export default {
 
       try {
         let announceMainDetails =
-          await AnnounceMainDetailsAPI.getAnnounceMainDetail(announceId.value);
+          await AnnounceMainDetailsAPI.getAnnounceMainDetail(announceId.value, store.state.accessToken);
         let ownerListings =
           await AnnounceMainDetailsAPI.getAllAnnounceMainDetailsFromOwner(
-            currentOwnerId.value
+            currentOwnerId.value,
+            store.state.accessToken
           );
-        let currentUserData = await OwnerAPI.getOwner(currentOwnerId.value); //the user that is currently logged in
+        let currentUserData = await OwnerAPI.getOwner(currentOwnerId.value, store.state.accessToken); //the user that is currently logged in
         parseOwnerDetails(currentUserData, currentOwnerData);
-        let currentUserLogin = await LoginAPI.getLogin(currentOwnerId.value);
+        let currentUserLogin = await LoginAPI.getLogin(store.state.loginId, store.state.accessToken);
         currentOwnerData.email = currentUserLogin.emailAdress;
 
         parseMainDetails(announceMainDetails, ownerListings);
         let ownerDetailsJS = await OwnerAPI.getOwner(
-          announceMainDetails.ownerId
+          announceMainDetails.ownerId, store.state.accessToken
         );
-
-        ownerDetails.ownerId = announceMainDetails.ownerId; //the owner of the announce
+        ownerDetails.ownerId = announceMainDetails.ownerId; 
         parseOwnerDetails(ownerDetailsJS, ownerDetails);
-        let ownerLogin = await LoginAPI.getLogin(announceMainDetails.ownerId);
-        ownerDetails.email = ownerLogin.emailAdress;
+
+        ownerDetails.email = ownerDetailsJS.login.emailAdress;
 
         parseCharacteristics(announceMainDetails.announceCharacteristic[0]);
         parsefeatures(announceMainDetails.announceFeature[0]);
@@ -395,7 +410,7 @@ export default {
       try{
         sendOfferData.announceReceivedId = announceId.value;
         sendOfferData.announceSentId = chosenAnnounceId;
-        await OfferSentAndReceivedAPI.store(sendOfferData);
+        await OfferSentAndReceivedAPI.store(sendOfferData, store.state.accessToken);
         displayAlert("Your offer has been sent successfully! You can check for it in Offers Sent section.", "success");
         profileDetails.offerRequested = true;
         profileDetails.key=22;
@@ -513,4 +528,13 @@ export default {
     display: none;
   }
 }
+</style>
+
+
+<style scoped lang="scss">
+
+:deep(.v-overlay__scrim) {
+     opacity:0.2 !important;
+}
+
 </style>

@@ -28,12 +28,13 @@ export default {
       }
     });
   },
-  store(data) {
-   // Service.headers.set("Content-Type", "multipart/form-data"); //for sending files to the server
-  //  Service.headers.set("Authorization", "Bearer " + Service.token);
+  store(data, token) {
     return fetch(Service.baseURL + "/AnnounceCharacteristics", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { 
+        "Content-Type": "application/json",
+        "Authorization": "Bearer "+ token,
+      },
       body: JSON.stringify(data),
     }).then(function (response) {
       if (response.status != 201) {

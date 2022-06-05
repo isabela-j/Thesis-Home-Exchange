@@ -1,7 +1,7 @@
 <template>
   <div class="center-content">
   <carousel 
-    :items-to-show="3.95"
+    :items-to-show="4.95"
     wrapAround
     :settings="settings"
     :breakpoints="breakpoints"
@@ -13,7 +13,7 @@
     </slide>
     <template #addons="{ slidesCount, currentSlide }" @onChange="changed()">
       <navigation v-if="slidesCount > 3"/>
-      <pagination />
+      <pagination v-if="slidesCount > 3"/>
     </template>
   </carousel>
   </div>
@@ -22,7 +22,7 @@
 <script>
 import "vue3-carousel/dist/carousel.css";
 import { Carousel, Slide, Pagination, Navigation } from "vue3-carousel";
-import { ref,watch } from "vue";
+import { ref,watch, reactive } from "vue";
 export default {
   name: "PicturesSlideShow",
   components: {
@@ -31,33 +31,22 @@ export default {
     Pagination,
     Navigation,
   },
-  setup() {
-    let currentImgSrc = ref("https://images.adsttc.com/media/images/5e68/48ed/b357/658e/fb00/0441/large_jpg/AM1506.jpg?1583892706");
+  setup(props) {
     let changed =() =>  {
       console.log("changed");
     }
+    let items = reactive(props.pictures);
     return {
-      items: [
-        "https://images.adsttc.com/media/images/5e68/48ed/b357/658e/fb00/0441/large_jpg/AM1506.jpg?1583892706",
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSjZoqOcp2UUh7Y2bXVpo46koYw29UamuHWiQ&usqp=CAU",
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSh4O9GCySQw_9C24XfInhq-lYgfnHlRSMB5g&usqp=CAU",
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQoLSG2pHU9KTA7tHA62H0jXspw4tzlr1UYBg&usqp=CAU",
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTenVOQ9M6IYr2sJir64rd09sb7n8w5SdXeuQ&usqp=CAU",
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR3pv_uuKkN2wpGr115_ZD-bo3gpJg5dvKFBQ&usqp=CAU",
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSIjoFfwaMck65QyMmJJB5EyZfmzfpq1IObPg&usqp=CAU",
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ5yUp0ykLk5JDjk2R6mt_uLywegeTeuSuMSg&usqp=CAU",
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSm8vt8ixMLrKq2pIKwr_WMLwOUIPlQdvIVKA&usqp=CAU",
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRK3yv3oXVqvD2irGtKy8iXRoGLmDXBHbKNKw&usqp=CAU",
-      ],
+      items,
       breakpoints: {
         // 700px and up
         700: {
-          itemsToShow: 3,
+          itemsToShow: 3.25,
           snapAlign: "center",
         },
         // 1024 and up
         1024: {
-          itemsToShow: 5.95,
+          itemsToShow: 4.65,
           snapAlign: "center",
         },
         settings: {
@@ -65,10 +54,10 @@ export default {
           snapAlign: "center",
         },
       },
-      currentImgSrc,
       changed,
     };
   },
+  props: ["pictures"]
 
 };
 </script>

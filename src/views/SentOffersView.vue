@@ -26,6 +26,7 @@
             :senderEmail="item.ownerEmail"
             :descY="item.descY"
             :announceId = "item.id_received"
+            :idSentReceived="item.id_offerSendAndReceived"
           />
         </v-col>
       </v-row>
@@ -60,13 +61,13 @@ export default {
       data.forEach((post) => {
         post.offerSent.forEach(async (sent) => {
           let listing = sent;
-          console.log(sent);
           let announceData = await AnnounceMainDetailsAPI.getAnnounceMainDetail(
-            sent.id_received
+            sent.id_received,
+            store.state.accessToken
           );
-          let ownerData = await LoginAPI.getLogin(announceData.ownerId);
-          listing.ownerEmail = ownerData.emailAdress;
-          let ownerData2 = await OwnerAPI.getOwner(announceData.ownerId);
+          let ownerData = await OwnerAPI.getOwner(announceData.ownerId, store.state.accessToken);
+          listing.ownerEmail = ownerData.login.emailAdress;
+          let ownerData2 = await OwnerAPI.getOwner(announceData.ownerId, store.state.accessToken);
           listing.phoneNo = ownerData2.phoneNumber;
           listing.title = announceData.title;
           listing.bedroomsNo = announceData.bedroomsNo;
@@ -75,8 +76,10 @@ export default {
           listing.price = announceData.price;
           listing.type =
             announceData.announceCharacteristic[0].realEstateTypeId;
-          listing.mainPicture =
-            "https://static01.nyt.com/images/2019/06/25/realestate/25domestic-zeff/a1c1a1a36c9e4ff8adcb958c4276f28d-jumbo.jpg?quality=75&auto=webp";
+          if(announceData.image.length > 0)
+          {
+            listing.mainPicture = announceData.image[0].imageData;
+          }
 
           listing.titleY = post.title;
           listing.bedroomsNoY = post.bedroomsNo;
@@ -84,8 +87,10 @@ export default {
           listing.parkingLotsNoY = post.parkingLotsNo;
           listing.priceY = post.price;
           listing.typeY = post.announceCharacteristic[0].realEstateTypeId;
-          listing.mainPictureY =
-            "https://images.adsttc.com/media/images/5e68/48ed/b357/658e/fb00/0441/large_jpg/AM1506.jpg?1583892706";
+         if(post.image.length > 0)
+          {
+            listing.mainPictureY = post.image[0].imageData;
+          }
           listing.descY = post.fullDescription;
           sentOffersData.push(listing);
         });
@@ -93,9 +98,9 @@ export default {
     };
     let populateSent = async () => {
       currentOwnerId.value = store.state.ownerId;
-      console.log(currentOwnerId.value);
       let data = await OfferSentAndReceivedAPI.getAllOffersSentByOwner(
-        currentOwnerId.value
+        currentOwnerId.value,
+        store.state.accessToken
       );
       parseData(data);
     };

@@ -2,8 +2,10 @@ import { createStore } from 'vuex'
 import createPersistedState from "vuex-persistedstate";
 
 const state = {
+    loginId: 0,
     ownerId: 0,
-    announceId: 0
+    announceId: 0,
+    accessToken: ""
 }
 
 const mutations = {
@@ -12,12 +14,20 @@ const mutations = {
     },
     updateAnnounceId(state, newAnnId){
         state.announceId = newAnnId
+    },
+    updateToken(state, newToken){
+        state.accessToken = newToken
+    },
+    updateLoginId(state, newLoginId){
+        state.loginId = newLoginId
     }
 }
 
 const actions = {
     updateId: ({ commit }) => commit('updateId'),
     updateAnnounceId: ({ commit }) => commit('updateAnnounceId'),
+    updateToken: ({ commit }) => commit('updateToken'),
+    updateLoginId: ({ commit }) => commit('updateLoginId'),
 }
 
 const getters = {

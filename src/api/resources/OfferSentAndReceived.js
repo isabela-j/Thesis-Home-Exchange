@@ -13,10 +13,12 @@ export default {
       }
     });
   },
-  getAllOffersSentByOwner(ownerId) {
+  getAllOffersSentByOwner(ownerId, token) {
     return fetch(Service.baseURL + "/OffersSentAndReceived/offersSentByOwner/" + ownerId, {
       method: "GET",
-      headers: Service.headers,
+      headers: {
+        "Authorization": "Bearer " + token,
+      }
     }).then(function (response) {
       if (response.status != 200) {
         throw response.status;
@@ -25,10 +27,12 @@ export default {
       }
     });
   },
-  getOfferSentAndReceived(offerSentAndReceivedId) {
+  getOfferSentAndReceived(offerSentAndReceivedId, token) {
     return fetch(Service.baseURL + "/OffersSentAndReceived/" + offerSentAndReceivedId ,{
       method: "GET",
-      headers: Service.headers,
+      headers: {
+        "Authorization": "Bearer " + token,
+      }
     }).then(function (response) {
       if (response.status != 200) {
         throw response.status;
@@ -37,12 +41,11 @@ export default {
       }
     });
   },
-  update(data, offerSentAndReceivedId) {
-  //  Service.headers.set("Content-Type", "multipart/form-data"); //for sending files to the server
-   // Service.headers.set("Authorization", "Bearer " + Service.token);
+  update(data, offerSentAndReceivedId, token) {
     return fetch(Service.baseURL + "/OffersSentAndReceived/" + offerSentAndReceivedId, {
       method: "PATCH",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json",
+      "Authorization": "Bearer " + token },
       body: JSON.stringify(data),
     }).then(function (response) {
       if (response.status != 200) {
@@ -52,18 +55,31 @@ export default {
       }
     });
   },
-  store(data) {
-    Service.headers.set("Content-Type", "multipart/form-data"); //for sending files to the server
-   // Service.headers.set("Authorization", "Bearer " + Service.token);
+  store(data, token) {
     return fetch(Service.baseURL + "/OffersSentAndReceived", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json",
+      "Authorization": "Bearer " + token },
       body: JSON.stringify(data),
     }).then(function (response) {
       if (response.status != 201) {
         throw response.status;
       } else {
         return response.json();
+      }
+    });
+  },
+  delete(id, token) {
+    return fetch(Service.baseURL + "/OffersSentAndReceived/" + id, {
+      method: "DELETE",
+      headers: {
+      "Authorization": "Bearer " + token
+    },
+    }).then(function (response) {
+      if (response.status != 200) {
+        throw response.status;
+      } else {
+        return response;
       }
     });
   },

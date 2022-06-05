@@ -13,10 +13,12 @@ export default {
       }
     });
   },
-  getOwner(id) {
+  getOwner(id,token) {
     return fetch(Service.baseURL + "/Owners/" + id, {
       method: "GET",
-      headers: Service.headers,
+      headers:  { 
+        "Authorization": "Bearer "+ token,
+      },
     }).then(function (response) {
       if (response.status != 200) {
         throw response.status;
@@ -25,12 +27,15 @@ export default {
       }
     });
   },
-  storeOwner(data) {
+  storeOwner(data, token) {
     //Service.headers.set("Content-Type", "multipart/form-data"); //for sending files to the server
     //Service.headers.set("Authorization", "Bearer " + Service.token);
     return fetch(Service.baseURL + "/Owners", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { 
+        "Content-Type": "application/json",
+        "Authorization": "Bearer "+ token,
+      },
       body: JSON.stringify(data),
     }).then(function (response) {
       if (response.status != 201) {
@@ -40,11 +45,14 @@ export default {
       }
     });
   },
-  update(data, id) {
+  update(data, id, token) {
     Service.headers.set("Content-Type", "multipart/form-data"); //for sending files to the server
     return fetch(Service.baseURL + "/Owners/" + id, {
       method: "PATCH",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization" : "Bearer " + token,
+      },
       body: JSON.stringify(data),
     }).then(function (response) {
       if (response.status != 200) {

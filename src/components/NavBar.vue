@@ -102,6 +102,7 @@
 import { ref, computed, onMounted, onUnmounted, reactive } from "vue";
 import logo from "@/assets/logo.png";
 import OwnerAPI from "@/api/resources/Owner.js";
+import LoginAPI from "@/api/resources/Login.js";
 import { useStore } from 'vuex';
 export default {
   name: "NavBar",
@@ -139,7 +140,7 @@ export default {
     };
     let dataKey = ref(0);
     let populateUser = async () => {
-      let details = await OwnerAPI.getOwner(store.state.ownerId);
+      let details = await OwnerAPI.getOwner(store.state.ownerId, store.state.accessToken);
       userTitle.value = details.firstName+" " + details.lastName;
       details.ownerTypeId === 1 ? userDescription.value = "Householder" : userDescription.value = "Broker";
       dataKey.value = dataKey.value+1;

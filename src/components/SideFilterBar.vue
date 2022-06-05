@@ -400,7 +400,8 @@ export default {
        currentOwnerId.value = store.state.ownerId;
         let posts =
           await AnnounceMainDetailsAPI.getAllAnnounceMainDetailsFromOwner(
-            currentOwnerId.value
+            currentOwnerId.value, 
+            store.state.accessToken
           );
         parsePosts(posts);
       }

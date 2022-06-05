@@ -37,12 +37,12 @@
       <v-row dense class="pa-2">
           <div class="align-to-right">
             <v-btn
-              v-if="isRequested"
+              v-if="isRequested && showRequest"
               class="btn btnClicked"
               @click="requestOffer"
               >Offer requested</v-btn
             >
-            <v-btn v-else class="btn btnNormal" @click="requestOffer"
+            <v-btn v-else-if="!isRequested && showRequest" class="btn btnNormal" @click="requestOffer"
               >Request offer</v-btn
             >
           </div>
@@ -74,6 +74,7 @@ export default {
     let name = ref(props.name);
     let phoneNo = ref(props.phoneNo);
     let email = ref(props.email);
+    let showRequest = ref(props.showRequest);
     let requestOffer = () => {
       if(!isRequested.value)
          { 
@@ -94,7 +95,7 @@ export default {
       suggestData
     };
   },
-   props: ["offerRequested", "name", "phoneNo", "email"],
+   props: ["offerRequested", "name", "phoneNo", "email", "showRequest"],
 };
 </script>
 

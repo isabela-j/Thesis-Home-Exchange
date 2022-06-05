@@ -15,6 +15,7 @@
             :offerRequested="item.offerRequested"
             :offerSaved="item.offerSaved"
             :mainPicture="item.mainPicture"
+            :announceStatus = "item.announceStatus"
             showSaveBtn="true"
           />
         </v-col>
@@ -45,15 +46,18 @@ export default {
       try {
         currentOwnerId.value = store.state.ownerId;
         let savedPosts = await SavedAPI.getAllOffersSavedByOwner(
-          currentOwnerId.value
+          currentOwnerId.value,
+          store.state.accessToken
         );
         let sentDetails =
           await AnnounceMainDetailsAPI.getAllAnnounceMainDetailsFromOwner(
-            currentOwnerId.value
+            currentOwnerId.value,
+            store.state.accessToken
           );
         savedPosts.forEach(async (post) => {
           let details = await AnnounceMainDetailsAPI.getAnnounceMainDetail(
-            post.announceMainDetailId
+            post.announceMainDetailId,
+            store.state.accessToken
           );
           parsePost(details, sentDetails);
         });
@@ -62,6 +66,7 @@ export default {
     const store = useStore();
     let parsePost = async (post, sentDetails) => {
       let listing = {};
+      listing.announceStatus = post.announceStatus;
       listing.announceMainDetailsId = post.id_announceMainDetails;
       listing.title = post.title;
       listing.beds = post.bedroomsNo;
@@ -90,8 +95,9 @@ export default {
           listing.offerSaved = true;
         }
       });
-      listing.mainPicture =
-        "https://static01.nyt.com/images/2019/06/25/realestate/25domestic-zeff/a1c1a1a36c9e4ff8adcb958c4276f28d-jumbo.jpg?quality=75&auto=webp"; //SCHIMBA
+      if (post.image.length > 0) {
+        listing.mainPicture = post.image[0].imageData;
+      }
       savedOffersData.push(listing);
     };
     const savedOffersCount = computed(() => {

@@ -6,12 +6,12 @@
         <v-col :key="2" class="cardOfferType">• {{ offerType }}</v-col>
         <v-col :key="3" align="right">
           <v-btn
-            v-if="isSaved"
+            v-if="isSaved && showRequest"
             @click="addToFavourites"
             class="btnFav btnClicked"
             ><font-awesome-icon icon="bookmark" class="fa-cow"
           /></v-btn>
-          <v-btn v-else @click="addToFavourites" class="btnFav">
+          <v-btn v-else-if="!isSaved && showRequest" @click="addToFavourites" class="btnFav">
             <font-awesome-icon icon="bookmark" class="fa-cog" />
           </v-btn>
         </v-col>
@@ -51,24 +51,41 @@ export default {
 
     let isSaved = ref(props.offerSaved);
 
+    let showRequest = ref(props.showRequest);
+
     const store = useStore();
     let addToFavourites = async () => {
       currentOwnerId.value = store.state.ownerId;
       console.log(currentOwnerId.value);
-      if (!isSaved.value) {
+         if (!isSaved.value) {
         try {
           let saveObj = {
             ownerId: currentOwnerId.value,
             announceMainDetailId: idAnnounce.value,
           };
-          await OfferSavedAPI.store(saveObj);
+          await OfferSavedAPI.store(saveObj, store.state.accessToken);
           isSaved.value = !isSaved.value;
         } catch (error) {
           console.log(error);
         }
       } else {
-        isSaved.value = !isSaved.value;
-        
+        try {
+          let offersSaved = await OfferSavedAPI.getAllOffersSavedByOwner(
+            currentOwnerId.value,
+            store.state.accessToken
+          );
+          offersSaved.forEach(async (offer) => {
+            if (offer.announceMainDetailId == idAnnounce.value) {
+              await OfferSavedAPI.delete(
+                offer.id_offerSaved,
+                store.state.accessToken
+              );
+            }
+          });
+          isSaved.value = !isSaved.value;
+        } catch (error) {
+          console.log(error);
+        }
       }
     };
     return {
@@ -91,6 +108,7 @@ export default {
     "offerRequested",
     "offerSaved",
     "idAnnounce",
+    "showRequest"
   ],
 };
 </script>

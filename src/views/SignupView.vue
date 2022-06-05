@@ -75,7 +75,7 @@
             <v-text-field
               :type="showPass ? 'text' : 'password'"
               name="input-10-2"
-              v-model="ownerMainData.passwordHash"
+              v-model="ownerMainData.password"
               label="Password"
               class="input-group--focused"
               variant="underlined"
@@ -153,7 +153,7 @@ export default {
   setup() {
     let ownerMainData = reactive({
       emailAdress: "",
-      passwordHash: "",
+      password: "",
     });
     let ownerDetails = reactive({
       firstName: "",
@@ -211,7 +211,7 @@ export default {
           "warning"
         );
         return false;
-      } else if (ownerMainData.passwordHash.length == 0) {
+      } else if (ownerMainData.password.length == 0) {
         displayAlert(
           "The password input is mandatory. Please fill this field.",
           "warning"
@@ -223,7 +223,7 @@ export default {
           "warning"
         );
         return false;
-      } else if (ownerMainData.passwordHash != passwordConfirmation.value) {
+      } else if (ownerMainData.password != passwordConfirmation.value) {
         displayAlert("The passwords don't match. Please rewrite.",
           "error");
         return false;
@@ -234,9 +234,16 @@ export default {
       if (validateInput()) {
         ownerDetails.ownerTypeId = radios.value == "householder" ? 1 : 2;
         try {
+          //create login user
           let res = await LoginAPI.store(ownerMainData);
           ownerDetails.loginId = JSON.parse(res.id);
-          store.commit('updateId', JSON.parse(res.id));
+          store.commit('updateLoginId', JSON.parse(res.id));
+
+          //get access token of the newly created user
+          let token = await LoginAPI.getAcessToken(ownerMainData);
+          store.commit('updateToken', token.access_token);
+
+          //create owner
           SignUpDetails();
         } catch (error) {
           displayAlert("The account couldn't be created. Please try again later.",
@@ -246,9 +253,8 @@ export default {
     };
     let SignUpDetails = async () => {
       try {
-        let resDetails = await OwnerAPI.storeOwner(ownerDetails);
-        LoginAPI.loginId = resDetails.id;
-        console.log(LoginAPI.loginId);
+        let resDetails = await OwnerAPI.storeOwner(ownerDetails, store.state.accessToken);
+        store.commit('updateId', JSON.parse(resDetails.id));
         GoToLocation("/");
       } catch (error) {
         console.log(error.value);

@@ -193,12 +193,13 @@ export default {
         try {
           if(userMainData.passwordHash.length > 0)
           {
-            let login = await LoginAPI.update(userMainData, currentOwnerId.value);
+            let login = await LoginAPI.update(userMainData, store.state.loginId, store.state.accessToken);
           }
-          let owner = await OwnerAPI.update(userDetails, currentOwnerId.value);
+          let owner = await OwnerAPI.update(userDetails, store.state.ownerId, store.state.accessToken);
            displayAlert("Your changes have been saved successfully!",
           "success");
         } catch (error) {
+          console.log(error);
           displayAlert("Your changes couldn't be saved . Please try again later.",
           "error");
         }
@@ -227,9 +228,9 @@ export default {
     };
     let populateUserData = async () => {
       currentOwnerId.value = store.state.ownerId;
-      let details = await OwnerAPI.getOwner(currentOwnerId.value);
+      let details = await OwnerAPI.getOwner(currentOwnerId.value, store.state.accessToken);
       parseDetails(details);
-      let mainDetails = await LoginAPI.getLogin(currentOwnerId.value);
+      let mainDetails = await LoginAPI.getLogin(store.state.loginId, store.state.accessToken);
       userMainData.emailAdress = mainDetails.emailAdress;
     };
     let GoToLocation = (location) => {

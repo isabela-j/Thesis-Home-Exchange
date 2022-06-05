@@ -25,10 +25,13 @@ export default {
       }
     });
   },
-  store(data) {
+  store(data,token) {
     return fetch(Service.baseURL + "/Images", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { 
+        "Content-Type": "application/json",
+        "Authorization": "Bearer "+ token,
+      },
       body: JSON.stringify(data),
     }).then(function (response) {
       if (response.status != 201) {

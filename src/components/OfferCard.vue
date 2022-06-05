@@ -33,17 +33,18 @@
               >
               <v-col :key="8" align="right">
                 <v-btn
-                  v-if="isRequested"
+                  v-if="isRequested && available"
                   class="btn btnClicked"
                   @click="requestOffer"
                   >Offer requested</v-btn
                 >
                 <v-btn
-                  v-else
+                  v-else-if="!isRequested && available"
                   class="btn btnNormal"
                   @click="GoToLocation('/announce')"
                   >See details</v-btn
                 >
+                <label v-else class="refusedLabel">The offer is not available anymore</label>
               </v-col>
             </v-row>
           </v-container>
@@ -66,10 +67,8 @@ export default {
     let currentOwnerId = ref();
     let isRequested = ref(props.offerRequested);
     let requestOffer = () => {
-      currentOwnerId.value = 1; 
-      isRequested.value = !isRequested.value;
-      /* axios.post("deleteRequest", savedData)
-       */
+      currentOwnerId.value = 1;
+      //isRequested.value = !isRequested.value;
     };
 
     let isSaved = ref(props.offerSaved);
@@ -78,25 +77,35 @@ export default {
     const store = useStore();
     let addToFavourites = async () => {
       currentOwnerId.value = store.state.ownerId;
-      console.log(currentOwnerId.value);
       if (!isSaved.value) {
-        try
-        {
-            let saveObj = {
-              ownerId: currentOwnerId.value,
-              announceMainDetailId: idAnnounce.value 
-            };
-            await OfferSavedAPI.store(saveObj);
-            isSaved.value = !isSaved.value;
-        }
-        catch(error)
-        {
+        try {
+          let saveObj = {
+            ownerId: currentOwnerId.value,
+            announceMainDetailId: idAnnounce.value,
+          };
+          await OfferSavedAPI.store(saveObj, store.state.accessToken);
+          isSaved.value = !isSaved.value;
+        } catch (error) {
           console.log(error);
         }
       } else {
-        isSaved.value = !isSaved.value;
-        /* axios.post("unsaveAnnounce", savedData)
-         */
+        try {
+          let offersSaved = await OfferSavedAPI.getAllOffersSavedByOwner(
+            currentOwnerId.value,
+            store.state.accessToken
+          );
+          offersSaved.forEach(async (offer) => {
+            if (offer.announceMainDetailId == idAnnounce.value) {
+              await OfferSavedAPI.delete(
+                offer.id_offerSaved,
+                store.state.accessToken
+              );
+            }
+          });
+          isSaved.value = !isSaved.value;
+        } catch (error) {
+          console.log(error);
+        }
       }
     };
     let GoToLocation = (location) => {
@@ -108,6 +117,11 @@ export default {
     let baths = ref(props.baths);
     let parkingLot = ref(props.parkingLot);
     let idAnnounce = ref(props.idAnnounce);
+    let announceStatus = ref(props.announceStatus);
+
+    let available = computed(() => {
+      return announceStatus.value === 0 ? true : false;
+    });
 
     let ShortDetails = computed(() => {
       return (
@@ -130,7 +144,9 @@ export default {
       GoToLocation,
       ShortDetails,
       idAnnounce,
-      currentOwnerId
+      currentOwnerId,
+      available,
+      announceStatus
     };
   },
 
@@ -145,7 +161,8 @@ export default {
     "beds",
     "baths",
     "parkingLot",
-    "idAnnounce"
+    "idAnnounce",
+    "announceStatus"
   ],
 };
 </script>
@@ -211,6 +228,11 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.refusedLabel {
+  color:rgb(199, 62, 62); 
+   font-weight: bold;
 }
 
 /* Extra small devices (phones, 600px and down) */

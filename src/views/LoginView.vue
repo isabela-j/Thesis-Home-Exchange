@@ -8,7 +8,7 @@
           </div>
           <v-text-field
             label="email address"
-            v-model="loginData.emailAddress"
+            v-model="loginData.emailAdress"
             variant="underlined"
           >
             <template v-slot:append>
@@ -69,7 +69,7 @@ export default {
     let showPass = ref(false);
     let loadLogins = ref([]);
     let loginData = reactive({
-      emailAddress: "",
+      emailAdress: "",
       password: "",
     });
     let loadPage = () => {
@@ -78,20 +78,21 @@ export default {
     let login = async () => {
       if (validateInput()) {
         try {
-          /* loadLogins.value = await LoginAPI.getAllLogins();
-          console.log(loadLogins.value);*/
-          console.log(store.state.ownerId);
-          store.commit("updateId", 4);
-          console.log(store.state.ownerId);
+          let token = await LoginAPI.getAcessToken(loginData);
+          store.commit('updateToken', token.access_token);
+
+          let userData = await LoginAPI.get(store.state.accessToken);
+          store.commit('updateLoginId', JSON.parse(userData.loginId));
+          store.commit('updateId', JSON.parse(userData.owner[0].id_owner));
+
           GoToLocation("/");
         } catch (error) {
-          console.log(error);
           displayAlert("Couldn't login. Please try again later", "error");
         }
       }
     };
     let validateInput = () => {
-      if (loginData.emailAddress.length == 0) {
+      if (loginData.emailAdress.length == 0) {
         displayAlert(
           "The email input is mandatory. Please fill this field.",
           "warning"
