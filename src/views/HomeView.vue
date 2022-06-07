@@ -3,6 +3,7 @@
     v-if="!smallScreen"
     class="compact-form"
     @filterPosts="getFilteredPosts"
+    @resetFilters="getAllPosts"
   />
   <v-main>
     <v-btn
@@ -21,7 +22,7 @@
       <v-row v-for="(item, index) in offerCards" :key="index" dense>
         <v-col :key="index">
           <OfferCard
-            :idAnnounce="item.announceMainDetailsId"
+             :idAnnounce="item.announceMainDetailsId"
             :title="item.title"
             :type="item.type"
             :beds="item.beds"
@@ -31,6 +32,8 @@
             :offerRequested="item.offerRequested"
             :offerSaved="item.offerSaved"
             :mainPicture="item.mainPicture"
+            showSaveBtn="true"
+            :announceStatus="item.announceStatus"
           />
         </v-col>
       </v-row>
@@ -111,7 +114,7 @@ export default {
             isOwnerOffer = true;
           }
         });
-        if (!isOwnerOffer) {
+        if (!isOwnerOffer && post.announceStatus === 0) {
           let listing = {};
           listing.announceMainDetailsId = post.id_announceMainDetails;
           listing.announceStatus = 0;
@@ -121,15 +124,6 @@ export default {
           listing.parkingLot = post.parkingLotsNo;
           listing.price = post.price;
           listing.offerRequested = false;
-        /*  post.offerReceived.forEach((received) => {
-            if (received.id_received == post.id_announceMainDetails) {
-              sentDetails.forEach((userOffers) => {
-                if (received.id_sender == userOffers.id_announceMainDetails) {
-                  listing.offerRequested = true;
-                }
-              });
-            }
-          });*/
           post.announceCharacteristic.forEach((characteristic) => {
             if (
               characteristic.announceMainDetailId == post.id_announceMainDetails
@@ -160,6 +154,7 @@ export default {
             currentOwnerId.value,
             store.state.accessToken
           );
+        offerCards.splice(0, offerCards.length);
         parsePosts(posts, sentDetails);
       } catch (error) {}
     };
@@ -172,6 +167,7 @@ export default {
             currentOwnerId.value,
             store.state.accessToken
           );
+        offerCards.splice(0, offerCards.length);
         parsePosts(posts, sentDetails);
       } catch (error) {
         console.log(error);

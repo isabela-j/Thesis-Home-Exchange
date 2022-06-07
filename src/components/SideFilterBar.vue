@@ -357,6 +357,7 @@ export default {
     MiniCardsList,
   },
 
+  emits: ["resetFilters","filterPosts"],
   setup(props, { emit }) {
     let currentOwnerId = ref();
 
@@ -488,6 +489,8 @@ export default {
       garage: false,
     });
 
+    let emitFilters= reactive({});
+
     let CheckBtn = (type) => {
       if (type == "house") filters.house = !filters.house;
       else if (type == "apartment") filters.apartment = !filters.apartment;
@@ -519,6 +522,7 @@ export default {
       filters.parkingNo = [];
       filters.floorNo = [];
       filters.partition = [];
+      emit("resetFilters");
     };
     let startFilter = () => {
       let announceMainDetails = {

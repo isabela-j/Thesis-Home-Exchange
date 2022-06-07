@@ -1,7 +1,8 @@
 <template>
   <v-main>
     <v-container class="container-custom" fluid>
-      <label class="bold pa-3"> {{ savedOffersCount }} saved offers</label>
+      <label v-if="savedOffersCount != 1" class="bold pa-3"> {{ savedOffersCount }} saved offers</label>
+      <label v-else class="bold pa-3"> {{ savedOffersCount }} saved offer</label>
       <v-row v-for="(item, index) in savedOffersData" :key="index" dense>
         <v-col :key="index">
           <OfferCard
