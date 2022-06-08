@@ -33,7 +33,6 @@ export default {
   },
   setup(props) {
     let changed =() =>  {
-      console.log("changed");
     }
     let items = reactive(props.pictures);
     return {

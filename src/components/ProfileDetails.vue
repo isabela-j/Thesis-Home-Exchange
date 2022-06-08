@@ -60,7 +60,6 @@ export default {
     const store = useStore();
     let addToFavourites = async () => {
       currentOwnerId.value = store.state.ownerId;
-      console.log(currentOwnerId.value);
       if (!isSaved.value) {
         try {
           let saveObj = {

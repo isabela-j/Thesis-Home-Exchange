@@ -170,7 +170,6 @@ export default {
     let radios = ref("householder");
     let onScroll = () => {
       scrollInvoked.value++;
-      console.log(scrollInvoked);
     };
     let alertType = ref("warning");
     let alertMessage = ref("");
@@ -260,7 +259,6 @@ export default {
         store.commit('updateId', JSON.parse(resDetails.id));
         GoToLocation("/");
       } catch (error) {
-        console.log(error.value);
       }
     };
     let GoToLocation = (location) => {

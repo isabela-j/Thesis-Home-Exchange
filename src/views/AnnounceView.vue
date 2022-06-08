@@ -408,7 +408,6 @@ export default {
         if (error === 401) {
           GoToLocation("/login");
         }
-        console.log(error);
       }
     };
     let overlay = ref(false);
