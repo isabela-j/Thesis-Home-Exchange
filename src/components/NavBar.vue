@@ -140,10 +140,16 @@ export default {
     };
     let dataKey = ref(0);
     let populateUser = async () => {
-      let details = await OwnerAPI.getOwner(store.state.ownerId, store.state.accessToken);
+      try{
+        let details = await OwnerAPI.getOwner(store.state.ownerId, store.state.accessToken);
       userTitle.value = details.firstName+" " + details.lastName;
       details.ownerTypeId === 1 ? userDescription.value = "Householder" : userDescription.value = "Broker";
       dataKey.value = dataKey.value+1;
+      }
+      catch(error)
+      {
+        
+      }
     }
     let menuBarHeight = ref(window.innerHeight);
     return {

@@ -626,6 +626,9 @@ export default {
           let resImg = await ImageAPI.store(picObj, store.state.accessToken);
         })
       } catch (error) {
+        if (error === 401) {
+            GoToLocation("/login");
+          }
         displayAlert(
           "Your announce couldn't be posted . Please try again later.",
           "error"
@@ -645,10 +648,10 @@ export default {
     let handleFileUpload = (e) => {
       pics.splice(0);
       let files = Array.from(e.target.files);
-      files.forEach(file => {
+      files.forEach((file) => {
          var reader = new FileReader();
-         reader.onloadend = function () {
-        pics.push(reader.result);
+         reader.onloadend = async function () {
+        await pics.push(reader.result);
       };
       reader.readAsDataURL(file);
       })

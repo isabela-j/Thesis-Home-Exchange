@@ -177,6 +177,9 @@ export default {
     const store = useStore();
     let loadPage = () => {
        store.commit('updateId', 0);
+       store.commit('updateAnnounceId',0);
+       store.commit('updateLoginId',0);
+       store.commit('updateToken',"");
     }
     let displayAlert = (message,type) => {
       alertType.value = type;

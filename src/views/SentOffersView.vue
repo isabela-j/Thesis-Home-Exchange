@@ -102,20 +102,31 @@ export default {
       });
     };
     let populateSent = async () => {
-      currentOwnerId.value = store.state.ownerId;
+      try{
+        currentOwnerId.value = store.state.ownerId;
       let data = await OfferSentAndReceivedAPI.getAllOffersSentByOwner(
         currentOwnerId.value,
         store.state.accessToken
       );
       parseData(data);
+      }
+      catch(error)
+      {
+        if (error === 401) {
+          GoToLocation("/login");
+        }
+      }
     };
-
+     let GoToLocation = (location) => {
+      window.location = location;
+    };
     return {
       sentOffersData,
       sentOffersCount,
       populateSent,
       currentOwnerId,
       parseData,
+      GoToLocation
     };
   },
 };

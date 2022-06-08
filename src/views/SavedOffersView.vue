@@ -1,8 +1,12 @@
 <template>
   <v-main>
     <v-container class="container-custom" fluid>
-      <label v-if="savedOffersCount != 1" class="bold pa-3"> {{ savedOffersCount }} saved offers</label>
-      <label v-else class="bold pa-3"> {{ savedOffersCount }} saved offer</label>
+      <label v-if="savedOffersCount != 1" class="bold pa-3">
+        {{ savedOffersCount }} saved offers</label
+      >
+      <label v-else class="bold pa-3">
+        {{ savedOffersCount }} saved offer</label
+      >
       <v-row v-for="(item, index) in savedOffersData" :key="index" dense>
         <v-col :key="index">
           <OfferCard
@@ -16,7 +20,7 @@
             :offerRequested="item.offerRequested"
             :offerSaved="item.offerSaved"
             :mainPicture="item.mainPicture"
-            :announceStatus = "item.announceStatus"
+            :announceStatus="item.announceStatus"
             showSaveBtn="true"
           />
         </v-col>
@@ -62,7 +66,11 @@ export default {
           );
           parsePost(details, sentDetails);
         });
-      } catch (error) {}
+      } catch (error) {
+        if (error === 401) {
+          GoToLocation("/login");
+        }
+      }
     };
     const store = useStore();
     let parsePost = async (post, sentDetails) => {
@@ -104,12 +112,16 @@ export default {
     const savedOffersCount = computed(() => {
       return savedOffersData.length > 0 ? savedOffersData.length : 0;
     });
+    let GoToLocation = (location) => {
+      window.location = location;
+    };
     return {
       savedOffersData,
       savedOffersCount,
       currentOwnerId,
       getSavedPosts,
       parsePost,
+      GoToLocation
     };
   },
 };

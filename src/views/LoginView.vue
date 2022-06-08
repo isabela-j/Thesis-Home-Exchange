@@ -74,6 +74,9 @@ export default {
     });
     let loadPage = () => {
       store.commit("updateId", 0);
+      store.commit('updateAnnounceId',0);
+      store.commit('updateLoginId',0);
+      store.commit('updateToken',"");
     };
     let login = async () => {
       if (validateInput()) {

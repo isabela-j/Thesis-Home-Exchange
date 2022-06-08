@@ -1,29 +1,31 @@
 <template>
-<v-main>
-      <v-container class="container-custom" fluid>
-      <label v-if="postedOffers != 1" class="bold pa-3">You have  {{ postedOffers }} offers</label>
-      <label v-else class="bold pa-3">You have  {{ postedOffers }} offer</label>
+  <v-main>
+    <v-container class="container-custom" fluid>
+      <label v-if="postedOffers != 1" class="bold pa-3"
+        >You have {{ postedOffers }} offers</label
+      >
+      <label v-else class="bold pa-3">You have {{ postedOffers }} offer</label>
       <v-row v-for="(item, index) in offerCards" :key="index" dense>
         <v-col :key="index">
           <OfferCard
-            :idAnnounce = "item.announceMainDetailsId"
+            :idAnnounce="item.announceMainDetailsId"
             :title="item.title"
             :type="item.type"
             :beds="item.beds"
             :baths="item.baths"
             :parkingLot="item.parkingLot"
             :price="item.price"
-            :offerRequested= "false"
+            :offerRequested="false"
             :offerSaved="item.offerSaved"
             :mainPicture="item.mainPicture"
             :showSaveBtn="false"
-            :announceStatus = "item.announceStatus"
-            :key = "item.key"
+            :announceStatus="item.announceStatus"
+            :key="item.key"
           />
         </v-col>
       </v-row>
     </v-container>
-</v-main>
+  </v-main>
 </template>
 
 <script>
@@ -31,11 +33,11 @@ import { ref, computed, reactive } from "vue";
 import OfferCard from "@/components/OfferCard.vue";
 import AnnounceMainDetailsAPI from "@/api/resources/AnnounceMainDetails.js";
 import LoginAPI from "@/api/resources/Login.js";
-import { useStore } from 'vuex';
-export default {       
-    name: "MyOffersView",
-    components: {
-     OfferCard, 
+import { useStore } from "vuex";
+export default {
+  name: "MyOffersView",
+  components: {
+    OfferCard,
   },
   created() {
     this.getMyPosts();
@@ -44,10 +46,10 @@ export default {
     let currentOwnerId = ref();
     let posts = reactive([]);
     let offerCards = reactive([]);
-     let parsePosts = async (posts) => {
+    let parsePosts = async (posts) => {
       posts.forEach((post) => {
         let listing = {
-          key : 0
+          key: 0,
         };
         listing.announceStatus = post.announceStatus;
         listing.announceMainDetailsId = post.id_announceMainDetails;
@@ -63,25 +65,31 @@ export default {
             listing.type = characteristic.realEstateTypeId;
           }
         });
-        if(post.image.length > 0)
-          {
-            listing.mainPicture = post.image[0].imageData;
-          }
+        if (post.image.length > 0) {
+          listing.mainPicture = post.image[0].imageData;
+        }
         listing.key = listing.key + 1;
         offerCards.push(listing);
       });
     };
-     const store = useStore();
-     let getMyPosts = async () => {
+    const store = useStore();
+    let getMyPosts = async () => {
       try {
         currentOwnerId.value = store.state.ownerId;
-        let posts  =
+        let posts =
           await AnnounceMainDetailsAPI.getAllAnnounceMainDetailsFromOwner(
             currentOwnerId.value,
             store.state.accessToken
           );
         parsePosts(posts);
-      } catch (error) {}
+      } catch (error) {
+        if (error === 401) {
+          GoToLocation("/login");
+        }
+      }
+    };
+    let GoToLocation = (location) => {
+      window.location = location;
     };
     const postedOffers = computed(() => {
       return offerCards.length;
@@ -92,10 +100,11 @@ export default {
       offerCards,
       posts,
       getMyPosts,
-      parsePosts
+      parsePosts,
+      GoToLocation
     };
   },
-}
+};
 </script>
 
 <style scoped>
@@ -109,12 +118,12 @@ export default {
   position: fixed;
   top: 50px; /* required */
   z-index: 1;
-  width:100%;
-  height:50px;
+  width: 100%;
+  height: 50px;
   border-radius: 0px;
-  background-color:  rgb(255, 162, 0);
+  background-color: rgb(255, 162, 0);
   color: white;
-  font-weight:bold;
+  font-weight: bold;
   text-transform: none;
 }
 .sticky-after {

@@ -11,7 +11,11 @@
             class="btnFav btnClicked"
             ><font-awesome-icon icon="bookmark" class="fa-cow"
           /></v-btn>
-          <v-btn v-else-if="!isSaved && showRequest" @click="addToFavourites" class="btnFav">
+          <v-btn
+            v-else-if="!isSaved && showRequest"
+            @click="addToFavourites"
+            class="btnFav"
+          >
             <font-awesome-icon icon="bookmark" class="fa-cog" />
           </v-btn>
         </v-col>
@@ -32,7 +36,7 @@
 <script>
 import { ref, computed } from "vue";
 import OfferSavedAPI from "@/api/resources/OfferSaved.js";
-import { useStore } from 'vuex'
+import { useStore } from "vuex";
 export default {
   name: "ProfileDetails",
 
@@ -57,7 +61,7 @@ export default {
     let addToFavourites = async () => {
       currentOwnerId.value = store.state.ownerId;
       console.log(currentOwnerId.value);
-         if (!isSaved.value) {
+      if (!isSaved.value) {
         try {
           let saveObj = {
             ownerId: currentOwnerId.value,
@@ -66,7 +70,9 @@ export default {
           await OfferSavedAPI.store(saveObj, store.state.accessToken);
           isSaved.value = !isSaved.value;
         } catch (error) {
-          console.log(error);
+          if (error === 401) {
+            GoToLocation("/login");
+          }
         }
       } else {
         try {
@@ -84,9 +90,14 @@ export default {
           });
           isSaved.value = !isSaved.value;
         } catch (error) {
-          console.log(error);
+          if (error === 401) {
+            GoToLocation("/login");
+          }
         }
       }
+    };
+    let GoToLocation = (location) => {
+      window.location = location;
     };
     return {
       offerType,
@@ -96,6 +107,7 @@ export default {
       addToFavourites,
       idAnnounce,
       currentOwnerId,
+      GoToLocation
     };
   },
 
@@ -108,7 +120,7 @@ export default {
     "offerRequested",
     "offerSaved",
     "idAnnounce",
-    "showRequest"
+    "showRequest",
   ],
 };
 </script>

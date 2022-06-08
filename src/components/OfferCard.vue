@@ -44,7 +44,9 @@
                   @click="GoToLocation('/announce')"
                   >See details</v-btn
                 >
-                <label v-else class="refusedLabel">The offer is not available anymore</label>
+                <label v-else class="refusedLabel"
+                  >The offer is not available anymore</label
+                >
               </v-col>
             </v-row>
           </v-container>
@@ -86,7 +88,9 @@ export default {
           await OfferSavedAPI.store(saveObj, store.state.accessToken);
           isSaved.value = !isSaved.value;
         } catch (error) {
-          console.log(error);
+          if (error === 401) {
+            GoToLocation("/login");
+          }
         }
       } else {
         try {
@@ -104,7 +108,9 @@ export default {
           });
           isSaved.value = !isSaved.value;
         } catch (error) {
-          console.log(error);
+          if (error === 401) {
+            GoToLocation("/login");
+          }
         }
       }
     };
@@ -146,7 +152,7 @@ export default {
       idAnnounce,
       currentOwnerId,
       available,
-      announceStatus
+      announceStatus,
     };
   },
 
@@ -162,7 +168,7 @@ export default {
     "baths",
     "parkingLot",
     "idAnnounce",
-    "announceStatus"
+    "announceStatus",
   ],
 };
 </script>
@@ -231,8 +237,8 @@ export default {
 }
 
 .refusedLabel {
-  color:rgb(199, 62, 62); 
-   font-weight: bold;
+  color: rgb(199, 62, 62);
+  font-weight: bold;
 }
 
 /* Extra small devices (phones, 600px and down) */

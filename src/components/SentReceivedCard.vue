@@ -139,7 +139,9 @@ export default {
       }
       catch(error)
       {
-        console.log(error);
+        if (error === 401) {
+          GoToLocation("/login");
+        }
       }
     };
     
@@ -153,7 +155,9 @@ export default {
       }
       catch(error)
       {
-        console.log(error);
+        if (error === 401) {
+          GoToLocation("/login");
+        }
       }
     };
     let UnsendOffer = async() => {
@@ -164,7 +168,9 @@ export default {
       }
        catch(error)
       {
-        console.log(error);
+        if (error === 401) {
+          GoToLocation("/login");
+        }
       }
     }
     const OfferInPending = computed(() => {

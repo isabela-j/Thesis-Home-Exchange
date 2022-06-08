@@ -4,8 +4,7 @@
       <v-container class="container-custom" fluid>
         <v-row dense>
           <v-col key="1">
-            <PicturesSlideShow 
-            :pictures = "profileDetails.images" />
+            <PicturesSlideShow :pictures="profileDetails.images" />
           </v-col>
         </v-row>
         <v-row class="fill-height" style="margin: 0.1em" dense>
@@ -18,7 +17,7 @@
               :price="profileDetails.price"
               :offerSaved="profileDetails.saved"
               :details="profileDetails.details"
-              :showRequest = "showRequestBtn"
+              :showRequest="showRequestBtn"
               :key="profileDetails.key"
             />
             <OwnerSmallDetails
@@ -35,7 +34,7 @@
               :name="currentOwnerData.fullName"
               :phoneNo="currentOwnerData.phoneNo"
               :email="currentOwnerData.email"
-              :showRequest = "showRequestBtn"
+              :showRequest="showRequestBtn"
               :key="profileDetails.key"
               @showOverlay="suggestAnOffer"
             />
@@ -48,7 +47,7 @@
               :name="currentOwnerData.fullName"
               :phoneNo="currentOwnerData.phoneNo"
               :email="currentOwnerData.email"
-              :showRequest = "showRequestBtn"
+              :showRequest="showRequestBtn"
               :key="profileDetails.key"
               @showOverlay="suggestAnOffer"
             />
@@ -97,14 +96,11 @@
       </v-container>
     </v-main>
   </div>
-  <div
-  >
-    <v-overlay v-model="overlay"    style="
-      position: absolute;
-      align-self: center;
-      position: fixed;
-      top:0%;
-    ">
+  <div>
+    <v-overlay
+      v-model="overlay"
+      style="position: absolute; align-self: center; position: fixed; top: 0%"
+    >
       <v-row dense>
         <v-alert
           density="default"
@@ -291,12 +287,11 @@ export default {
           });
         }
       });*/
-      details.image.forEach((image)=>{
-        profileDetails.images.push(image.imageData)
+      details.image.forEach((image) => {
+        profileDetails.images.push(image.imageData);
       });
-      if(details.ownerId === store.state.ownerId)
-      {
-          showRequestBtn.value = false;
+      if (details.ownerId === store.state.ownerId) {
+        showRequestBtn.value = false;
       }
       profileDetails.key = 1;
     };
@@ -359,8 +354,7 @@ export default {
               listing.type = characteristic.realEstateTypeId;
             }
           });
-          if(post.image.length > 0)
-          {
+          if (post.image.length > 0) {
             listing.mainPicture = post.image[0].imageData;
           }
           ownerAvailablePosts.push(listing);
@@ -375,22 +369,32 @@ export default {
 
       try {
         let announceMainDetails =
-          await AnnounceMainDetailsAPI.getAnnounceMainDetail(announceId.value, store.state.accessToken);
+          await AnnounceMainDetailsAPI.getAnnounceMainDetail(
+            announceId.value,
+            store.state.accessToken
+          );
         let ownerListings =
           await AnnounceMainDetailsAPI.getAllAnnounceMainDetailsFromOwner(
             currentOwnerId.value,
             store.state.accessToken
           );
-        let currentUserData = await OwnerAPI.getOwner(currentOwnerId.value, store.state.accessToken); //the user that is currently logged in
+        let currentUserData = await OwnerAPI.getOwner(
+          currentOwnerId.value,
+          store.state.accessToken
+        ); //the user that is currently logged in
         parseOwnerDetails(currentUserData, currentOwnerData);
-        let currentUserLogin = await LoginAPI.getLogin(store.state.loginId, store.state.accessToken);
+        let currentUserLogin = await LoginAPI.getLogin(
+          store.state.loginId,
+          store.state.accessToken
+        );
         currentOwnerData.email = currentUserLogin.emailAdress;
 
         parseMainDetails(announceMainDetails, ownerListings);
         let ownerDetailsJS = await OwnerAPI.getOwner(
-          announceMainDetails.ownerId, store.state.accessToken
+          announceMainDetails.ownerId,
+          store.state.accessToken
         );
-        ownerDetails.ownerId = announceMainDetails.ownerId; 
+        ownerDetails.ownerId = announceMainDetails.ownerId;
         parseOwnerDetails(ownerDetailsJS, ownerDetails);
 
         ownerDetails.email = ownerDetailsJS.login.emailAdress;
@@ -401,25 +405,37 @@ export default {
 
         parseOwnerListings(ownerListings);
       } catch (error) {
+        if (error === 401) {
+          GoToLocation("/login");
+        }
         console.log(error);
       }
     };
     let overlay = ref(false);
     let sendOfferRequest = async (chosenAnnounceId) => {
       overlay.value = false;
-      try{
+      try {
         sendOfferData.announceReceivedId = announceId.value;
         sendOfferData.announceSentId = chosenAnnounceId;
-        await OfferSentAndReceivedAPI.store(sendOfferData, store.state.accessToken);
-        displayAlert("Your offer has been sent successfully! You can check for it in Offers Sent section.", "success");
+        await OfferSentAndReceivedAPI.store(
+          sendOfferData,
+          store.state.accessToken
+        );
+        displayAlert(
+          "Your offer has been sent successfully! You can check for it in Offers Sent section.",
+          "success"
+        );
         profileDetails.offerRequested = true;
-        profileDetails.key=22;
+        profileDetails.key = 22;
+      } catch (error) {
+        if (error === 401) {
+          GoToLocation("/login");
+        }
+        displayAlert(
+          "Your offer couldn't be sent. Please try again later.",
+          "error"
+        );
       }
-      catch(error)
-      {
-         displayAlert("Your offer couldn't be sent. Please try again later.", "error");
-      }
-      
     };
     let alertType = ref("warning");
     let alertMessage = ref("");
@@ -434,7 +450,10 @@ export default {
     let suggestAnOffer = (offerData) => {
       overlay.value = true;
       sendOfferData = offerData;
-    }
+    };
+    let GoToLocation = (location) => {
+      window.location = location;
+    };
     return {
       populateAnnounce,
       announceId,
@@ -455,7 +474,8 @@ export default {
       displayAlert,
       suggestAnOffer,
       sendOfferData,
-      showRequestBtn
+      showRequestBtn,
+      GoToLocation
     };
   },
 };
@@ -531,11 +551,8 @@ export default {
 }
 </style>
 
-
 <style scoped lang="scss">
-
 :deep(.v-overlay__scrim) {
-     opacity:0.2 !important;
+  opacity: 0.2 !important;
 }
-
 </style>

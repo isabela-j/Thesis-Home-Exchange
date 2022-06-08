@@ -29,8 +29,8 @@
             :descY="item.descY"
             :currentOwnerId="currentOwnerId"
             :idSentReceived="item.id_offerSendAndReceived"
-            :announceStatus = "item.announceStatus"
-             :announceStatusY="item.announceStatusY"
+            :announceStatus="item.announceStatus"
+            :announceStatusY="item.announceStatusY"
           />
         </v-col>
       </v-row>
@@ -80,7 +80,7 @@ export default {
             listing.mainPicture = announceData.image[0].imageData;
           }
 
-          listing.announceStatusY= post.announceStatus;
+          listing.announceStatusY = post.announceStatus;
           listing.titleY = post.title;
           listing.bedroomsNoY = post.bedroomsNo;
           listing.bathroomsNoY = post.bathroomsNo;
@@ -97,13 +97,22 @@ export default {
     };
     const store = useStore();
     let populateReceived = async () => {
-      currentOwnerId.value = store.state.ownerId;
-      let data =
-        await AnnounceMainDetailsAPI.getAllAnnounceMainDetailsFromOwner(
-          currentOwnerId.value,
-          store.state.accessToken
-        );
-      parseData(data);
+      try {
+        currentOwnerId.value = store.state.ownerId;
+        let data =
+          await AnnounceMainDetailsAPI.getAllAnnounceMainDetailsFromOwner(
+            currentOwnerId.value,
+            store.state.accessToken
+          );
+        parseData(data);
+      } catch (error) {
+        if (error === 401) {
+          GoToLocation("/login");
+        }
+      }
+    };
+    let GoToLocation = (location) => {
+      window.location = location;
     };
     return {
       receivedOffersData,
@@ -111,6 +120,7 @@ export default {
       populateReceived,
       currentOwnerId,
       yourOffersData,
+      GoToLocation
     };
   },
 };

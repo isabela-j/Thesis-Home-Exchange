@@ -1,7 +1,7 @@
 <template>
   <div class="center-content">
   <carousel 
-    :items-to-show="4.95"
+    :items-to-show="2.95"
     wrapAround
     :settings="settings"
     :breakpoints="breakpoints"
@@ -41,16 +41,16 @@ export default {
       breakpoints: {
         // 700px and up
         700: {
-          itemsToShow: 3.25,
+          itemsToShow: 3.95,
           snapAlign: "center",
         },
         // 1024 and up
         1024: {
-          itemsToShow: 4.65,
+          itemsToShow: 2.95,
           snapAlign: "center",
         },
         settings: {
-          itemsToShow: 1,
+          itemsToShow: 3,
           snapAlign: "center",
         },
       },

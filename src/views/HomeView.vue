@@ -156,7 +156,12 @@ export default {
           );
         offerCards.splice(0, offerCards.length);
         parsePosts(posts, sentDetails);
-      } catch (error) {}
+      } catch (error) {
+        if(error === 401)
+        {
+          GoToLocation('/login');
+        }
+      }
     };
     const getFilteredPosts = async (filters) => {
       offerCards.splice(0, offerCards.length);
@@ -170,8 +175,14 @@ export default {
         offerCards.splice(0, offerCards.length);
         parsePosts(posts, sentDetails);
       } catch (error) {
-        console.log(error);
+        if(error === 401)
+        {
+          GoToLocation('/login');
+        }
       }
+    };
+     let GoToLocation = (location) => {
+      window.location = location;
     };
     onMounted(() => {
       window.addEventListener("resize", () => {
@@ -197,6 +208,7 @@ export default {
       getFilteredPosts,
       sentDetails,
       currentOwnerId,
+      GoToLocation
     };
   },
 };

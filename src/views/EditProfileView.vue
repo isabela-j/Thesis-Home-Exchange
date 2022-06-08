@@ -128,7 +128,13 @@
           <v-divider horizontal class="divider-custom mx-1" />
           <v-row dense class="ma-2">
             <v-col :key="1" cols="2">
-              <v-btn class="btn logout-btn" width="100%" @click="GoToLocation('/login')"> Logout </v-btn>
+              <v-btn
+                class="btn logout-btn"
+                width="100%"
+                @click="GoToLocation('/login')"
+              >
+                Logout
+              </v-btn>
             </v-col>
             <v-col :key="2"> </v-col>
             <v-col :key="3" cols="2" align="right">
@@ -162,7 +168,7 @@
 import { ref, computed, reactive } from "vue";
 import LoginAPI from "@/api/resources/Login.js";
 import OwnerAPI from "@/api/resources/Owner.js";
-import { useStore } from 'vuex';
+import { useStore } from "vuex";
 export default {
   name: "EditProfileView",
   created() {
@@ -187,21 +193,32 @@ export default {
       ownerTypeId: 2,
     });
     const store = useStore();
-    
+
     let SaveChanges = async () => {
       if (validateInput()) {
         try {
-          if(userMainData.passwordHash.length > 0)
-          {
-            let login = await LoginAPI.update(userMainData, store.state.loginId, store.state.accessToken);
+          if (userMainData.passwordHash.length > 0) {
+            let login = await LoginAPI.update(
+              userMainData,
+              store.state.loginId,
+              store.state.accessToken
+            );
           }
-          let owner = await OwnerAPI.update(userDetails, store.state.ownerId, store.state.accessToken);
-           displayAlert("Your changes have been saved successfully!",
-          "success");
+          let owner = await OwnerAPI.update(
+            userDetails,
+            store.state.ownerId,
+            store.state.accessToken
+          );
+          displayAlert("Your changes have been saved successfully!", "success");
         } catch (error) {
-          console.log(error);
-          displayAlert("Your changes couldn't be saved . Please try again later.",
-          "error");
+          if (error === 401) {
+            GoToLocation("/login");
+          }
+
+          displayAlert(
+            "Your changes couldn't be saved . Please try again later.",
+            "error"
+          );
         }
       }
     };
@@ -228,10 +245,24 @@ export default {
     };
     let populateUserData = async () => {
       currentOwnerId.value = store.state.ownerId;
-      let details = await OwnerAPI.getOwner(currentOwnerId.value, store.state.accessToken);
+      try{
+        let details = await OwnerAPI.getOwner(
+        currentOwnerId.value,
+        store.state.accessToken
+      );
       parseDetails(details);
-      let mainDetails = await LoginAPI.getLogin(store.state.loginId, store.state.accessToken);
+      let mainDetails = await LoginAPI.getLogin(
+        store.state.loginId,
+        store.state.accessToken
+      );
       userMainData.emailAdress = mainDetails.emailAdress;
+      }
+      catch(error)
+      {
+        if (error === 401) {
+            GoToLocation("/login");
+          }
+      }
     };
     let GoToLocation = (location) => {
       window.location = location;
@@ -251,7 +282,7 @@ export default {
       alertMessage,
       validateInput,
       displayAlert,
-      GoToLocation
+      GoToLocation,
     };
   },
 };
