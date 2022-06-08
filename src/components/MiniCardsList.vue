@@ -1,6 +1,5 @@
 <template>
   <v-container class="pa-0">  
-    <!--v-radio-group  color="rgb(252,158,1)"-->
         <v-row v-for="(miniCard, index) in miniCards" :key="index" dense>
         <v-col :key="index">
             <MiniCard
@@ -15,7 +14,6 @@
             <v-divider></v-divider>
         </v-col>
         </v-row>
-    <!--/v-radio-group-->
   </v-container>
 </template>
 

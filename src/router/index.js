@@ -3,7 +3,6 @@ import HomeView from '../views/HomeView.vue'
 import LoginView from '../views/LoginView.vue'
 import SignupView from '../views/SignupView.vue'
 import AddOfferView from '../views/AddOfferView.vue'
-import ChoosePreferencesView from '../views/ChoosePreferencesView.vue'
 import SavedOffersView from '../views/SavedOffersView.vue'
 import MyOffersView from '../views/MyOffersView.vue'
 import SentOffersView from '../views/SentOffersView.vue'
@@ -45,11 +44,6 @@ const router = createRouter({
       path: '/addoffer',
       name: 'addoffer',
       component: AddOfferView, 
-    },
-    {
-      path: '/choosePreferences',
-      name: 'choosePreferences',
-      component: ChoosePreferencesView, 
     },
     {
       path: '/savedOffers',

@@ -357,7 +357,7 @@ export default {
     MiniCardsList,
   },
 
-  emits: ["resetFilters","filterPosts"],
+  emits: ["resetFilters", "filterPosts"],
   setup(props, { emit }) {
     let currentOwnerId = ref();
 
@@ -372,6 +372,7 @@ export default {
       }
     };
     let parsePosts = async (posts) => {
+      myOffers.splice(0);
       posts.forEach((post) => {
         let listing = {};
         listing.announceMainDetailsId = post.id_announceMainDetails;
@@ -388,8 +389,7 @@ export default {
             listing.type = characteristic.realEstateTypeId;
           }
         });
-        listing.mainPicture =
-          "https://static01.nyt.com/images/2019/06/25/realestate/25domestic-zeff/a1c1a1a36c9e4ff8adcb958c4276f28d-jumbo.jpg?quality=75&auto=webp"; //SCHIMBA
+        listing.mainPicture = "";
         myOffers.push(listing);
       });
     };
@@ -398,13 +398,15 @@ export default {
       if (!showYourAnnounces.value) {
         showPreferences.value = !showPreferences.value;
         showYourAnnounces.value = !showPreferences.value;
-       currentOwnerId.value = store.state.ownerId;
-        let posts =
-          await AnnounceMainDetailsAPI.getAllAnnounceMainDetailsFromOwner(
-            currentOwnerId.value, 
-            store.state.accessToken
-          );
-        parsePosts(posts);
+        currentOwnerId.value = store.state.ownerId;
+        try {
+          let posts =
+            await AnnounceMainDetailsAPI.getAllAnnounceMainDetailsFromOwner(
+              currentOwnerId.value,
+              store.state.accessToken
+            );
+          parsePosts(posts);
+        } catch (error) {}
       }
     };
 
@@ -422,7 +424,7 @@ export default {
     let bedrooms = ref([1, 2, 3, 4, 5, 6, 7]);
     let bathrooms = ref([1, 2, 3, 4, 5]);
     let parkingLots = ref([1, 2, 3, 4, 5]);
-    let floors = ref([0,1,2,3,4,5,6,7,8]);
+    let floors = ref([0, 1, 2, 3, 4, 5, 6, 7, 8]);
     let partitionModel = ref(["detached", "semi-detached", "uncompartmented"]);
     let features = ref([
       "modern furniture",
@@ -489,7 +491,7 @@ export default {
       garage: false,
     });
 
-    let emitFilters= reactive({});
+    let emitFilters = reactive({});
 
     let CheckBtn = (type) => {
       if (type == "house") filters.house = !filters.house;
@@ -539,7 +541,9 @@ export default {
         },
         parkingLotsNo: [],
       };
-      filters.offerLocation.forEach((loc) => announceMainDetails.fullAddress.push(loc));
+      filters.offerLocation.forEach((loc) =>
+        announceMainDetails.fullAddress.push(loc)
+      );
       filters.roomsNo.forEach((nr) => announceMainDetails.bedroomsNo.push(nr));
       filters.bathsNo.forEach((nr) => announceMainDetails.bathroomsNo.push(nr));
       filters.parkingNo.forEach((nr) =>
@@ -578,23 +582,23 @@ export default {
         sewerage: filters.sewerage,
         gasPipe: filters.gasPipe,
         thermalPowerStationOwn: filters.thermalStation,
-        newRadiators: filters.newRadiators
-      }
+        newRadiators: filters.newRadiators,
+      };
 
       let announceFeatures = {
         modernFurniture: filters.modernFurniture,
         electricStove: filters.electricStove,
         washingMachine: filters.washingMachine,
         dishWasher: filters.dishwasher,
-        garage: filters.garage
-      }
+        garage: filters.garage,
+      };
 
       let finalFilters = {
         announceMainDetails: announceMainDetails,
         announceCharacteristics: announceCharacteristics,
         announceUtilities: announceUtilities,
-        announceFeatures: announceFeatures
-      }
+        announceFeatures: announceFeatures,
+      };
       var el = JSON.parse(JSON.stringify(finalFilters));
       emit("filterPosts", el);
     };

@@ -76,7 +76,6 @@ import BasicFilterBar from "@/components/BasicFilterBar.vue";
 import AnnounceMainDetailsAPI from "@/api/resources/AnnounceMainDetails.js";
 import LoginAPI from "@/api/resources/Login.js";
 import { computed } from "vue";
-import offers from "../offers.json";
 import { useStore } from "vuex";
 export default {
   name: "HomeView",
